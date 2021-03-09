@@ -1,0 +1,9 @@
+# web
+FormsWeb/target/
+FormsWeb/nb-configuration.xml
+
+# client
+FormsClient/target/
+FormsClient/nb-configuration.xml
+
+
