@@ -6,4 +6,7 @@ FormsWeb/nb-configuration.xml
 FormsClient/target/
 FormsClient/nb-configuration.xml
 
-
+# .sh
+FormsWeb/lex_cup_src/main/*.sh
+FormsWeb/lex_cup_src/main/*.java
+FormsWeb/lex_cup_src/main/*java~

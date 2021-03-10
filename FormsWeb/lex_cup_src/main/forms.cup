@@ -1,0 +1,59 @@
+package com.cesar31.formsweb.lexerandparser;
+
+import com.cesar31.formsweb.lexerandparser.FormsLex;
+
+import java_cup.runtime.Symbol;
+import java.util.ArrayList;
+import java.util.List;
+
+class FormsParser;
+
+parser code {:
+
+	private boolean parsed;
+
+	public FormsParser(FormsLex lex) {
+        	super(lex);
+        	this.parsed = true;
+	}
+
+	public void syntax_error(Symbol cur_token) {
+                /* parsed */
+                this.parsed = false;
+                /**/
+
+                List<String> expected = new ArrayList<>();
+
+                this.cur_token = cur_token;
+                System.out.printf("syntax_error: Linea: %d, columna: %d, sym: %s, nombre: %s, value: \"%s\", parse_state: %d\n", cur_token.left, cur_token.right, cur_token.sym, symbl_name_from_id(cur_token.sym), cur_token.value, cur_token.parse_state);
+
+                List<Integer> tokens = expected_token_ids();
+                System.out.print("Se esperaba ->");
+                for(Integer i : tokens) {
+                        System.out.printf("%s, ", symbl_name_from_id(i));
+                        expected.add(symbl_name_from_id(i));
+                }
+                System.out.println("");
+	}
+
+:}
+
+terminal INIT_SOL, FIN_SOL, INIT_MANY_SOL, FIN_MANY_SOL, NEW_USER, CRED, USER, PASS, DATE, EDIT_USER, DEL_USER, LOGIN;
+terminal PARAMQ, ID, QUOTE, COLON, GREATER, LBRACE, RBRACE, LBRACKET, RBRACKET, COMMA;
+
+non terminal user_user, user_pass, user_nl, sol_user_nl;
+
+sol_user_nl		::=		INIT_SOL COLON QUOTE NEW_USER QUOTE GREATER user_nl FIN_SOL
+						;
+
+user_nl			::=		LBRACE QUOTE CRED QUOTE COLON LBRACKET LBRACE user_user COMMA user_pass RBRACE RBRACKET RBRACE
+						;
+
+user_user		::=		QUOTE USER QUOTE COLON QUOTE PARAMQ:user QUOTE
+						{: System.out.printf("User = %s\n", user); :}
+						;
+
+user_pass		::=		QUOTE PASS QUOTE COLON QUOTE PARAMQ:pass QUOTE
+						{: System.out.printf("Pass = %s\n", pass); :}
+						;
+
