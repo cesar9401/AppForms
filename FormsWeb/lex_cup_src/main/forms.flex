@@ -38,8 +38,7 @@ Integer =  0|[1-9][0-9]*
 DateFormat = \d{4,4}\-\d{2,2}\-\d{2,2}
 AlfaN = [0-9a-zA-Z]
 Param = \w*{AlfaN}+\w*
-//Id = "\"" [_\-\$]\w*{AlfaN}+\w* "\""
-//ParamQ = "\"" {Param} "\""
+Id = [_\-\$]\w*{AlfaN}+\w*
 
 /* Tags solicitudes */
 Ini = [Ii][Nn][Ii]
@@ -74,10 +73,10 @@ Fin_m_res = "<!" {Fin} "_" {Res}[Ss] ">"
 	{Fin_m_sol}
 	{ return symbol(FIN_MANY_SOL); }
 
-	"\""
+	\"
 	{ return symbol(QUOTE); }
 
-  /* Solicitudes predefinidas */
+	/* Solicitudes predefinidas */
 	"CREAR_USUARIO"
 	{ return symbol(NEW_USER); }
 
@@ -105,6 +104,9 @@ Fin_m_res = "<!" {Fin} "_" {Res}[Ss] ">"
 	{Param}
 	{ return symbol(PARAMQ, yytext()); }
 
+	{Id}
+	{ return symbol(ID, yytext()); }
+
 	":"
 	{ return symbol(COLON); }
 
@@ -131,4 +133,8 @@ Fin_m_res = "<!" {Fin} "_" {Res}[Ss] ">"
 
 }
 
-[^]     { /* Ignore */ }
+[^]
+{
+	return symbol(ERROR, yytext());
+	// throw new Error("Ilegal character: <" + yytext() + ">");
+}

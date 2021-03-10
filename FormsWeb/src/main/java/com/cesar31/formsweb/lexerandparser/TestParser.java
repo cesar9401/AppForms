@@ -9,15 +9,15 @@ import java.io.StringReader;
 public class TestParser {
 
     public static void main(String[] args) {
-        String input = "<!ini_solicitud:\"CREAR_USUARIO\">\n"
+        String input = "<!ini_solicitud : \"CREAR_USUARIO\">\n"
                 + "      { \"CREDENCIALES_USUARIO\":[{\n"
-                + "            \"USUARIO\": \"juanito619\",\n"
+                + "            \"USUARIO\": \"juanito619\"    ,\n"
                 + "            \"PASSWORD\": \"12345678\"\n"
-                + "           }         \n"
+                + "           h         \n"
                 + "         ]\n"
                 + "      }\n"
                 + "<fin_solicitud!>";
-        
+
         FormsLex lex = new FormsLex(new StringReader(input));
         FormsParser parser = new FormsParser(lex);
         try {
@@ -26,5 +26,5 @@ public class TestParser {
             ex.printStackTrace(System.out);
         }
     }
-    
+
 }

@@ -13,47 +13,112 @@ parser code {:
 	private boolean parsed;
 
 	public FormsParser(FormsLex lex) {
-        	super(lex);
-        	this.parsed = true;
+		super(lex);
+		this.parsed = true;
+	}
+
+	public void report_fatal_error(String message, Object info) {
+        /* parsed */
+        this.parsed = false;
+
+        //System.out.println("report_fatal_error");
+        //System.out.println("Message: " + message);
+        //System.out.println("Object info: " + info);
+
+        /* Armando reportes de errores */
+        List<String> expected = new ArrayList<>();
+        List<Integer> tokens = expected_token_ids();
+        for(Integer i : tokens) {
+            expected.add(symbl_name_from_id(i));
+        }
 	}
 
 	public void syntax_error(Symbol cur_token) {
-                /* parsed */
-                this.parsed = false;
-                /**/
+        /* parsed */
+        this.parsed = false;
+        /**/
 
-                List<String> expected = new ArrayList<>();
+        List<String> expected = new ArrayList<>();
 
-                this.cur_token = cur_token;
-                System.out.printf("syntax_error: Linea: %d, columna: %d, sym: %s, nombre: %s, value: \"%s\", parse_state: %d\n", cur_token.left, cur_token.right, cur_token.sym, symbl_name_from_id(cur_token.sym), cur_token.value, cur_token.parse_state);
+        this.cur_token = cur_token;
+        System.out.printf("syntax_error: Linea: %d, columna: %d, sym: %s, nombre: %s, value: \"%s\", parse_state: %d\n", cur_token.left, cur_token.right, cur_token.sym, symbl_name_from_id(cur_token.sym), cur_token.value, cur_token.parse_state);
 
-                List<Integer> tokens = expected_token_ids();
-                System.out.print("Se esperaba ->");
-                for(Integer i : tokens) {
-                        System.out.printf("%s, ", symbl_name_from_id(i));
-                        expected.add(symbl_name_from_id(i));
-                }
-                System.out.println("");
+        List<Integer> tokens = expected_token_ids();
+        System.out.print("Se esperaba ->");
+        for(Integer i : tokens) {
+			System.out.printf("%s, ", symbl_name_from_id(i));
+            expected.add(symbl_name_from_id(i));
+        }
+        System.out.println("");
+	}
+
+	protected int error_sync_size() {
+		return 1;
+	}
+
+	public boolean isParsed() {
+		return parsed;
 	}
 
 :}
 
 terminal INIT_SOL, FIN_SOL, INIT_MANY_SOL, FIN_MANY_SOL, NEW_USER, CRED, USER, PASS, DATE, EDIT_USER, DEL_USER, LOGIN;
 terminal PARAMQ, ID, QUOTE, COLON, GREATER, LBRACE, RBRACE, LBRACKET, RBRACKET, COMMA;
+terminal ERROR;
 
 non terminal user_user, user_pass, user_nl, sol_user_nl;
+non terminal colon, quote, greater, lbrace, comma, rbrace, lbracket, rbracket;
 
-sol_user_nl		::=		INIT_SOL COLON QUOTE NEW_USER QUOTE GREATER user_nl FIN_SOL
-						;
+sol_user_nl	::=	INIT_SOL colon quote NEW_USER quote greater user_nl FIN_SOL
+				;
 
-user_nl			::=		LBRACE QUOTE CRED QUOTE COLON LBRACKET LBRACE user_user COMMA user_pass RBRACE RBRACKET RBRACE
-						;
+user_nl		::=	lbrace quote CRED quote colon lbracket lbrace user_user comma user_pass rbrace rbracket rbrace
+				;
 
-user_user		::=		QUOTE USER QUOTE COLON QUOTE PARAMQ:user QUOTE
-						{: System.out.printf("User = %s\n", user); :}
-						;
+user_user	::=	quote USER quote colon quote PARAMQ:user quote
+				{: System.out.printf("User = %s\n", user); :}
+				;
 
-user_pass		::=		QUOTE PASS QUOTE COLON QUOTE PARAMQ:pass QUOTE
-						{: System.out.printf("Pass = %s\n", pass); :}
-						;
+user_pass	::=	quote PASS quote colon quote PARAMQ:pass quote
+				{: System.out.printf("Pass = %s\n", pass); :}
+				;
 
+colon		::=	COLON
+				| error
+				{: System.out.println("colon"); :}
+				;
+
+quote		::=	QUOTE
+				| error
+				{: System.out.println("quote"); :}
+				;
+
+greater		::=	GREATER
+				| error
+				{: System.out.println("greater"); :}
+				;
+
+lbrace		::=	LBRACE
+				| error
+				{: System.out.println("lbrace"); :}
+				;
+
+rbrace		::=	RBRACE
+				| error
+				{: System.out.println("rbrace"); :}
+				;
+
+comma		::=	COMMA
+				| error
+				{: System.out.println("comma"); :}
+				;
+
+lbracket	::=	LBRACKET
+				| error
+				{: System.out.println("lbracket"); :}
+				;
+
+rbracket	::=	RBRACKET
+				| error
+				{: System.out.println("rbracket"); :}
+				;

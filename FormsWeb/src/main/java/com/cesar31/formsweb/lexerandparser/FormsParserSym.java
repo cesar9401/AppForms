@@ -12,6 +12,7 @@ public class FormsParserSym {
   public static final int LOGIN = 13;
   public static final int RBRACE = 20;
   public static final int DATE = 10;
+  public static final int ERROR = 24;
   public static final int GREATER = 18;
   public static final int INIT_MANY_SOL = 4;
   public static final int USER = 8;
@@ -56,7 +57,8 @@ public class FormsParserSym {
   "RBRACE",
   "LBRACKET",
   "RBRACKET",
-  "COMMA"
+  "COMMA",
+  "ERROR"
   };
 }
 
