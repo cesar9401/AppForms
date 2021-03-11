@@ -1091,12 +1091,12 @@ public class FormsLex implements java_cup.runtime.Scanner {
             // fall through
           case 26: break;
           case 3:
-            { return symbol(QUOTE);
+            { return symbol(QUOTE, yytext());
             }
             // fall through
           case 27: break;
           case 4:
-            { return symbol(COMMA);
+            { return symbol(COMMA, yytext());
             }
             // fall through
           case 28: break;
@@ -1106,32 +1106,32 @@ public class FormsLex implements java_cup.runtime.Scanner {
             // fall through
           case 29: break;
           case 6:
-            { return symbol(COLON);
+            { return symbol(COLON, yytext());
             }
             // fall through
           case 30: break;
           case 7:
-            { return symbol(GREATER);
+            { return symbol(GREATER, yytext());
             }
             // fall through
           case 31: break;
           case 8:
-            { return symbol(LBRACKET);
+            { return symbol(LBRACKET, yytext());
             }
             // fall through
           case 32: break;
           case 9:
-            { return symbol(RBRACKET);
+            { return symbol(RBRACKET, yytext());
             }
             // fall through
           case 33: break;
           case 10:
-            { return symbol(LBRACE);
+            { return symbol(LBRACE, yytext());
             }
             // fall through
           case 34: break;
           case 11:
-            { return symbol(RBRACE);
+            { return symbol(RBRACE, yytext());
             }
             // fall through
           case 35: break;
@@ -1141,62 +1141,62 @@ public class FormsLex implements java_cup.runtime.Scanner {
             // fall through
           case 36: break;
           case 13:
-            { return symbol(USER);
+            { return symbol(USER, yytext());
             }
             // fall through
           case 37: break;
           case 14:
-            { return symbol(PASS);
+            { return symbol(PASS, yytext());
             }
             // fall through
           case 38: break;
           case 15:
-            { return symbol(NEW_USER);
+            { return symbol(NEW_USER, yytext());
             }
             // fall through
           case 39: break;
           case 16:
-            { return symbol(LOGIN);
+            { return symbol(LOGIN, yytext());
             }
             // fall through
           case 40: break;
           case 17:
-            { return symbol(DATE);
+            { return symbol(DATE, yytext());
             }
             // fall through
           case 41: break;
           case 18:
-            { return symbol(INIT_SOL);
+            { return symbol(INIT_SOL, yytext());
             }
             // fall through
           case 42: break;
           case 19:
-            { return symbol(FIN_SOL);
+            { return symbol(FIN_SOL, yytext());
             }
             // fall through
           case 43: break;
           case 20:
-            { return symbol(DEL_USER);
+            { return symbol(DEL_USER, yytext());
             }
             // fall through
           case 44: break;
           case 21:
-            { return symbol(EDIT_USER);
+            { return symbol(EDIT_USER, yytext());
             }
             // fall through
           case 45: break;
           case 22:
-            { return symbol(FIN_MANY_SOL);
+            { return symbol(FIN_MANY_SOL, yytext());
             }
             // fall through
           case 46: break;
           case 23:
-            { return symbol(INIT_MANY_SOL);
+            { return symbol(INIT_MANY_SOL, yytext());
             }
             // fall through
           case 47: break;
           case 24:
-            { return symbol(CRED);
+            { return symbol(CRED, yytext());
             }
             // fall through
           case 48: break;

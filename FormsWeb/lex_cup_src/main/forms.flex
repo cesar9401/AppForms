@@ -62,44 +62,44 @@ Fin_m_res = "<!" {Fin} "_" {Res}[Ss] ">"
 <YYINITIAL> {
 
 	{Ini_sol}
-	{ return symbol(INIT_SOL); }
+	{ return symbol(INIT_SOL, yytext()); }
 
 	{Fin_sol}
-	{ return symbol(FIN_SOL); }
+	{ return symbol(FIN_SOL, yytext()); }
 
 	{Ini_m_sol}
-	{ return symbol(INIT_MANY_SOL); }
+	{ return symbol(INIT_MANY_SOL, yytext()); }
 
 	{Fin_m_sol}
-	{ return symbol(FIN_MANY_SOL); }
+	{ return symbol(FIN_MANY_SOL, yytext()); }
 
 	\"
-	{ return symbol(QUOTE); }
+	{ return symbol(QUOTE, yytext()); }
 
 	/* Solicitudes predefinidas */
 	"CREAR_USUARIO"
-	{ return symbol(NEW_USER); }
+	{ return symbol(NEW_USER, yytext()); }
 
 	"CREDENCIALES_USUARIO"
-	{ return symbol(CRED); }
+	{ return symbol(CRED, yytext()); }
 
 	"USUARIO"
-	{ return symbol(USER); }
+	{ return symbol(USER, yytext()); }
 
 	"PASSWORD"
-	{ return symbol(PASS); }
+	{ return symbol(PASS, yytext()); }
 
 	"FECHA_CREACION"
-	{ return symbol(DATE); }
+	{ return symbol(DATE, yytext()); }
 
 	"MODIFICAR_USUARIO"
-	{ return symbol(EDIT_USER); }
+	{ return symbol(EDIT_USER, yytext()); }
 
 	"ELIMINAR_USUARIO"
-	{ return symbol(DEL_USER); }
+	{ return symbol(DEL_USER, yytext()); }
 
 	"LOGIN_USUARIO"
-	{ return symbol(LOGIN); }
+	{ return symbol(LOGIN, yytext()); }
 
 	{Param}
 	{ return symbol(PARAMQ, yytext()); }
@@ -108,25 +108,25 @@ Fin_m_res = "<!" {Fin} "_" {Res}[Ss] ">"
 	{ return symbol(ID, yytext()); }
 
 	":"
-	{ return symbol(COLON); }
+	{ return symbol(COLON, yytext()); }
 
 	">"
-	{ return symbol(GREATER); }
+	{ return symbol(GREATER, yytext()); }
 
 	"{"
-	{ return symbol(LBRACE); }
+	{ return symbol(LBRACE, yytext()); }
 
 	"}"
-	{ return symbol(RBRACE); }
+	{ return symbol(RBRACE, yytext()); }
 
 	"["
-	{ return symbol(LBRACKET); }
+	{ return symbol(LBRACKET, yytext()); }
 
 	"]"
-	{ return symbol(RBRACKET); }
+	{ return symbol(RBRACKET, yytext()); }
 
 	","
-	{ return symbol(COMMA); }
+	{ return symbol(COMMA, yytext()); }
 
 	{WhiteSpace}
 	{ /* Ignore */ }

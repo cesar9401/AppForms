@@ -10,6 +10,7 @@ class FormsParser;
 
 parser code {:
 
+	private Symbol cur_token;
 	private boolean parsed;
 
 	public FormsParser(FormsLex lex) {
@@ -70,55 +71,61 @@ non terminal user_user, user_pass, user_nl, sol_user_nl;
 non terminal colon, quote, greater, lbrace, comma, rbrace, lbracket, rbracket;
 
 sol_user_nl	::=	INIT_SOL colon quote NEW_USER quote greater user_nl FIN_SOL
+				| error quote;
 				;
 
 user_nl		::=	lbrace quote CRED quote colon lbracket lbrace user_user comma user_pass rbrace rbracket rbrace
 				;
 
 user_user	::=	quote USER quote colon quote PARAMQ:user quote
-				{: System.out.printf("User = %s\n", user); :}
+				{:
+					System.out.printf("User = %s\n", user);
+				:}
 				;
 
 user_pass	::=	quote PASS quote colon quote PARAMQ:pass quote
-				{: System.out.printf("Pass = %s\n", pass); :}
+				{:
+					System.out.printf("Pass = %s\n", pass); :}
 				;
 
 colon		::=	COLON
 				| error
-				{: System.out.println("colon"); :}
+				{:
+					System.out.println("colon ::= error");
+				:}
 				;
 
 quote		::=	QUOTE
 				| error
-				{: System.out.println("quote"); :}
+				{: System.out.println("quote ::= error"); :}
 				;
 
 greater		::=	GREATER
 				| error
-				{: System.out.println("greater"); :}
+				{: System.out.println("greater ::= error"); :}
 				;
 
 lbrace		::=	LBRACE
 				| error
-				{: System.out.println("lbrace"); :}
+				{: System.out.println("lbrace ::= error"); :}
 				;
 
 rbrace		::=	RBRACE
 				| error
-				{: System.out.println("rbrace"); :}
+				{: System.out.println("rbrace ::= error"); :}
 				;
 
 comma		::=	COMMA
 				| error
-				{: System.out.println("comma"); :}
+				{: System.out.println("comma ::= error"); :}
 				;
 
 lbracket	::=	LBRACKET
 				| error
-				{: System.out.println("lbracket"); :}
+				{: System.out.println("lbracket ::= error"); :}
 				;
 
 rbracket	::=	RBRACKET
 				| error
-				{: System.out.println("rbracket"); :}
+				{: System.out.println("rbracket ::= error"); :}
 				;
