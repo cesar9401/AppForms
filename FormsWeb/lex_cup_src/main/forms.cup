@@ -68,13 +68,12 @@ terminal PARAMQ, ID, QUOTE, COLON, GREATER, LBRACE, RBRACE, LBRACKET, RBRACKET, 
 terminal ERROR;
 
 non terminal user_user, user_pass, user_nl, sol_user_nl;
-non terminal colon, quote, greater, lbrace, comma, rbrace, lbracket, rbracket;
+non terminal ini, fin, new_user, cred, colon, quote, greater, lbrace, comma, rbrace, lbracket, rbracket;
 
-sol_user_nl	::=	INIT_SOL colon quote NEW_USER quote greater user_nl FIN_SOL
-				| error quote;
+sol_user_nl	::=	ini colon quote new_user quote greater user_nl fin
 				;
 
-user_nl		::=	lbrace quote CRED quote colon lbracket lbrace user_user comma user_pass rbrace rbracket rbrace
+user_nl		::=	lbrace quote cred quote colon lbracket lbrace user_user comma user_pass rbrace rbracket rbrace
 				;
 
 user_user	::=	quote USER quote colon quote PARAMQ:user quote
@@ -88,11 +87,29 @@ user_pass	::=	quote PASS quote colon quote PARAMQ:pass quote
 					System.out.printf("Pass = %s\n", pass); :}
 				;
 
+ini		::=		INIT_SOL
+				| error
+				{: System.out.println("ini ::= error"); :}
+				;
+
+fin			::=	FIN_SOL
+				| error
+				{: System.out.println("fin ::= error"); :}
+				;
+
+new_user	::=	NEW_USER
+				| error
+				{: System.out.println("new_user ::= error"); :}
+				;
+
+cred		::=	CRED
+				| error
+				{: System.out.println("cred ::= error"); :}
+				;
+
 colon		::=	COLON
 				| error
-				{:
-					System.out.println("colon ::= error");
-				:}
+				{: System.out.println("colon ::= error"); :}
 				;
 
 quote		::=	QUOTE

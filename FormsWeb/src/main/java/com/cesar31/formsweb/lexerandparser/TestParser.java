@@ -19,7 +19,7 @@ public class TestParser {
                 + "<fin_solicitud!>";
         
         String input2 = "<!INI_solicitud : \"CREAR_USUARIO\"> \n "
-                + "{ \"CREDENCIALES_USUARIO\" gfsd [{ \n "
+                + "{ \"CREDENCIALES_USUARIO\" : [{ \n "
                 + "\"USUARIO\" : \"cesar31\" , \n"
                 + "\"PASSWORD\" : \"_123321\"\n"
                 + " }\n "
