@@ -20,14 +20,14 @@ public class TestForms {
     private static Invocation.Builder invocationBuilder;
     private static Response response;
     
-    public static void main(String[] args) {
-        // Write your code here
-        client = ClientBuilder.newClient();
-        
-        // Leer (metodo get)
-        webTarget = client.target(URL_BASE).path("/myresource");
-        
-        String resultado = webTarget.request(MediaType.TEXT_PLAIN).get(Response.class).readEntity(new GenericType<String>(){});
-        System.out.println("El resutlado es: " + resultado);
-    }
+//    public static void main(String[] args) {
+//        // Write your code here
+//        client = ClientBuilder.newClient();
+//        
+//        // Leer (metodo get)
+//        webTarget = client.target(URL_BASE).path("/myresource");
+//        
+//        String resultado = webTarget.request(MediaType.TEXT_PLAIN).get(Response.class).readEntity(new GenericType<String>(){});
+//        System.out.println("El resutlado es: " + resultado);
+//    }
 }
