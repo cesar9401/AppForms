@@ -16,7 +16,7 @@ public class sym {
   public static final int RBRACE = 22;
   public static final int SMALLER = 19;
   public static final int DATE = 10;
-  public static final int ERROR = 31;
+  public static final int ERROR = 32;
   public static final int GREATER = 20;
   public static final int INIT_MANY_SOL = 4;
   public static final int USER = 8;
@@ -28,7 +28,7 @@ public class sym {
   public static final int CRED = 7;
   public static final int ID = 16;
   public static final int RBRACKET = 24;
-  public static final int STRING_LITERAL = 32;
+  public static final int STRING_LITERAL = 33;
   public static final int QUOTE = 17;
   public static final int COMMA = 25;
   public static final int EDIT_USER = 11;
@@ -40,6 +40,7 @@ public class sym {
   public static final int FIN_SOL = 3;
   public static final int INTEGER = 15;
   public static final int PARAM = 14;
+  public static final int SYMBL = 31;
   public static final int NEW_USER = 6;
   public static final String[] terminalNames = new String[] {
   "EOF",
@@ -73,6 +74,7 @@ public class sym {
   "MINUS",
   "TIMES",
   "DIVIDE",
+  "SYMBL",
   "ERROR",
   "STRING_LITERAL"
   };

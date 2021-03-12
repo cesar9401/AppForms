@@ -21,9 +21,9 @@ public class TestParser {
                 + "      }\n"
                 + "<fin_solicitud!>";
 
-        String input2 = "<!INI_solicitud : \"CREAR_USUARIO\"> \n "
+        String input2 = "<!INI_solicitud : \"\n\t   \\ CREAR_USUARIO\t\n\"> \n "
                 + "{ \"CREDENCIALES_USUARIO\" : [{ \n "
-                + "\"USUARIO\" : \"  cesar <!>31\" , \n"
+                + "\"USUARIO\" : \"\\cesar  <!>31\" , \n"
                 + "\"PASSWORD\" : \"123.321\"\n"
                 + " }\n "
                 + "  ] \n"

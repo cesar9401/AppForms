@@ -26,6 +26,17 @@ import java_cup.runtime.*;
 		return new Symbol(type, yyline + 1, yycolumn + 1, value);
 	}
 
+	private Symbol getSymbol(int type, Object value) {
+		String s = value.toString().trim();
+		System.out.println("string -> " + value.toString());
+		System.out.println("string -> " + s);
+
+		if(s.equals("CREAR_USUARIO"))
+			return symbol(NEW_USER, value);
+
+		return symbol(type, value);
+	}
+
 %}
 
 // %eofval{
@@ -35,10 +46,13 @@ import java_cup.runtime.*;
 
 /* Espacios */
 LineTerminator = \r|\n|\r\n
-WhiteSpace = {LineTerminator}|[\s\t\f]
+WhiteSpace = {LineTerminator}|[\s\t\f ]
 
+//Param = [\w\-\$\^\*\+\.\/\?\(\)@#%&~`¿,:;¡|]+
+Param = \w+
 Integer =  0|[1-9][0-9]*
 Id = [\_\-\$]+ ({Param} | [\_\-\$])*
+Symbol = [<>!]+
 
 /* Tags solicitudes */
 Ini = [Ii][Nn][Ii]
@@ -51,13 +65,13 @@ Fin_sol = {Fin} "_" {Sol}
 Ini_m_sol = {Ini} "_" {Sol}[Ed][Ss]
 Fin_m_sol = {Fin} "_" {Sol}[Ed][Ss]
 
-Param = [\w\-\$\^\*\+\.\/\?\(\)@#%&~`¿,:;¡|]+
-
 /* Para respuestas del servidor */
 // Ini_res = {Ini} "_" {Res}
 // Fin_res =  {Fin} "_" {Res}
 // Ini_m_res = {Ini} "_" {Res}[Ss]
 // Fin_m_res = {Fin} "_" {Res}[Ss]
+
+%state STRING
 
 %%
 
@@ -76,29 +90,29 @@ Param = [\w\-\$\^\*\+\.\/\?\(\)@#%&~`¿,:;¡|]+
 	{ return symbol(FIN_MANY_SOL, yytext()); }
 
 	/* Solicitudes predefinidas */
-	"CREAR_USUARIO"
-	{ return symbol(NEW_USER, yytext()); }
+	// "CREAR_USUARIO"
+	// { return symbol(NEW_USER, yytext()); }
 
-	"CREDENCIALES_USUARIO"
-	{ return symbol(CRED, yytext()); }
+	// "CREDENCIALES_USUARIO"
+	// { return symbol(CRED, yytext()); }
 
-	"USUARIO"
-	{ return symbol(USER, yytext()); }
+	// "USUARIO"
+	// { return symbol(USER, yytext()); }
 
-	"PASSWORD"
-	{ return symbol(PASS, yytext()); }
+	// "PASSWORD"
+	// { return symbol(PASS, yytext()); }
 
-	"FECHA_CREACION"
-	{ return symbol(DATE, yytext()); }
+	// "FECHA_CREACION"
+	// { return symbol(DATE, yytext()); }
 
-	"MODIFICAR_USUARIO"
-	{ return symbol(EDIT_USER, yytext()); }
+	// "MODIFICAR_USUARIO"
+	// { return symbol(EDIT_USER, yytext()); }
 
-	"ELIMINAR_USUARIO"
-	{ return symbol(DEL_USER, yytext()); }
+	// "ELIMINAR_USUARIO"
+	// { return symbol(DEL_USER, yytext()); }
 
-	"LOGIN_USUARIO"
-	{ return symbol(LOGIN, yytext()); }
+	// "LOGIN_USUARIO"
+	// { return symbol(LOGIN, yytext()); }
 
 	":"
 	{ return symbol(COLON, yytext()); }
@@ -128,7 +142,10 @@ Param = [\w\-\$\^\*\+\.\/\?\(\)@#%&~`¿,:;¡|]+
 	{ return symbol(COMMA, yytext()); }
 
 	\"
-	{ return symbol(QUOTE, yytext()); }
+	{
+		string.setLength(0);
+		yybegin(STRING);
+	}
 
 	"+"
 	{ return symbol(PLUS, yytext()); }
@@ -155,6 +172,29 @@ Param = [\w\-\$\^\*\+\.\/\?\(\)@#%&~`¿,:;¡|]+
 	{WhiteSpace}
 	{ /* Ignore */ }
 
+}
+
+<STRING> {
+	\"
+	{
+		yybegin(YYINITIAL);
+		return getSymbol(STRING_LITERAL, string.toString());
+	}
+
+	[^\n\r\"\\]+
+	{ string.append(yytext()); }
+
+	\\t
+	{ string.append('\t'); }
+
+    \\n
+	{ string.append('\n'); }
+
+	\\
+	{ string.append('\\'); }
+
+	{WhiteSpace}
+	{ /* Ignore */ }
 }
 
 [^]
