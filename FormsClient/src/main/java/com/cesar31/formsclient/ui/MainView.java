@@ -1,12 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.cesar31.formsclient.ui;
 
+import com.cesar31.formsclient.control.FileControl;
 import java.awt.Event;
 import javax.swing.Action;
+import javax.swing.JFileChooser;
 import javax.swing.KeyStroke;
 import javax.swing.text.DefaultEditorKit;
 
@@ -16,9 +13,9 @@ import javax.swing.text.DefaultEditorKit;
  */
 public class MainView extends javax.swing.JFrame {
 
-    /**
-     * Creates new form MainView
-     */
+    private FileControl control;
+
+    // Para control de lineas
     private LineNumber num;
     private LineNumber numResponse;
 
@@ -26,6 +23,7 @@ public class MainView extends javax.swing.JFrame {
         initComponents();
         initLineNumber();
         textMainSetActions();
+        control = new FileControl();
     }
 
     /**
@@ -39,11 +37,6 @@ public class MainView extends javax.swing.JFrame {
         // JTextArea para respuestas del servidor
         numResponse = new LineNumber(textResponse);
         scrollResponse.setRowHeaderView(numResponse);
-
-        //textResponse.setText("<!init_solicitud : \"CREAR_USUARIO\"> { \"CREDENCIALES_USUARIO\" : [{ \"USUARIO\" : \"_jose123\" , \"PASSWORD\" : \"abc123\" }] } <fin_solicitud>");
-        //textResponse.append("\n<!init_solicitud : \"CREAR_USUARIO\"> { \"CREDENCIALES_USUARIO\" : [{ \"USUARIO\" : \"juanito321\" , \"PASSWORD\" : \"abc123\" }] } <fin_solicitud>");
-        //textResponse.append("\n<!init_solicitud : \"CREAR_USUARIO\"> { \"CREDENCIALES_USUARIO\" : [{ \"USUARIO\" : \"cesar21\" , \"PASSWORD\" : \"abc123\" }] } <fin_solicitud>");
-        //textResponse.append("\n<!init_solicitud : \"CREAR_USUARIO\"> { \"CREDENCIALES_USUARIO\" : [{ \"USUARIO\" : \"maria16\" , \"PASSWORD\" : \"abc123\" }] } <fin_solicitud>");
     }
 
     /**
@@ -61,7 +54,7 @@ public class MainView extends javax.swing.JFrame {
         Action paste = textMain.getActionMap().get(DefaultEditorKit.pasteAction);
         paste.putValue(Action.NAME, "Pegar");
         paste.putValue(Action.ACCELERATOR_KEY, KeyStroke.getAWTKeyStroke('V', Event.CTRL_MASK));
-        
+
         // Agregar a los menu 
         ItemCut.setAction(cut);
         ItemCopy.setAction(copy);
@@ -85,9 +78,11 @@ public class MainView extends javax.swing.JFrame {
         scrollResponse = new javax.swing.JScrollPane();
         textResponse = new javax.swing.JTextArea();
         labelSol1 = new javax.swing.JLabel();
+        labelInfo = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         menu1 = new javax.swing.JMenu();
-        itemImport = new javax.swing.JMenuItem();
+        itemOpen = new javax.swing.JMenuItem();
+        itemGuardar = new javax.swing.JMenuItem();
         itemExit = new javax.swing.JMenuItem();
         menu2 = new javax.swing.JMenu();
         ItemCut = new javax.swing.JMenuItem();
@@ -122,12 +117,22 @@ public class MainView extends javax.swing.JFrame {
         textMain.setTabSize(4);
         textMain.setCaretColor(new java.awt.Color(255, 255, 255));
         textMain.setMargin(new java.awt.Insets(10, 10, 10, 10));
+        textMain.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                textMainCaretUpdate(evt);
+            }
+        });
         scrollText.setViewportView(textMain);
 
         btnRequest.setBackground(new java.awt.Color(42, 33, 57));
         btnRequest.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         btnRequest.setForeground(new java.awt.Color(255, 255, 255));
         btnRequest.setText("Enviar Peticion");
+        btnRequest.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRequestActionPerformed(evt);
+            }
+        });
 
         textResponse.setEditable(false);
         textResponse.setBackground(new java.awt.Color(42, 33, 57));
@@ -149,6 +154,16 @@ public class MainView extends javax.swing.JFrame {
         labelSol1.setMinimumSize(new java.awt.Dimension(250, 30));
         labelSol1.setPreferredSize(new java.awt.Dimension(250, 30));
 
+        labelInfo.setBackground(new java.awt.Color(23, 21, 32));
+        labelInfo.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        labelInfo.setForeground(new java.awt.Color(255, 255, 255));
+        labelInfo.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelInfo.setText("Linea -, Columna -");
+        labelInfo.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        labelInfo.setMaximumSize(new java.awt.Dimension(250, 30));
+        labelInfo.setMinimumSize(new java.awt.Dimension(250, 30));
+        labelInfo.setPreferredSize(new java.awt.Dimension(250, 30));
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
@@ -158,7 +173,10 @@ public class MainView extends javax.swing.JFrame {
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnRequest, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(mainPanelLayout.createSequentialGroup()
+                                .addComponent(btnRequest, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(labelInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(scrollResponse, javax.swing.GroupLayout.DEFAULT_SIZE, 975, Short.MAX_VALUE)
                             .addComponent(scrollText)))
                     .addGroup(mainPanelLayout.createSequentialGroup()
@@ -176,7 +194,9 @@ public class MainView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(scrollText, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnRequest)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnRequest)
+                    .addComponent(labelInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(labelSol, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -195,16 +215,22 @@ public class MainView extends javax.swing.JFrame {
         menu1.setText("File");
         menu1.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
 
-        itemImport.setBackground(new java.awt.Color(36, 27, 47));
-        itemImport.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        itemImport.setForeground(new java.awt.Color(255, 255, 255));
-        itemImport.setText("Importar");
-        itemImport.addActionListener(new java.awt.event.ActionListener() {
+        itemOpen.setBackground(new java.awt.Color(36, 27, 47));
+        itemOpen.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        itemOpen.setForeground(new java.awt.Color(255, 255, 255));
+        itemOpen.setText("Abrir");
+        itemOpen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itemImportActionPerformed(evt);
+                itemOpenActionPerformed(evt);
             }
         });
-        menu1.add(itemImport);
+        menu1.add(itemOpen);
+
+        itemGuardar.setBackground(new java.awt.Color(36, 27, 47));
+        itemGuardar.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        itemGuardar.setForeground(new java.awt.Color(255, 255, 255));
+        itemGuardar.setText("Guardar");
+        menu1.add(itemGuardar);
 
         itemExit.setBackground(new java.awt.Color(36, 27, 47));
         itemExit.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
@@ -229,11 +255,6 @@ public class MainView extends javax.swing.JFrame {
         ItemCut.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         ItemCut.setForeground(new java.awt.Color(255, 255, 255));
         ItemCut.setText("Cortar");
-        ItemCut.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ItemCutActionPerformed(evt);
-            }
-        });
         menu2.add(ItemCut);
 
         ItemCopy.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_DOWN_MASK));
@@ -241,11 +262,6 @@ public class MainView extends javax.swing.JFrame {
         ItemCopy.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         ItemCopy.setForeground(new java.awt.Color(255, 255, 255));
         ItemCopy.setText("Copiar");
-        ItemCopy.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ItemCopyActionPerformed(evt);
-            }
-        });
         menu2.add(ItemCopy);
 
         ItemPaste.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_DOWN_MASK));
@@ -253,11 +269,6 @@ public class MainView extends javax.swing.JFrame {
         ItemPaste.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         ItemPaste.setForeground(new java.awt.Color(255, 255, 255));
         ItemPaste.setText("Pegar");
-        ItemPaste.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ItemPasteActionPerformed(evt);
-            }
-        });
         menu2.add(ItemPaste);
 
         menuBar.add(menu2);
@@ -278,26 +289,41 @@ public class MainView extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Evento para cerrar el programa
+     *
+     * @param evt
+     */
     private void itemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemExitActionPerformed
         // TODO add your handling code here:
+        this.setVisible(false);
+        this.dispose();
     }//GEN-LAST:event_itemExitActionPerformed
 
-    private void itemImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemImportActionPerformed
+    private void btnRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRequestActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_itemImportActionPerformed
+    }//GEN-LAST:event_btnRequestActionPerformed
 
-    private void ItemCutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemCutActionPerformed
+    /**
+     * Obtener informacion de linea y columna
+     *
+     * @param evt
+     */
+    private void textMainCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_textMainCaretUpdate
         // TODO add your handling code here:
-    }//GEN-LAST:event_ItemCutActionPerformed
+        String info = control.lineAndColumnInfo(textMain);
+        labelInfo.setText(info);
+    }//GEN-LAST:event_textMainCaretUpdate
 
-    private void ItemCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemCopyActionPerformed
+    private void itemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemOpenActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_ItemCopyActionPerformed
-
-    private void ItemPasteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemPasteActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ItemPasteActionPerformed
-
+        JFileChooser fileChooser = new JFileChooser();
+        int seleccion = fileChooser.showOpenDialog(this);
+        if (seleccion == JFileChooser.APPROVE_OPTION) {
+            String text = control.readData(fileChooser.getSelectedFile().getAbsolutePath());
+            textMain.setText(text);
+        }
+    }//GEN-LAST:event_itemOpenActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem ItemCopy;
@@ -305,7 +331,9 @@ public class MainView extends javax.swing.JFrame {
     private javax.swing.JMenuItem ItemPaste;
     private javax.swing.JButton btnRequest;
     private javax.swing.JMenuItem itemExit;
-    private javax.swing.JMenuItem itemImport;
+    private javax.swing.JMenuItem itemGuardar;
+    private javax.swing.JMenuItem itemOpen;
+    private javax.swing.JLabel labelInfo;
     private javax.swing.JLabel labelSol;
     private javax.swing.JLabel labelSol1;
     private javax.swing.JPanel mainPanel;
