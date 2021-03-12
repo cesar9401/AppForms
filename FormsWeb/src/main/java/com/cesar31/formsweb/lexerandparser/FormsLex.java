@@ -544,7 +544,29 @@ public class FormsLex implements java_cup.runtime.Scanner {
 		System.out.println("string -> " + s);
 
 		if(s.equals("CREAR_USUARIO"))
-			return symbol(NEW_USER, value);
+			return symbol(ADD_USER, s);
+		if(s.equals("CREDENCIALES_USUARIO"))
+			return symbol(CRED, s);
+		if(s.equals("USUARIO"))
+			return symbol(USER, s);
+		if(s.equals("PASSWORD"))
+			return symbol(PASS, s);
+		if(s.equals("FECHA_CREACION"))
+			return symbol(DATE_ADD, s);
+		if(s.equals("MODIFICAR_USUARIO"))
+			return symbol(EDIT_USER, s);
+		if(s.equals("ELIMINAR_USUARIO"))
+			return symbol(DEL_USER, s);
+		if(s.equals("LOGIN_USUARIO"))
+			return symbol(LOGIN, s);
+		if(s.equals("USUARIO_ANTIGUO"))
+			return symbol(OLD_USER, s);
+		if(s.equals("USUARIO_NUEVO"))
+			return symbol(NEW_USER, s);
+		if(s.equals("NUEVO_PASSWORD"))
+			return symbol(NEW_PASS, s);
+		if(s.equals("FECHA_MODIFICACION"))
+			return symbol(DATE_MOD, s);
 
 		return symbol(type, value);
 	}

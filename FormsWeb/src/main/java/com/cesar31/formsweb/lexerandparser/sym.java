@@ -8,40 +8,43 @@ package com.cesar31.formsweb.lexerandparser;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int TIMES = 29;
-  public static final int PLUS = 27;
+  public static final int DIVIDE = 34;
+  public static final int STRING_LITERAL = 36;
+  public static final int LBRACKET = 27;
+  public static final int NEW_USER = 15;
+  public static final int FIN_MANY_SOL = 5;
+  public static final int EDIT_USER = 11;
+  public static final int INTEGER = 19;
+  public static final int SMALLER = 23;
+  public static final int GREATER = 24;
+  public static final int ADD_USER = 6;
+  public static final int MINUS = 32;
+  public static final int PARAM = 18;
+  public static final int FIN_SOL = 3;
+  public static final int PASS = 9;
+  public static final int OLD_USER = 14;
+  public static final int COMMA = 29;
+  public static final int INIT_SOL = 2;
+  public static final int PLUS = 31;
+  public static final int QUOTE = 21;
+  public static final int ID = 20;
+  public static final int EXCL = 30;
+  public static final int EOF = 0;
+  public static final int RBRACKET = 28;
+  public static final int DATE_ADD = 10;
+  public static final int error = 1;
+  public static final int DATE_MOD = 17;
+  public static final int NEW_PASS = 16;
   public static final int DEL_USER = 12;
+  public static final int ERROR = 35;
+  public static final int TIMES = 33;
+  public static final int COLON = 22;
+  public static final int LBRACE = 25;
   public static final int LOGIN = 13;
-  public static final int EXCL = 26;
-  public static final int RBRACE = 22;
-  public static final int SMALLER = 19;
-  public static final int DATE = 10;
-  public static final int ERROR = 32;
-  public static final int GREATER = 20;
+  public static final int CRED = 7;
+  public static final int RBRACE = 26;
   public static final int INIT_MANY_SOL = 4;
   public static final int USER = 8;
-  public static final int PASS = 9;
-  public static final int LBRACKET = 23;
-  public static final int LBRACE = 21;
-  public static final int COLON = 18;
-  public static final int INIT_SOL = 2;
-  public static final int CRED = 7;
-  public static final int ID = 16;
-  public static final int RBRACKET = 24;
-  public static final int STRING_LITERAL = 33;
-  public static final int QUOTE = 17;
-  public static final int COMMA = 25;
-  public static final int EDIT_USER = 11;
-  public static final int EOF = 0;
-  public static final int FIN_MANY_SOL = 5;
-  public static final int DIVIDE = 30;
-  public static final int MINUS = 28;
-  public static final int error = 1;
-  public static final int FIN_SOL = 3;
-  public static final int INTEGER = 15;
-  public static final int PARAM = 14;
-  public static final int SYMBL = 31;
-  public static final int NEW_USER = 6;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -49,14 +52,18 @@ public class sym {
   "FIN_SOL",
   "INIT_MANY_SOL",
   "FIN_MANY_SOL",
-  "NEW_USER",
+  "ADD_USER",
   "CRED",
   "USER",
   "PASS",
-  "DATE",
+  "DATE_ADD",
   "EDIT_USER",
   "DEL_USER",
   "LOGIN",
+  "OLD_USER",
+  "NEW_USER",
+  "NEW_PASS",
+  "DATE_MOD",
   "PARAM",
   "INTEGER",
   "ID",
@@ -74,7 +81,6 @@ public class sym {
   "MINUS",
   "TIMES",
   "DIVIDE",
-  "SYMBL",
   "ERROR",
   "STRING_LITERAL"
   };
