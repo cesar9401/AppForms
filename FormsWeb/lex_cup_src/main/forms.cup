@@ -6,14 +6,19 @@ import java_cup.runtime.Symbol;
 import java.util.ArrayList;
 import java.util.List;
 
-class FormsParser;
+//class FormsParser;
 
 parser code {:
 
 	private Symbol cur_token;
 	private boolean parsed;
 
-	public FormsParser(FormsLex lex) {
+	// public FormsParser(FormsLex lex) {
+	// 	super(lex);
+	// 	this.parsed = true;
+	// }
+
+	public parser(FormsLex lex) {
 		super(lex);
 		this.parsed = true;
 	}
@@ -64,8 +69,9 @@ parser code {:
 :}
 
 terminal INIT_SOL, FIN_SOL, INIT_MANY_SOL, FIN_MANY_SOL, NEW_USER, CRED, USER, PASS, DATE, EDIT_USER, DEL_USER, LOGIN;
-terminal PARAMQ, ID, QUOTE, COLON, GREATER, LBRACE, RBRACE, LBRACKET, RBRACKET, COMMA;
-terminal ERROR;
+terminal PARAM, INTEGER, ID, QUOTE, COLON, SMALLER, GREATER, LBRACE, RBRACE, LBRACKET, RBRACKET, COMMA, EXCL;
+terminal PLUS, MINUS, TIMES, DIVIDE;
+terminal ERROR, STRING_LITERAL;
 
 non terminal user_user, user_pass, user_nl, sol_user_nl;
 non terminal ini, fin, new_user, cred, colon, quote, greater, lbrace, comma, rbrace, lbracket, rbracket;
@@ -76,13 +82,13 @@ sol_user_nl	::=	ini colon quote new_user quote greater user_nl fin
 user_nl		::=	lbrace quote cred quote colon lbracket lbrace user_user comma user_pass rbrace rbracket rbrace
 				;
 
-user_user	::=	quote USER quote colon quote PARAMQ:user quote
+user_user	::=	quote USER quote colon quote PARAM:user quote
 				{:
 					System.out.printf("User = %s\n", user);
 				:}
 				;
 
-user_pass	::=	quote PASS quote colon quote PARAMQ:pass quote
+user_pass	::=	quote PASS quote colon quote PARAM:pass quote
 				{:
 					System.out.printf("Pass = %s\n", pass); :}
 				;

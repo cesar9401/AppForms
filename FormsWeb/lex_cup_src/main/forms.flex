@@ -1,6 +1,6 @@
 package com.cesar31.formsweb.lexerandparser;
 
-import static com.cesar31.formsweb.lexerandparser.FormsParserSym.*;
+import static com.cesar31.formsweb.lexerandparser.sym.*;
 import java_cup.runtime.*;
 
 %%
@@ -12,8 +12,11 @@ import java_cup.runtime.*;
 %cup
 %line
 %column
+%cupdebug
 
 %{
+
+	private StringBuffer string = new StringBuffer();
 
 	private Symbol symbol(int type) {
 		return new Symbol(type, yyline + 1, yycolumn + 1);
@@ -25,37 +28,36 @@ import java_cup.runtime.*;
 
 %}
 
-%eofval{
-	return new java_cup.runtime.Symbol(FormsParserSym.EOF);
-%eofval}
-%eofclose
+// %eofval{
+// 	return new java_cup.runtime.Symbol(FormsParserSym.EOF);
+// %eofval}
+// %eofclose
 
 /* Espacios */
 LineTerminator = \r|\n|\r\n
 WhiteSpace = {LineTerminator}|[\s\t\f]
 
 Integer =  0|[1-9][0-9]*
-DateFormat = \d{4,4}\-\d{2,2}\-\d{2,2}
-AlfaN = [0-9a-zA-Z]
-Param = \w*{AlfaN}+\w*
-Id = [_\-\$]\w*{AlfaN}+\w*
+Id = [\_\-\$]+ ({Param} | [\_\-\$])*
 
 /* Tags solicitudes */
 Ini = [Ii][Nn][Ii]
 Sol = [Ss][Oo][Ll][Ii][Cc][Ii][Tt][Uu][Dd]
 Fin = [Ff][Ii][Nn]
-Res = [Rr][Ee][Ss][Pp][Uu][Ee][Ss][Tt][Aa]
+//Res = [Rr][Ee][Ss][Pp][Uu][Ee][Ss][Tt][Aa]
 
-Ini_sol = "<!" {Ini} "_" {Sol}
-Fin_sol = "<" {Fin} "_" {Sol} "!>"
-Ini_m_sol = "<!" {Ini} "_" {Sol}[Ed][Ss] ">"
-Fin_m_sol = "<!" {Fin} "_" {Sol}[Ed][Ss] ">"
+Ini_sol = {Ini} "_" {Sol}
+Fin_sol = {Fin} "_" {Sol}
+Ini_m_sol = {Ini} "_" {Sol}[Ed][Ss]
+Fin_m_sol = {Fin} "_" {Sol}[Ed][Ss]
+
+Param = [\w\-\$\^\*\+\.\/\?\(\)@#%&~`¿,:;¡|]+
 
 /* Para respuestas del servidor */
-Ini_res = "<!" {Ini} "_" {Res}
-Fin_res = "<!" {Fin} "_" {Res}
-Ini_m_res = "<!" {Ini} "_" {Res}[Ss] ">"
-Fin_m_res = "<!" {Fin} "_" {Res}[Ss] ">"
+// Ini_res = {Ini} "_" {Res}
+// Fin_res =  {Fin} "_" {Res}
+// Ini_m_res = {Ini} "_" {Res}[Ss]
+// Fin_m_res = {Fin} "_" {Res}[Ss]
 
 %%
 
@@ -72,9 +74,6 @@ Fin_m_res = "<!" {Fin} "_" {Res}[Ss] ">"
 
 	{Fin_m_sol}
 	{ return symbol(FIN_MANY_SOL, yytext()); }
-
-	\"
-	{ return symbol(QUOTE, yytext()); }
 
 	/* Solicitudes predefinidas */
 	"CREAR_USUARIO"
@@ -101,14 +100,14 @@ Fin_m_res = "<!" {Fin} "_" {Res}[Ss] ">"
 	"LOGIN_USUARIO"
 	{ return symbol(LOGIN, yytext()); }
 
-	{Param}
-	{ return symbol(PARAMQ, yytext()); }
-
-	{Id}
-	{ return symbol(ID, yytext()); }
-
 	":"
 	{ return symbol(COLON, yytext()); }
+
+	"<"
+	{ return symbol(SMALLER, yytext()); }
+
+	"!"
+	{ return symbol(EXCL, yytext()); }
 
 	">"
 	{ return symbol(GREATER, yytext()); }
@@ -127,6 +126,31 @@ Fin_m_res = "<!" {Fin} "_" {Res}[Ss] ">"
 
 	","
 	{ return symbol(COMMA, yytext()); }
+
+	\"
+	{ return symbol(QUOTE, yytext()); }
+
+	"+"
+	{ return symbol(PLUS, yytext()); }
+
+	"-"
+	{ return symbol(MINUS, yytext()); }
+
+	"*"
+	{ return symbol(TIMES, yytext()); }
+
+	"/"
+	{ return symbol(DIVIDE, yytext()); }
+
+	{Integer}
+	{
+		return symbol(INTEGER, yytext());
+	}
+
+	{Param}
+	{
+		return symbol(PARAM, yytext());
+	}
 
 	{WhiteSpace}
 	{ /* Ignore */ }

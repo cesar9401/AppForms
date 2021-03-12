@@ -6,32 +6,40 @@
 package com.cesar31.formsweb.lexerandparser;
 
 /** CUP generated class containing symbol constants. */
-public class FormsParserSym {
+public class sym {
   /* terminals */
+  public static final int TIMES = 29;
+  public static final int PLUS = 27;
   public static final int DEL_USER = 12;
   public static final int LOGIN = 13;
-  public static final int RBRACE = 20;
+  public static final int EXCL = 26;
+  public static final int RBRACE = 22;
+  public static final int SMALLER = 19;
   public static final int DATE = 10;
-  public static final int ERROR = 24;
-  public static final int GREATER = 18;
+  public static final int ERROR = 31;
+  public static final int GREATER = 20;
   public static final int INIT_MANY_SOL = 4;
   public static final int USER = 8;
   public static final int PASS = 9;
-  public static final int LBRACKET = 21;
-  public static final int LBRACE = 19;
-  public static final int COLON = 17;
+  public static final int LBRACKET = 23;
+  public static final int LBRACE = 21;
+  public static final int COLON = 18;
   public static final int INIT_SOL = 2;
   public static final int CRED = 7;
-  public static final int ID = 15;
-  public static final int RBRACKET = 22;
-  public static final int PARAMQ = 14;
-  public static final int QUOTE = 16;
-  public static final int COMMA = 23;
+  public static final int ID = 16;
+  public static final int RBRACKET = 24;
+  public static final int STRING_LITERAL = 32;
+  public static final int QUOTE = 17;
+  public static final int COMMA = 25;
   public static final int EDIT_USER = 11;
   public static final int EOF = 0;
   public static final int FIN_MANY_SOL = 5;
+  public static final int DIVIDE = 30;
+  public static final int MINUS = 28;
   public static final int error = 1;
   public static final int FIN_SOL = 3;
+  public static final int INTEGER = 15;
+  public static final int PARAM = 14;
   public static final int NEW_USER = 6;
   public static final String[] terminalNames = new String[] {
   "EOF",
@@ -48,17 +56,25 @@ public class FormsParserSym {
   "EDIT_USER",
   "DEL_USER",
   "LOGIN",
-  "PARAMQ",
+  "PARAM",
+  "INTEGER",
   "ID",
   "QUOTE",
   "COLON",
+  "SMALLER",
   "GREATER",
   "LBRACE",
   "RBRACE",
   "LBRACKET",
   "RBRACKET",
   "COMMA",
-  "ERROR"
+  "EXCL",
+  "PLUS",
+  "MINUS",
+  "TIMES",
+  "DIVIDE",
+  "ERROR",
+  "STRING_LITERAL"
   };
 }
 
