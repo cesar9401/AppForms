@@ -28,8 +28,8 @@ import java_cup.runtime.*;
 
 	private Symbol getSymbol(int type, Object value) {
 		String s = value.toString().trim();
-		System.out.println("string -> " + value.toString());
-		System.out.println("string -> " + s);
+		//System.out.println("string -> " + value.toString());
+		//System.out.println("string -> " + s);
 
 		if(s.equals("CREAR_USUARIO"))
 			return symbol(ADD_USER, s);
@@ -73,8 +73,6 @@ WhiteSpace = {LineTerminator}|[\s\t\f ]
 //Param = [\w\-\$\^\*\+\.\/\?\(\)@#%&~`¿,:;¡|]+
 Param = \w+
 Integer =  0|[1-9][0-9]*
-Id = [\_\-\$]+ ({Param} | [\_\-\$])*
-Symbol = [<>!]+
 
 /* Tags solicitudes */
 Ini = [Ii][Nn][Ii]
@@ -175,7 +173,7 @@ Fin_m_sol = {Fin} "_" {Sol}[Ed][Ss]
 	\"
 	{
 		yybegin(YYINITIAL);
-		return getSymbol(STRING_LITERAL, string.toString());
+		return getSymbol(STR, string.toString());
 	}
 
 	[^\n\r\"\\]+

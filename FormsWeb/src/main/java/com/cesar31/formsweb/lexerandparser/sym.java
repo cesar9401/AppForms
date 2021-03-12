@@ -8,41 +8,40 @@ package com.cesar31.formsweb.lexerandparser;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int DIVIDE = 34;
-  public static final int STRING_LITERAL = 36;
-  public static final int LBRACKET = 27;
+  public static final int DIVIDE = 33;
+  public static final int LBRACKET = 26;
   public static final int NEW_USER = 15;
+  public static final int STR = 35;
   public static final int FIN_MANY_SOL = 5;
   public static final int EDIT_USER = 11;
   public static final int INTEGER = 19;
-  public static final int SMALLER = 23;
-  public static final int GREATER = 24;
+  public static final int SMALLER = 22;
+  public static final int GREATER = 23;
   public static final int ADD_USER = 6;
-  public static final int MINUS = 32;
+  public static final int MINUS = 31;
   public static final int PARAM = 18;
   public static final int FIN_SOL = 3;
   public static final int PASS = 9;
   public static final int OLD_USER = 14;
-  public static final int COMMA = 29;
+  public static final int COMMA = 28;
   public static final int INIT_SOL = 2;
-  public static final int PLUS = 31;
-  public static final int QUOTE = 21;
+  public static final int PLUS = 30;
   public static final int ID = 20;
-  public static final int EXCL = 30;
+  public static final int EXCL = 29;
   public static final int EOF = 0;
-  public static final int RBRACKET = 28;
+  public static final int RBRACKET = 27;
   public static final int DATE_ADD = 10;
   public static final int error = 1;
   public static final int DATE_MOD = 17;
   public static final int NEW_PASS = 16;
   public static final int DEL_USER = 12;
-  public static final int ERROR = 35;
-  public static final int TIMES = 33;
-  public static final int COLON = 22;
-  public static final int LBRACE = 25;
+  public static final int ERROR = 34;
+  public static final int TIMES = 32;
+  public static final int COLON = 21;
+  public static final int LBRACE = 24;
   public static final int LOGIN = 13;
   public static final int CRED = 7;
-  public static final int RBRACE = 26;
+  public static final int RBRACE = 25;
   public static final int INIT_MANY_SOL = 4;
   public static final int USER = 8;
   public static final String[] terminalNames = new String[] {
@@ -67,7 +66,6 @@ public class sym {
   "PARAM",
   "INTEGER",
   "ID",
-  "QUOTE",
   "COLON",
   "SMALLER",
   "GREATER",
@@ -82,7 +80,7 @@ public class sym {
   "TIMES",
   "DIVIDE",
   "ERROR",
-  "STRING_LITERAL"
+  "STR"
   };
 }
 

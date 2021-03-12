@@ -70,26 +70,26 @@ parser code {:
 
 terminal INIT_SOL, FIN_SOL, INIT_MANY_SOL, FIN_MANY_SOL, ADD_USER, CRED, USER, PASS, DATE_ADD, EDIT_USER, DEL_USER, LOGIN;
 terminal OLD_USER, NEW_USER, NEW_PASS, DATE_MOD;
-terminal PARAM, INTEGER, ID, QUOTE, COLON, SMALLER, GREATER, LBRACE, RBRACE, LBRACKET, RBRACKET, COMMA, EXCL;
+terminal PARAM, INTEGER, ID, COLON, SMALLER, GREATER, LBRACE, RBRACE, LBRACKET, RBRACKET, COMMA, EXCL;
 terminal PLUS, MINUS, TIMES, DIVIDE;
-terminal ERROR, STRING_LITERAL;
+terminal ERROR, STR;
 
-non terminal user_user, user_pass, user_nl, sol_user_nl;
-non terminal ini, fin, new_user, cred, colon, quote, greater, lbrace, comma, rbrace, lbracket, rbracket;
+non terminal user_user, user_pass, user_nl, sol_user_nl, add_user;
+non terminal ini, fin, new_user, cred, colon, greater, smaller, excl, lbrace, comma, rbrace, lbracket, rbracket;
 
-sol_user_nl	::=	ini colon quote new_user quote greater user_nl fin
+sol_user_nl	::=	smaller excl ini colon add_user greater user_nl smaller fin excl greater
 				;
 
-user_nl		::=	lbrace quote cred quote colon lbracket lbrace user_user comma user_pass rbrace rbracket rbrace
+user_nl		::=	lbrace cred colon lbracket lbrace user_user comma user_pass rbrace rbracket rbrace
 				;
 
-user_user	::=	quote USER quote colon quote PARAM:user quote
+user_user	::=	USER colon STR:user
 				{:
 					System.out.printf("User = %s\n", user);
 				:}
 				;
 
-user_pass	::=	quote PASS quote colon quote PARAM:pass quote
+user_pass	::=	 PASS colon STR:pass
 				{:
 					System.out.printf("Pass = %s\n", pass); :}
 				;
@@ -104,7 +104,7 @@ fin			::=	FIN_SOL
 				{: System.out.println("fin ::= error"); :}
 				;
 
-new_user	::=	ADD_USER
+add_user	::=	ADD_USER
 				| error
 				{: System.out.println("new_user ::= error"); :}
 				;
@@ -119,14 +119,19 @@ colon		::=	COLON
 				{: System.out.println("colon ::= error"); :}
 				;
 
-quote		::=	QUOTE
-				| error
-				{: System.out.println("quote ::= error"); :}
-				;
-
 greater		::=	GREATER
 				| error
 				{: System.out.println("greater ::= error"); :}
+				;
+
+smaller		::=	SMALLER
+				| error
+				{: System.out.println("smaller ::= error"); :}
+				;
+
+excl		::=	EXCL
+				| error
+				{: System.out.println("excl ::= error"); :}
 				;
 
 lbrace		::=	LBRACE

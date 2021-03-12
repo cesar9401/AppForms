@@ -28,8 +28,20 @@ public class TestParser {
                 + "  ] \n"
                 + "} \n "
                 + "<fiN_solicitud!>";
+        
+        debugCup(input);
+       
+        FormsLex lexer = new FormsLex(new StringReader(input2));
+        parser parser = new parser(lexer);
+        try {
+            parser.parse();
+        } catch (Exception ex) {
+            ex.printStackTrace(System.out);
+        }
+    }
 
-        FormsLex lex = new FormsLex(new StringReader(input2));
+    public static void debugCup(String input) {
+        FormsLex lex = new FormsLex(new StringReader(input));
 
         while (true) {
             try {
@@ -41,26 +53,8 @@ public class TestParser {
                 ex.printStackTrace(System.out);
             }
         }
-        
-
-    }
-
-    public static void getTokens(String input) {
         System.out.println("\n\n");
-        FormsLex lexer = new FormsLex(new StringReader(input));
-        while (true) {
-            try {
-                Symbol s = lexer.next_token();
-                if (s.sym == 0) {
-                    break;
-                } else {
-                    System.out.println("value -> " + s.value + ", sym -> " + s.sym);
-                }
-            } catch (IOException ex) {
-                ex.printStackTrace(System.out);
-            }
-
-        }
+        System.out.println("----------------FIN DEBUG CUP--------------------------------------------------------");
     }
 
 }

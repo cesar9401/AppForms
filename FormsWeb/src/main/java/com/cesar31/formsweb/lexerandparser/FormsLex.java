@@ -540,8 +540,8 @@ public class FormsLex implements java_cup.runtime.Scanner {
 
 	private Symbol getSymbol(int type, Object value) {
 		String s = value.toString().trim();
-		System.out.println("string -> " + value.toString());
-		System.out.println("string -> " + s);
+		//System.out.println("string -> " + value.toString());
+		//System.out.println("string -> " + s);
 
 		if(s.equals("CREAR_USUARIO"))
 			return symbol(ADD_USER, s);
@@ -1077,7 +1077,7 @@ public class FormsLex implements java_cup.runtime.Scanner {
           case 46: break;
           case 20:
             { yybegin(YYINITIAL);
-		return getSymbol(STRING_LITERAL, string.toString());
+		return getSymbol(STR, string.toString());
             }
             // fall through
           case 47: break;
