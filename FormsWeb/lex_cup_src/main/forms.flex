@@ -17,6 +17,7 @@ import java_cup.runtime.*;
 %{
 
 	private StringBuffer string = new StringBuffer();
+	private boolean date = false;
 
 	private Symbol symbol(int type) {
 		return new Symbol(type, yyline + 1, yycolumn + 1);
@@ -31,6 +32,8 @@ import java_cup.runtime.*;
 		//System.out.println("string -> " + value.toString());
 		//System.out.println("string -> " + s);
 
+		if(date)
+			return symbol(DATE, s);
 		if(s.equals("CREAR_USUARIO"))
 			return symbol(ADD_USER, s);
 		if(s.equals("CREDENCIALES_USUARIO"))
@@ -56,7 +59,7 @@ import java_cup.runtime.*;
 		if(s.equals("FECHA_MODIFICACION"))
 			return symbol(DATE_MOD, s);
 
-		return symbol(type, value);
+		return symbol(type, value.toString());
 	}
 
 %}
@@ -73,6 +76,7 @@ WhiteSpace = {LineTerminator}|[\s\t\f ]
 //Param = [\w\-\$\^\*\+\.\/\?\(\)@#%&~`¿,:;¡|]+
 Param = \w+
 Integer =  0|[1-9][0-9]*
+Date = \d{4,4}\-\d{2,2}\-\d{2,2}
 
 /* Tags solicitudes */
 Ini = [Ii][Nn][Ii]
@@ -176,17 +180,33 @@ Fin_m_sol = {Fin} "_" {Sol}[Ed][Ss]
 		return getSymbol(STR, string.toString());
 	}
 
+	{WhiteSpace}*{Date}{WhiteSpace}*
+	{
+		//System.out.println("Date: " + yytext());
+		date = true;
+		string.append(yytext());
+	}
+
 	[^\n\r\"\\]+
-	{ string.append(yytext()); }
+	{
+		date = false;
+		string.append(yytext());
+	}
 
 	\\t
-	{ string.append('\t'); }
+	{
+		string.append('\t');
+	}
 
     \\n
-	{ string.append('\n'); }
+	{
+		string.append('\n');
+	}
 
 	\\
-	{ string.append('\\'); }
+	{
+		string.append('\\');
+	}
 
 	{WhiteSpace}
 	{ /* Ignore */ }

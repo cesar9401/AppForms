@@ -68,30 +68,46 @@ parser code {:
 
 :}
 
-terminal INIT_SOL, FIN_SOL, INIT_MANY_SOL, FIN_MANY_SOL, ADD_USER, CRED, USER, PASS, DATE_ADD, EDIT_USER, DEL_USER, LOGIN;
-terminal OLD_USER, NEW_USER, NEW_PASS, DATE_MOD;
+terminal INIT_SOL, FIN_SOL, INIT_MANY_SOL, FIN_MANY_SOL;
 terminal PARAM, INTEGER, ID, COLON, SMALLER, GREATER, LBRACE, RBRACE, LBRACKET, RBRACKET, COMMA, EXCL;
 terminal PLUS, MINUS, TIMES, DIVIDE;
-terminal ERROR, STR;
+terminal ERROR;
 
-non terminal user_user, user_pass, user_nl, sol_user_nl, add_user;
-non terminal ini, fin, new_user, cred, colon, greater, smaller, excl, lbrace, comma, rbrace, lbracket, rbracket;
+terminal String STR, DATE, ADD_USER, CRED, DATE_ADD, EDIT_USER, DEL_USER, LOGIN, OLD_USER, NEW_USER, NEW_PASS, DATE_MOD, USER, PASS;
+
+non terminal user_user, user_pass, user_nl, sol_user_nl, user_date, user_l;
+non terminal ini, fin, colon, greater, smaller, excl, lbrace, comma, rbrace, lbracket, rbracket;
+
+non terminal String str_param, add_user, user, cred, pass, date;
+
+
 
 sol_user_nl	::=	smaller excl ini colon add_user greater user_nl smaller fin excl greater
 				;
 
-user_nl		::=	lbrace cred colon lbracket lbrace user_user comma user_pass rbrace rbracket rbrace
+user_nl		::=	user_l
+				| lbrace cred colon lbracket lbrace user_user comma user_pass comma user_date rbrace rbracket rbrace
 				;
 
-user_user	::=	USER colon STR:user
+user_l		::=	lbrace cred colon lbracket lbrace user_user comma user_pass rbrace rbracket rbrace
+				;
+
+user_user	::=	user colon str_param:u
 				{:
-					System.out.printf("User = %s\n", user);
+					System.out.printf("User = %s\n", u);
 				:}
 				;
 
-user_pass	::=	 PASS colon STR:pass
+user_pass	::=	 pass colon str_param:p
 				{:
-					System.out.printf("Pass = %s\n", pass); :}
+					System.out.printf("Pass = %s\n", p);
+				:}
+				;
+
+user_date	::=	DATE_ADD colon date:a
+				{:
+					System.out.printf("Date = %s\n", a);
+				:}
 				;
 
 ini		::=		INIT_SOL
@@ -104,14 +120,51 @@ fin			::=	FIN_SOL
 				{: System.out.println("fin ::= error"); :}
 				;
 
+str_param	::=	STR:p {: RESULT = p; :}
+				| DATE:p {: RESULT = p; :}
+				| ADD_USER:p {: RESULT = p; :}
+				| CRED:p {: RESULT = p; :}
+				| USER:p {: RESULT = p; :}
+				| PASS:p {: RESULT = p; :}
+				| DATE_ADD:p {: RESULT = p; :}
+				| EDIT_USER:p {: RESULT = p; :}
+				| DEL_USER:p {: RESULT = p; :}
+				| LOGIN:p {: RESULT = p; :}
+				| OLD_USER:p {: RESULT = p; :}
+				| NEW_USER:p {: RESULT = p; :}
+				| NEW_PASS:p {: RESULT = p; :}
+				| DATE_MOD:p {: RESULT = p; :}
+				| error
+				;
+
 add_user	::=	ADD_USER
 				| error
-				{: System.out.println("new_user ::= error"); :}
+				{: System.out.println("add_user ::= error"); :}
+				;
+
+user		::= USER
+				| error
+				{: System.out.println("user ::= error"); :}
 				;
 
 cred		::=	CRED
 				| error
 				{: System.out.println("cred ::= error"); :}
+				;
+
+pass		::=	PASS
+				| error
+				{: System.out.println("pass ::= error"); :}
+				;
+
+// date_add	::=	DATE_ADD
+// 				| error
+// 				{: System.out.println("date_add ::= error"); :}
+// 				;
+
+date		::=	DATE:p {: RESULT = p; :}
+				| error
+				{: System.out.println("date ::= error"); :}
 				;
 
 colon		::=	COLON
