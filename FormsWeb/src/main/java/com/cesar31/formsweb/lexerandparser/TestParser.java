@@ -22,7 +22,7 @@ public class TestParser {
                 + "<fin_Solicitud>";
 
         String input2 = "<!INI_solicitud : \"\n\tCREAR_USUARIO\t\n\"> \n "
-                + "{ \"CREDENCIALES_USUARIO\" : [{ \n "
+                + "{ \"    \\CREDENCIALES_USUARIO\" : [{ \n "
                 + "\"USUARIO\" : \"cesar<_]>31\" , \n"
                 + "\"PASSWORD\" : \"123.321\"\n  "
                 + " }\n "
@@ -33,8 +33,16 @@ public class TestParser {
         
         String input3 = "fdsafadsfdas  fads\"  < ! >"
                 + "fasd\" <!fin_solicitUdes> ini_solicitudes ini_solicitud";
+        
+//        String string = "\"  fdsafadsfads \"";
+//        string = string.replaceAll("\"", "");
+//        string = string.trim();
+//        System.out.println(string);
+//        string = "\"".concat(string).concat("\"");
+//        System.out.println(string);
+        
 
-        debugCup(input3);
+        debugCup(input2);
 //        FormsLex lexer = new FormsLex(new StringReader(input2));
 //        parser parser = new parser(lexer);
 //        try {

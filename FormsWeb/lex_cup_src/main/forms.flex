@@ -28,38 +28,40 @@ import java_cup.runtime.*;
 	}
 
 	private Symbol getSymbol(int type, Object value) {
-		String s = value.toString().trim();
-		//System.out.println("string -> " + value.toString());
+		String s = value.toString().replaceAll("\"", "");
+		s = s.trim();
+		String a = "\"".concat(s).concat("\"");
+		System.out.println("value -> " + value.toString());
 		System.out.println("string -> " + s);
 
 		if(date)
-			return symbol(DATE, s);
+			return symbol(DATE, a);
 		if(s.equals("CREAR_USUARIO"))
-			return symbol(ADD_USER, s);
+			return symbol(ADD_USER, a);
 		if(s.equals("CREDENCIALES_USUARIO"))
-			return symbol(CRED, s);
+			return symbol(CRED, a);
 		if(s.equals("USUARIO"))
-			return symbol(USER, s);
+			return symbol(USER, a);
 		if(s.equals("PASSWORD"))
-			return symbol(PASS, s);
+			return symbol(PASS, a);
 		if(s.equals("FECHA_CREACION"))
-			return symbol(DATE_ADD, s);
+			return symbol(DATE_ADD, a);
 		if(s.equals("MODIFICAR_USUARIO"))
-			return symbol(EDIT_USER, s);
+			return symbol(EDIT_USER, a);
 		if(s.equals("ELIMINAR_USUARIO"))
-			return symbol(DEL_USER, s);
+			return symbol(DEL_USER, a);
 		if(s.equals("LOGIN_USUARIO"))
-			return symbol(LOGIN, s);
+			return symbol(LOGIN, a);
 		if(s.equals("USUARIO_ANTIGUO"))
-			return symbol(OLD_USER, s);
+			return symbol(OLD_USER, a);
 		if(s.equals("USUARIO_NUEVO"))
-			return symbol(NEW_USER, s);
+			return symbol(NEW_USER, a);
 		if(s.equals("NUEVO_PASSWORD"))
-			return symbol(NEW_PASS, s);
+			return symbol(NEW_PASS, a);
 		if(s.equals("FECHA_MODIFICACION"))
-			return symbol(DATE_MOD, s);
+			return symbol(DATE_MOD, a);
 
-		return symbol(type, s);
+		return symbol(type, a);
 	}
 
 %}
@@ -78,6 +80,9 @@ Param = \w+
 Symbol = ([\\] | {Param})+
 Integer =  0|[1-9][0-9]*
 Date = \d{4,4}\-\d{2,2}\-\d{2,2}
+StringDate = \" {WhiteSpace}*{Date}{WhiteSpace}* \"
+Input = [^\n\r\"\\]+
+StringInput =  \" ({WhiteSpace}* | [\\] | [^\n\r\"\\]+)+ \"
 
 /* Tags solicitudes */
 Ini = [Ii][Nn][Ii]
@@ -96,7 +101,7 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 // Ini_m_res = {Ini} "_" {Res}[Ss]
 // Fin_m_res = {Fin} "_" {Res}[Ss]
 
-%state STRING
+//%state STRING
 
 %%
 
@@ -113,6 +118,19 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 
 	{Fin_m_sol}
 	{ return symbol(FIN_MANY_SOL, yytext()); }
+
+	{StringDate}
+	{
+		//System.out.println("Date: " + yytext());
+		date = true;
+		return getSymbol(STR, yytext());
+	}
+
+	{StringInput}
+	{
+		date = false;
+		return getSymbol(STR, yytext());
+	}
 
 	":"
 	{ return symbol(COLON, yytext()); }
@@ -140,12 +158,6 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 
 	","
 	{ return symbol(COMMA, yytext()); }
-
-	\"
-	{
-		string.setLength(0);
-		yybegin(STRING);
-	}
 
 	"+"
 	{ return symbol(PLUS, yytext()); }
@@ -179,44 +191,31 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 
 }
 
-<STRING> {
-	\"
-	{
-		yybegin(YYINITIAL);
-		return getSymbol(STR, string.toString());
-	}
+// <STRING> {
+// 	\"
+// 	{
+// 		yybegin(YYINITIAL);
+// 		return getSymbol(STR, string.toString());
+// 	}
 
-	{WhiteSpace}*{Date}{WhiteSpace}*
-	{
-		//System.out.println("Date: " + yytext());
-		date = true;
-		string.append(yytext());
-	}
+// 	\\t
+// 	{
+// 		string.append('\t');
+// 	}
 
-	[^\n\r\"\\]+
-	{
-		date = false;
-		string.append(yytext());
-	}
+//     \\n
+// 	{
+// 		string.append('\n');
+// 	}
 
-	\\t
-	{
-		string.append('\t');
-	}
+// 	\\
+// 	{
+// 		string.append('\\');
+// 	}
 
-    \\n
-	{
-		string.append('\n');
-	}
-
-	\\
-	{
-		string.append('\\');
-	}
-
-	{WhiteSpace}
-	{ /* Ignore */ }
-}
+// 	{WhiteSpace}
+// 	{ /* Ignore */ }
+// }
 
 [^]
 {
