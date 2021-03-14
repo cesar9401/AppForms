@@ -30,7 +30,7 @@ import java_cup.runtime.*;
 	private Symbol getSymbol(int type, Object value) {
 		String s = value.toString().trim();
 		//System.out.println("string -> " + value.toString());
-		//System.out.println("string -> " + s);
+		System.out.println("string -> " + s);
 
 		if(date)
 			return symbol(DATE, s);
@@ -59,7 +59,7 @@ import java_cup.runtime.*;
 		if(s.equals("FECHA_MODIFICACION"))
 			return symbol(DATE_MOD, s);
 
-		return symbol(type, value.toString());
+		return symbol(type, s);
 	}
 
 %}
@@ -71,10 +71,11 @@ import java_cup.runtime.*;
 
 /* Espacios */
 LineTerminator = \r|\n|\r\n
-WhiteSpace = {LineTerminator}|[\s\t\f ]
+WhiteSpace = {LineTerminator}|[\s\t\f]
 
 //Param = [\w\-\$\^\*\+\.\/\?\(\)@#%&~`¿,:;¡|]+
 Param = \w+
+Symbol = ([\\] | {Param})+
 Integer =  0|[1-9][0-9]*
 Date = \d{4,4}\-\d{2,2}\-\d{2,2}
 
@@ -86,8 +87,8 @@ Fin = [Ff][Ii][Nn]
 
 Ini_sol = {Ini} "_" {Sol}
 Fin_sol = {Fin} "_" {Sol}
-Ini_m_sol = {Ini} "_" {Sol}[Ed][Ss]
-Fin_m_sol = {Fin} "_" {Sol}[Ed][Ss]
+Ini_m_sol = {Ini} "_" {Sol}[Ee][Ss]
+Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 
 /* Para respuestas del servidor */
 // Ini_res = {Ini} "_" {Res}
@@ -166,6 +167,11 @@ Fin_m_sol = {Fin} "_" {Sol}[Ed][Ss]
 	{Param}
 	{
 		return symbol(PARAM, yytext());
+	}
+
+	{Symbol}
+	{
+		return symbol(SYMB, yytext());
 	}
 
 	{WhiteSpace}

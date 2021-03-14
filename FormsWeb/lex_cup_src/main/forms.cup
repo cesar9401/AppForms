@@ -71,53 +71,62 @@ parser code {:
 terminal INIT_SOL, FIN_SOL, INIT_MANY_SOL, FIN_MANY_SOL;
 terminal PARAM, INTEGER, ID, COLON, SMALLER, GREATER, LBRACE, RBRACE, LBRACKET, RBRACKET, COMMA, EXCL;
 terminal PLUS, MINUS, TIMES, DIVIDE;
-terminal ERROR;
+terminal ERROR, SYMB;
 
 terminal String STR, DATE, ADD_USER, CRED, DATE_ADD, EDIT_USER, DEL_USER, LOGIN, OLD_USER, NEW_USER, NEW_PASS, DATE_MOD, USER, PASS;
 
-non terminal user_user, user_pass, user_nl, sol_user_nl, user_date, user_l;
-non terminal ini, fin, colon, greater, smaller, excl, lbrace, comma, rbrace, lbracket, rbracket;
+non terminal ini_sol, fin_sol, sol, sol_user_nl, user_date, creden, new_user, pass_user;
+non terminal ini, fin, colon, greater, smaller, excl, lbrace, comma, rbrace, lbracket, rbracket, date_add;
 
-non terminal String str_param, add_user, user, cred, pass, date;
+non terminal String str_param, user, cred, pass, date;
 
-
-
-sol_user_nl	::=	smaller excl ini colon add_user greater user_nl smaller fin excl greater
+sol			::=	ini_sol sol
+				| ini_sol
 				;
 
-user_nl		::=	user_l
-				| lbrace cred colon lbracket lbrace user_user comma user_pass comma user_date rbrace rbracket rbrace
+/* inicio solicitud */
+ini_sol		::=	SMALLER excl ini colon sol_user_nl
+				| error EXCL ini colon sol_user_nl
+				/*| error sol_user_nl*/
 				;
 
-user_l		::=	lbrace cred colon lbracket lbrace user_user comma user_pass rbrace rbracket rbrace
+sol_user_nl	::=	ADD_USER greater creden
+				| error GREATER creden
+				/*| error creden*/
 				;
 
-user_user	::=	user colon str_param:u
+creden		::=	LBRACE cred colon lbracket new_user
+				| error CRED colon lbracket new_user
+				/*| error new_user*/
+				;
+
+new_user	::=	LBRACE user colon str_param:u pass_user rbracket rbrace fin_sol
 				{:
 					System.out.printf("User = %s\n", u);
 				:}
+				| error USER colon str_param pass_user rbracket rbrace fin_sol
+				{:
+					System.out.println("new_user ::= error COLON ...");
+				:}
+				/*| error fin_sol*/
 				;
 
-user_pass	::=	 pass colon str_param:p
+pass_user	::=	COMMA pass colon str_param:p user_date rbrace
 				{:
 					System.out.printf("Pass = %s\n", p);
 				:}
+				| error PASS colon str_param user_date rbrace
 				;
 
-user_date	::=	DATE_ADD colon date:a
+/* fin solicitud */
+fin_sol		::= smaller fin excl greater
+				;
+
+user_date	::=	COMMA date_add colon date:a
 				{:
 					System.out.printf("Date = %s\n", a);
 				:}
-				;
-
-ini		::=		INIT_SOL
-				| error
-				{: System.out.println("ini ::= error"); :}
-				;
-
-fin			::=	FIN_SOL
-				| error
-				{: System.out.println("fin ::= error"); :}
+				|
 				;
 
 str_param	::=	STR:p {: RESULT = p; :}
@@ -137,10 +146,21 @@ str_param	::=	STR:p {: RESULT = p; :}
 				| error
 				;
 
-add_user	::=	ADD_USER
+/* terminales con errores para no terminales */
+ini			::=	INIT_SOL
 				| error
-				{: System.out.println("add_user ::= error"); :}
+				{: System.out.println("ini ::= error"); :}
 				;
+
+fin			::=	FIN_SOL
+				| error
+				{: System.out.println("fin ::= error"); :}
+				;
+
+// add_user	::=	ADD_USER
+// 				| error
+// 				{: System.out.println("add_user ::= error"); :}
+// 				;
 
 user		::= USER
 				| error
@@ -157,10 +177,10 @@ pass		::=	PASS
 				{: System.out.println("pass ::= error"); :}
 				;
 
-// date_add	::=	DATE_ADD
-// 				| error
-// 				{: System.out.println("date_add ::= error"); :}
-// 				;
+date_add	::=	DATE_ADD
+				| error
+				{: System.out.println("date_add ::= error"); :}
+				;
 
 date		::=	DATE:p {: RESULT = p; :}
 				| error
