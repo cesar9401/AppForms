@@ -16,52 +16,12 @@ import java_cup.runtime.*;
 
 %{
 
-	private StringBuffer string = new StringBuffer();
-	private boolean date = false;
-
 	private Symbol symbol(int type) {
 		return new Symbol(type, yyline + 1, yycolumn + 1);
 	}
 
 	private Symbol symbol(int type, Object value) {
 		return new Symbol(type, yyline + 1, yycolumn + 1, value);
-	}
-
-	private Symbol getSymbol(int type, Object value) {
-		String s = value.toString().replaceAll("\"", "");
-		s = s.trim();
-		String a = "\"".concat(s).concat("\"");
-		//System.out.println("value -> " + value.toString());
-		//System.out.println("string -> " + s);
-
-		if(date)
-			return symbol(DATE, a);
-		if(s.equals("CREAR_USUARIO"))
-			return symbol(ADD_USER, a);
-		if(s.equals("CREDENCIALES_USUARIO"))
-			return symbol(CRED, a);
-		if(s.equals("USUARIO"))
-			return symbol(USER, a);
-		if(s.equals("PASSWORD"))
-			return symbol(PASS, a);
-		if(s.equals("FECHA_CREACION"))
-			return symbol(DATE_ADD, a);
-		if(s.equals("MODIFICAR_USUARIO"))
-			return symbol(EDIT_USER, a);
-		if(s.equals("ELIMINAR_USUARIO"))
-			return symbol(DEL_USER, a);
-		if(s.equals("LOGIN_USUARIO"))
-			return symbol(LOGIN, a);
-		if(s.equals("USUARIO_ANTIGUO"))
-			return symbol(OLD_USER, a);
-		if(s.equals("USUARIO_NUEVO"))
-			return symbol(NEW_USER, a);
-		if(s.equals("NUEVO_PASSWORD"))
-			return symbol(NEW_PASS, a);
-		if(s.equals("FECHA_MODIFICACION"))
-			return symbol(DATE_MOD, a);
-
-		return symbol(type, a);
 	}
 
 %}
@@ -80,11 +40,12 @@ Param = \w+
 Symbol = ([\\] | {Param})+
 Integer =  0|[1-9][0-9]*
 Date = \d{4,4}\-\d{2,2}\-\d{2,2}
-StringDate = \" {WhiteSpace}*{Date}{WhiteSpace}* \"
 Input = [^\n\r\"\\]+
 StringInput =  \" ({WhiteSpace} | [\\] | {Input})+ \"
-LeftError = \" ([\\] | {Input})+
-RightError = ([\\] | {Input})+ \"
+
+Quote = \"
+Ql = {Quote} {WhiteSpace}*
+Qr = {WhiteSpace}* {Quote}
 
 /* Tags solicitudes */
 Ini = [Ii][Nn][Ii]
@@ -103,8 +64,6 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 // Ini_m_res = {Ini} "_" {Res}[Ss]
 // Fin_m_res = {Fin} "_" {Res}[Ss]
 
-//%state STRING
-
 %%
 
 <YYINITIAL> {
@@ -121,18 +80,56 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 	{Fin_m_sol}
 	{ return symbol(FIN_MANY_SOL, yytext()); }
 
-	{StringDate}
-	{
-		//System.out.println("Date: " + yytext());
-		date = true;
-		return getSymbol(STR, yytext());
-	}
+	/* Fecha */
+	{Ql} {Date} {Qr}
+	{ return symbol(DATE, yytext()); }
 
+	/* Palabras reservadas con comillas */
+	{Ql} "CREAR_USUARIO" {Qr}
+	{ return symbol(ADD_USER, yytext()); }
+
+	{Ql} "NUEVO_FORMULARIO" {Qr}
+	{ return symbol(NEW_FORM, yytext()); }
+
+	{Ql} "CREDENCIALES_USUARIO" {Qr}
+	{ return symbol(CRED, yytext()); }
+
+	{Ql} "USUARIO" {Qr}
+	{ return symbol(USER, yytext()); }
+
+	{Ql} "PASSWORD" {Qr}
+	{ return symbol(PASS, yytext()); }
+
+	{Ql} "FECHA_CREACION" {Qr}
+	{ return symbol(DATE_ADD, yytext()); }
+
+	{Ql} "MODIFICAR_USUARIO" {Qr}
+	{ return symbol(EDIT_USER, yytext()); }
+
+	{Ql} "ELIMINAR_USUARIO" {Qr}
+	{ return symbol(DEL_USER, yytext()); }
+
+	{Ql} "LOGIN_USUARIO" {Qr}
+	{ return symbol(LOGIN, yytext()); }
+
+	{Ql} "USUARIO_ANTIGUO" {Qr}
+	{ return symbol(OLD_USER, yytext()); }
+
+	{Ql} "USUARIO_NUEVO" {Qr}
+	{ return symbol(NEW_USER, yytext()); }
+
+	{Ql} "NUEVO_PASSWORD" {Qr}
+	{ return symbol(NEW_PASS, yytext()); }
+
+	{Ql} "FECHA_MODIFICACION" {Qr}
+	{ return symbol(DATE_MOD, yytext()); }
+
+	{Ql} "PARAMETROS_FORMULARIO" {Qr}
+	{ return symbol(PARAM_F, yytext()); }
+
+	/* Input con comillas */
 	{StringInput}
-	{
-		date = false;
-		return getSymbol(STR, yytext());
-	}
+	{ return symbol(STR, yytext()); }
 
 	":"
 	{ return symbol(COLON, yytext()); }
@@ -191,35 +188,10 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 	{WhiteSpace}
 	{ /* Ignore */ }
 
-	\"
+	/* Comillas */
+	{Quote}
 	{ return symbol(QUOTE, yytext()); }
 }
-
-// <STRING> {
-// 	\"
-// 	{
-// 		yybegin(YYINITIAL);
-// 		return getSymbol(STR, string.toString());
-// 	}
-
-// 	\\t
-// 	{
-// 		string.append('\t');
-// 	}
-
-//     \\n
-// 	{
-// 		string.append('\n');
-// 	}
-
-// 	\\
-// 	{
-// 		string.append('\\');
-// 	}
-
-// 	{WhiteSpace}
-// 	{ /* Ignore */ }
-// }
 
 [^]
 {

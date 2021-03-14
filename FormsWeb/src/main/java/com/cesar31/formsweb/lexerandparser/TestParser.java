@@ -11,46 +11,38 @@ import java_cup.runtime.Symbol;
 public class TestParser {
 
     public static void main(String[] args) {
-        String input = "<ini_solicitud : \"CEAR_USUARIO\">\n"
-                + "      { \"CREDENCILES_USUARIO\":[{\n"
-                + "            \"USUARiO\" :\"2020-13-12\"   , \n"
-                + "            \"PASsWORD\": \"2020-12-12\"    ,\n"
-                + "\"FECA_CREACION\"  : \" 2020-02-12 \"    "
-                + "             }      \n"
-                + "         ]\n"
-                + "      }\n"
-                + "<fin_Solicitud>";
 
-        String input2 = "<!INI_solicitud : \n\tCREAR_USUARIO\t\n\"> \n "
+        String input = "<!INI_solicitud : \"\n\tCREAR_USUARIO\t\n\"> \n "
                 + "{ \"    CREDENCIALES_USUARIO\" : [{ \n "
-                + "\"USUARIO\" : \"\n\tcesar<_]>31\" , \n"
+                + "\"USUARIO\" : \"\\n\\tCREAR_USUARIO\" , \n"
                 + "\"PASSWORD\" : \"123.321\"\n  ,"
                 + "\"FECHA_CREACION\"  : \" 2020-02-12 \"    "
                 + " }\n "
                 + "  ] \n"
                 + "} \n "
-                + "<fiN_solicitud>"
+                + "<fiN_solicitud!>"
                 + "\n";
 
-        String input3 = "\"fdsafadsfd\" ini_solicitud \"fdasfads 12.32";
+        String input2 = "<!ini_solicitud:\"MODIFICAR_USUARIO\">\n"
+                + "      { \"CREDENCIALES_USUARIO\":[{\n"
+                + "            \"USUARIO_ANTIGUO\": \"juanito619\",\n"
+                + "            \"USUARIO_NUEVO\": \"juanito619lopez\",\n"
+                + "            \"NUEVO_PASSWORD\": \"12345678910\"\n"
+                + "           }         \n"
+                + "         ]\n"
+                + "      }\n"
+                + "<fin_solicitud!>";
 
-//        String string = "\"  fdsafadsfads \"";
-//        string = string.replaceAll("\"", "");
-//        string = string.trim();
-//        System.out.println(string);
-//        string = "\"".concat(string).concat("\"");
-//        System.out.println(string);
-
-        debugCup(input2);
-        debug(input2);
-
-//        FormsLex lexer = new FormsLex(new StringReader(input2));
-//        parser parser = new parser(lexer);
-//        try {
-//            parser.parse();
-//        } catch (Exception ex) {
-//            ex.printStackTrace(System.out);
-//        }
+        //debugCup(input2);
+        //debug(input2);
+        
+        FormsLex lexer = new FormsLex(new StringReader(input2));
+        parser parser = new parser(lexer);
+        try {
+            parser.parse();
+        } catch (Exception ex) {
+            ex.printStackTrace(System.out);
+        }
     }
 
     public static void debugCup(String str) {

@@ -17,11 +17,13 @@ public class sym {
   public static final int INTEGER = 7;
   public static final int SMALLER = 10;
   public static final int GREATER = 11;
+  public static final int NEW_FORM = 39;
   public static final int ADD_USER = 27;
   public static final int MINUS = 19;
   public static final int DATE = 26;
   public static final int PARAM = 6;
   public static final int FIN_SOL = 3;
+  public static final int PARAM_F = 40;
   public static final int PASS = 38;
   public static final int OLD_USER = 33;
   public static final int COMMA = 16;
@@ -86,7 +88,9 @@ public class sym {
   "NEW_PASS",
   "DATE_MOD",
   "USER",
-  "PASS"
+  "PASS",
+  "NEW_FORM",
+  "PARAM_F"
   };
 }
 
