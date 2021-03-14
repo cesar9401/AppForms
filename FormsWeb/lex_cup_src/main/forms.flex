@@ -31,8 +31,8 @@ import java_cup.runtime.*;
 		String s = value.toString().replaceAll("\"", "");
 		s = s.trim();
 		String a = "\"".concat(s).concat("\"");
-		System.out.println("value -> " + value.toString());
-		System.out.println("string -> " + s);
+		//System.out.println("value -> " + value.toString());
+		//System.out.println("string -> " + s);
 
 		if(date)
 			return symbol(DATE, a);
@@ -82,7 +82,9 @@ Integer =  0|[1-9][0-9]*
 Date = \d{4,4}\-\d{2,2}\-\d{2,2}
 StringDate = \" {WhiteSpace}*{Date}{WhiteSpace}* \"
 Input = [^\n\r\"\\]+
-StringInput =  \" ({WhiteSpace}* | [\\] | [^\n\r\"\\]+)+ \"
+StringInput =  \" ({WhiteSpace} | [\\] | {Input})+ \"
+LeftError = \" ([\\] | {Input})+
+RightError = ([\\] | {Input})+ \"
 
 /* Tags solicitudes */
 Ini = [Ii][Nn][Ii]
@@ -189,6 +191,8 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 	{WhiteSpace}
 	{ /* Ignore */ }
 
+	\"
+	{ return symbol(QUOTE, yytext()); }
 }
 
 // <STRING> {
