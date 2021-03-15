@@ -28,15 +28,22 @@ public class TestParser {
                 + "            \"USUARIO_ANTIGUO\": \"juanito619\",\n"
                 + "            \"USUARIO_NUEVO\": \"juanito619lopez\",\n"
                 + "            \"NUEVO_PASSWORD\": \"12345678910\"\n"
+                + "           ,  \"FECHA_MODIFICACION\" : \"2002-12-21\"  }    \n"
+                + "          ]\n"
+                + "      }\n"
+                + "<fin_solicitud>";
+
+        String input3 = "< ! ini_solicitud  \"ELIMINAR_USUARIO\">\n"
+                + "      { \"CREDENCIALES_USUARIO\":[{\n"
+                + "            \"USUARIO\": \"juanito619lopez\"\n"
                 + "           }         \n"
                 + "         ]\n"
                 + "      }\n"
-                + "<fin_solicitud!>";
+                + "<fin_solicitud >";
 
         //debugCup(input2);
         //debug(input2);
-        
-        FormsLex lexer = new FormsLex(new StringReader(input2));
+        FormsLex lexer = new FormsLex(new StringReader(input3));
         parser parser = new parser(lexer);
         try {
             parser.parse();
