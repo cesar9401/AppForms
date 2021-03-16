@@ -80,7 +80,7 @@ terminal String NEW_FORM, PARAM_F;
 non terminal ini_sol, fin_sol, sol, sol_user_nl, user_date, credNew, credEdit, credDel, new_user, pass_user;
 non terminal edit_user, edit_date, edit_pass, user_n, del_user;
 
-non terminal String str_param, date;
+non terminal String str_param;
 
 sol			::=	ini_sol sol
 				| ini_sol
@@ -94,6 +94,7 @@ ini_sol		::=	SMALLER EXCL INIT_SOL COLON sol_user_nl
 				;
 
 sol_user_nl	::=	ADD_USER GREATER credNew /* add user */
+				{: System.out.println("Crear Usuario"); :}
 				| error GREATER credNew
 				| ADD_USER error credNew
 				| EDIT_USER GREATER credEdit /* edit user */
@@ -102,6 +103,9 @@ sol_user_nl	::=	ADD_USER GREATER credNew /* add user */
 				| DEL_USER GREATER credDel /* del user */
 				| error GREATER credDel
 				| DEL_USER error credDel
+				| LOGIN GREATER credNew /* login user */
+				{: System.out.println("Login Usuario"); :}
+				| LOGIN error credNew
 				;
 
 /* add user */
@@ -181,15 +185,21 @@ edit_pass	::=	COMMA NEW_PASS COLON str_param:w edit_date RBRACE
 				| COMMA NEW_USER COLON str_param edit_date error
 				;
 
-user_date	::=	COMMA DATE_ADD COLON date:a
+user_date	::=	COMMA DATE_ADD COLON DATE:a
 				{:
 					System.out.printf("DateMod = %s\n", a);
 				:}
+				// | COMMA error COLON DATE /* Revisar */
+				| COMMA DATE_ADD error DATE
+				| COMMA DATE_ADD COLON error
 				|
 				;
 
-edit_date	::=	COMMA DATE_MOD COLON date:a
+edit_date	::=	COMMA DATE_MOD COLON DATE:a
 				{: System.out.printf("Date = %s\n", a); :}
+				| COMMA error COLON DATE
+				| COMMA DATE_MOD error DATE
+				| COMMA DATE_MOD COLON error
 				|
 				;
 
@@ -212,6 +222,7 @@ fin_sol		::= SMALLER FIN_SOL EXCL GREATER
 				| SMALLER error EXCL GREATER
 				| SMALLER FIN_SOL error GREATER
 				| SMALLER FIN_SOL EXCL error
+				{: System.out.println("GREATER"); :}
 				;
 
 str_param	::=	STR:p {: RESULT = p; :}

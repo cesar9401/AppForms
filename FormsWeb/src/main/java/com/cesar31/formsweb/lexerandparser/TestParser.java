@@ -12,11 +12,11 @@ public class TestParser {
 
     public static void main(String[] args) {
 
-        String input = "<!INI_solicitud : \"\n\tCREAR_USUARIO\t\n\"> \n "
+        String input1 = "<!INI_solicitud : \"\n\tCREAR_USUARIO\t\n\"> \n "
                 + "{ \"    CREDENCIALES_USUARIO\" : [{ \n "
-                + "\"USUARIO\" : \"\\n\\tCREAR_USUARIO\" , \n"
+                + "\"USUARIO\" : \"\\t32123_jose21\" , \n"
                 + "\"PASSWORD\" : \"123.321\"\n  ,"
-                + "\"FECHA_CREACION\"  : \" 2020-02-12 \"    "
+                + "\"FECHA_CREACION\"  : \"\t2020-02-12\"    \n"
                 + " }\n "
                 + "  ] \n"
                 + "} \n "
@@ -31,19 +31,28 @@ public class TestParser {
                 + "           ,  \"FECHA_MODIFICACION\" : \"2002-12-21\"  }    \n"
                 + "          ]\n"
                 + "      }\n"
-                + "<fin_solicitud>";
+                + "<fin_solicitud!>";
 
-        String input3 = "< ! ini_solicitud  \"ELIMINAR_USUARIO\">\n"
+        String input3 = "< ! ini_solicitud : \"ELIMINAR_USUARIO\">\n"
                 + "      { \"CREDENCIALES_USUARIO\":[{\n"
                 + "            \"USUARIO\": \"juanito619lopez\"\n"
                 + "           }         \n"
                 + "         ]\n"
                 + "      }\n"
-                + "<fin_solicitud >";
+                + "<fin_solicitud !>";
+
+        String input4 = "<!ini_solicitud:\"LOGIN_USUARIO\">\n"
+                + "     { \"CREDENCIALES_USUARIO\":[{\n"
+                + "            \"USUARIO\": \"juanito619\",\n"
+                + "            \"PASSWORD\": \"12345678\"\n"
+                + "           }         \n"
+                + "         ]\n"
+                + "      }      \n"
+                + "<fin_solicitud!>";
 
         //debugCup(input2);
         //debug(input2);
-        FormsLex lexer = new FormsLex(new StringReader(input3));
+        FormsLex lexer = new FormsLex(new StringReader(input4));
         parser parser = new parser(lexer);
         try {
             parser.parse();
