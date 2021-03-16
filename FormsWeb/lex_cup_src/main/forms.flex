@@ -41,7 +41,11 @@ Symbol = ([\\] | {Param})+
 Integer =  0|[1-9][0-9]*
 Date = \d{4,4}\-\d{2,2}\-\d{2,2}
 Input = [^\n\r\"\\]+
-StringInput =  \" ({WhiteSpace} | [\\] | {Input})+ \"
+InputClean = [^\n\r\"\\\t\s\f]+
+
+StringNoClean =  \" ({WhiteSpace} | [\\] | {Input})+ \"
+StringClean =  \" ([\\] | {InputClean})+ \"
+
 
 Quote = \"
 Ql = {Quote} {WhiteSpace}*
@@ -128,8 +132,11 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 	{ return symbol(PARAM_F, yytext()); }
 
 	/* Input con comillas */
-	{StringInput}
+	{StringClean}
 	{ return symbol(STR, yytext()); }
+
+	{StringNoClean}
+	{ return symbol(STR_N, yytext()); }
 
 	":"
 	{ return symbol(COLON, yytext()); }

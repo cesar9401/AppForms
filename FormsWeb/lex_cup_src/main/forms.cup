@@ -1,6 +1,8 @@
 package com.cesar31.formsweb.lexerandparser;
 
 import com.cesar31.formsweb.lexerandparser.FormsLex;
+import com.cesar31.formsweb.control.*;
+import com.cesar31.formsweb.model.*;
 
 import java_cup.runtime.Symbol;
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ parser code {:
 
 	private Symbol cur_token;
 	private boolean parsed;
+	private ContainerUser u;
 
 	// public FormsParser(FormsLex lex) {
 	// 	super(lex);
@@ -21,6 +24,7 @@ parser code {:
 	public parser(FormsLex lex) {
 		super(lex);
 		this.parsed = true;
+		u = new ContainerUser();
 	}
 
 	public void report_fatal_error(String message, Object info) {
@@ -66,6 +70,10 @@ parser code {:
 		return parsed;
 	}
 
+	public ContainerUser getContainer() {
+		return u;
+	}
+
 :}
 
 terminal INIT_SOL, FIN_SOL, INIT_MANY_SOL, FIN_MANY_SOL;
@@ -73,7 +81,7 @@ terminal PARAM, INTEGER, ID, COLON, SMALLER, GREATER, LBRACE, RBRACE, LBRACKET, 
 terminal PLUS, MINUS, TIMES, DIVIDE;
 terminal ERROR, SYMB, QUOTE;
 
-terminal String STR, DATE, ADD_USER, CRED, DATE_ADD, EDIT_USER, DEL_USER, LOGIN, OLD_USER, NEW_USER, NEW_PASS, DATE_MOD, USER, PASS;
+terminal String STR, STR_N, DATE, ADD_USER, CRED, DATE_ADD, EDIT_USER, DEL_USER, LOGIN, OLD_USER, NEW_USER, NEW_PASS, DATE_MOD, USER, PASS;
 terminal String NEW_FORM, PARAM_F;
 
 
@@ -109,7 +117,10 @@ sol_user_nl	::=	ADD_USER GREATER credNew /* add user */
 				;
 
 /* add user */
-credNew	::=		LBRACE CRED COLON LBRACKET new_user
+credNew	::=		LBRACE CRED COLON LBRACKET new_user:user
+				{:
+					u.addUser((User) user);
+				:}
 				| error CRED COLON LBRACKET new_user
 				| LBRACE error COLON LBRACKET new_user
 				| LBRACE CRED error LBRACKET new_user
@@ -133,24 +144,26 @@ credDel		::= LBRACE CRED COLON LBRACKET del_user
 				;
 
 /* add user */
-new_user	::=	LBRACE USER COLON str_param:u pass_user RBRACKET RBRACE fin_sol
+new_user	::=	LBRACE USER COLON str_param:p pass_user:user RBRACKET RBRACE fin_sol
 				{:
-					System.out.printf("User = %s\n", u);
+					RESULT = u.setUser((User) user, p);
 				:}
 				| error USER COLON str_param pass_user RBRACKET RBRACE fin_sol
 				| LBRACE error COLON str_param pass_user RBRACKET RBRACE fin_sol
 				| LBRACE USER error str_param pass_user RBRACKET RBRACE fin_sol
+				| LBRACE USER COLON error pass_user RBRACKET RBRACE fin_sol
 				| LBRACE USER COLON str_param pass_user error RBRACE fin_sol
 				| LBRACE USER COLON str_param pass_user RBRACKET error fin_sol
 				;
 
-pass_user	::=	COMMA PASS COLON str_param:p user_date RBRACE
+pass_user	::=	COMMA PASS COLON str_param:p user_date:user RBRACE
 				{:
-					System.out.printf("Pass = %s\n", p);
+					RESULT = u.setPassword((User) user, p);
 				:}
 				| error PASS COLON str_param user_date RBRACE
 				| COMMA error COLON str_param user_date RBRACE
 				| COMMA PASS error str_param user_date RBRACE
+				| COMMA PASS COLON error user_date RBRACE
 				| COMMA PASS COLON str_param user_date error
 				;
 
@@ -187,16 +200,19 @@ edit_pass	::=	COMMA NEW_PASS COLON str_param:w edit_date RBRACE
 
 user_date	::=	COMMA DATE_ADD COLON DATE:a
 				{:
-					System.out.printf("DateMod = %s\n", a);
+					RESULT = u.setDate(a);
 				:}
-				// | COMMA error COLON DATE /* Revisar */
+				// | COMMA error COLON DATE: /* REVISAR */
 				| COMMA DATE_ADD error DATE
 				| COMMA DATE_ADD COLON error
 				|
+				{:
+					RESULT = u.setDate("");
+				:}
 				;
 
 edit_date	::=	COMMA DATE_MOD COLON DATE:a
-				{: System.out.printf("Date = %s\n", a); :}
+				{: System.out.printf("DateMod = %s\n", a); :}
 				| COMMA error COLON DATE
 				| COMMA DATE_MOD error DATE
 				| COMMA DATE_MOD COLON error

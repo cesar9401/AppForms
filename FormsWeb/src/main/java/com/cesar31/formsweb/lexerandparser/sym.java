@@ -10,44 +10,45 @@ public class sym {
   /* terminals */
   public static final int DIVIDE = 21;
   public static final int LBRACKET = 14;
-  public static final int NEW_USER = 34;
+  public static final int NEW_USER = 35;
   public static final int STR = 25;
   public static final int FIN_MANY_SOL = 5;
-  public static final int EDIT_USER = 30;
+  public static final int EDIT_USER = 31;
   public static final int INTEGER = 7;
   public static final int SMALLER = 10;
   public static final int GREATER = 11;
-  public static final int NEW_FORM = 39;
-  public static final int ADD_USER = 27;
+  public static final int NEW_FORM = 40;
+  public static final int ADD_USER = 28;
   public static final int MINUS = 19;
-  public static final int DATE = 26;
+  public static final int DATE = 27;
   public static final int PARAM = 6;
   public static final int FIN_SOL = 3;
-  public static final int PARAM_F = 40;
-  public static final int PASS = 38;
-  public static final int OLD_USER = 33;
+  public static final int PARAM_F = 41;
+  public static final int PASS = 39;
+  public static final int OLD_USER = 34;
   public static final int COMMA = 16;
   public static final int INIT_SOL = 2;
   public static final int PLUS = 18;
   public static final int QUOTE = 24;
+  public static final int STR_N = 26;
   public static final int ID = 8;
   public static final int EXCL = 17;
   public static final int EOF = 0;
   public static final int RBRACKET = 15;
-  public static final int DATE_ADD = 29;
+  public static final int DATE_ADD = 30;
   public static final int error = 1;
-  public static final int DATE_MOD = 36;
-  public static final int NEW_PASS = 35;
-  public static final int DEL_USER = 31;
+  public static final int DATE_MOD = 37;
+  public static final int NEW_PASS = 36;
+  public static final int DEL_USER = 32;
   public static final int ERROR = 22;
   public static final int TIMES = 20;
   public static final int COLON = 9;
   public static final int LBRACE = 12;
-  public static final int LOGIN = 32;
-  public static final int CRED = 28;
+  public static final int LOGIN = 33;
+  public static final int CRED = 29;
   public static final int RBRACE = 13;
   public static final int INIT_MANY_SOL = 4;
-  public static final int USER = 37;
+  public static final int USER = 38;
   public static final int SYMB = 23;
   public static final String[] terminalNames = new String[] {
   "EOF",
@@ -76,6 +77,7 @@ public class sym {
   "SYMB",
   "QUOTE",
   "STR",
+  "STR_N",
   "DATE",
   "ADD_USER",
   "CRED",
