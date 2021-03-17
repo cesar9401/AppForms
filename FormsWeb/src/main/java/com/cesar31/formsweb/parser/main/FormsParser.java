@@ -572,7 +572,15 @@ class CUP$FormsParser$actions {
           case 3: // ini_sol ::= SMALLER EXCL INIT_SOL COLON sol_user_nl 
             {
               Object RESULT =null;
-
+		int qleft = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.elementAt(CUP$FormsParser$top-4)).left;
+		int qright = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.elementAt(CUP$FormsParser$top-4)).right;
+		Token q = (Token)((java_cup.runtime.Symbol) CUP$FormsParser$stack.elementAt(CUP$FormsParser$top-4)).value;
+		int rleft = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).left;
+		int rright = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).right;
+		Object r = (Object)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
+		
+					u.setResult(q, (String) r);
+				
               CUP$FormsParser$result = parser.getSymbolFactory().newSymbol("ini_sol",0, ((java_cup.runtime.Symbol)CUP$FormsParser$stack.elementAt(CUP$FormsParser$top-4)), ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), RESULT);
             }
           return CUP$FormsParser$result;
@@ -617,7 +625,13 @@ class CUP$FormsParser$actions {
           case 8: // sol_user_nl ::= ADD_USER GREATER credNew 
             {
               Object RESULT =null;
-		 System.out.println("Crear Usuario"); 
+		int tleft = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.elementAt(CUP$FormsParser$top-2)).left;
+		int tright = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.elementAt(CUP$FormsParser$top-2)).right;
+		Token t = (Token)((java_cup.runtime.Symbol) CUP$FormsParser$stack.elementAt(CUP$FormsParser$top-2)).value;
+		
+					RESULT = "CREAR";
+					//System.out.println("Crear Usuario");
+				
               CUP$FormsParser$result = parser.getSymbolFactory().newSymbol("sol_user_nl",3, ((java_cup.runtime.Symbol)CUP$FormsParser$stack.elementAt(CUP$FormsParser$top-2)), ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), RESULT);
             }
           return CUP$FormsParser$result;

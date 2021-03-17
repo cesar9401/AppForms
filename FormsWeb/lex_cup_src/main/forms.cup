@@ -102,15 +102,21 @@ sol			::=	ini_sol sol
 				| ini_sol
 				;
 
-ini_sol		::=	SMALLER EXCL INIT_SOL COLON sol_user_nl
+ini_sol		::=	SMALLER:q EXCL INIT_SOL COLON sol_user_nl:r
+				{:
+					u.setResult(q, (String) r);
+				:}
 				| error EXCL INIT_SOL COLON sol_user_nl
 				| SMALLER error INIT_SOL COLON sol_user_nl
 				| SMALLER EXCL error COLON sol_user_nl
 				| SMALLER EXCL INIT_SOL error sol_user_nl
 				;
 
-sol_user_nl	::=	ADD_USER GREATER credNew /* add user */
-				{: System.out.println("Crear Usuario"); :}
+sol_user_nl	::=	ADD_USER:t GREATER credNew /* add user */
+				{:
+					RESULT = "CREAR";
+					//System.out.println("Crear Usuario");
+				:}
 				| error GREATER credNew
 				| ADD_USER error credNew
 				| EDIT_USER GREATER credEdit /* edit user */
