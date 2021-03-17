@@ -18,10 +18,10 @@ public class TestParserMain {
 
     public static void main(String[] args) {
 
-        String input1 = "<!INI_solicitud : \"\n\tCREAR_USUARIO\t\n\"> \n "
+        String input1 = "<!INI_olicitud : \"\n\tCREAR_USUARIO\t\n\"> \n "
                 + "{ \"    CREDENCIALES_USUARIO\" : [{ \n "
-                + "\"USUARIO\" : \"user_123_(*)\" , \n"
-                + "\"PASSWORD\" : \"123.321\"\n  ,"
+                + "\"USARIO\" : \"user_123_(*)\" , \n"
+                + "\"PASWORD\" : \"123.321\"\n  ,"
                 + "\"FECHA_CREACION\"  : \"\t2020-02-12\"    \n"
                 + " }\n "
                 + "  ] \n"
@@ -68,13 +68,18 @@ public class TestParserMain {
             if (parser.isParsed()) {
                 UserContainer u = parser.getContainer();
                 List<User> user = u.getAddUser();
-                user.add(DaoDB.createUser("cesar_12^2", "Huevos_94C", "2020-01-29", "2020-12-19"));
-                user.add(DaoDB.createUser("maria17", "_12>fdas*", "2020-12-31", "null"));
+                user.forEach(t -> {
+                    System.out.println(t.toString());
+                });
 
-                String json = mapper.writerWithDefaultPrettyPrinter().withView(User.class).writeValueAsString(user);
-                System.out.println(json);
 
-                mapper.writerWithDefaultPrettyPrinter().withView(User.class).writeValue(new File("forms.db"), user);
+                //user.add(DaoDB.createUser("cesar_12^2", "Huevos_94C", "2020-01-29", "2020-12-19"));
+                //user.add(DaoDB.createUser("maria17", "_12>fdas*", "2020-12-31", "null"));
+
+                //String json = mapper.writerWithDefaultPrettyPrinter().withView(User.class).writeValueAsString(user);
+                //System.out.println(json);
+
+                //mapper.writerWithDefaultPrettyPrinter().withView(User.class).writeValue(new File("forms.db"), user);
 
             }
         } catch (Exception ex) {

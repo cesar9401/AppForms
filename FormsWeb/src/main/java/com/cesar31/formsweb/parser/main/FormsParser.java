@@ -584,7 +584,8 @@ public class FormsParser extends java_cup.runtime.lr_parser {
         List<String> expected = new ArrayList<>();
 
         this.cur_token = cur_token;
-        System.out.printf("syntax_error: Linea: %d, columna: %d, sym: %s, nombre: %s, value: \"%s\", parse_state: %d\n", cur_token.left, cur_token.right, cur_token.sym, symbl_name_from_id(cur_token.sym), cur_token.value, cur_token.parse_state);
+		Token t = (Token) cur_token.value;
+        System.out.printf("syntax_error: %s\n", t.toString());
 
         List<Integer> tokens = expected_token_ids();
         System.out.print("Se esperaba ->");
@@ -669,7 +670,10 @@ class CUP$FormsParser$actions {
           case 3: // ini_sol ::= SMALLER EXCL INIT_SOL COLON sol_user_nl 
             {
               Object RESULT =null;
-
+		int sleft = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.elementAt(CUP$FormsParser$top-2)).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.elementAt(CUP$FormsParser$top-2)).right;
+		Token s = (Token)((java_cup.runtime.Symbol) CUP$FormsParser$stack.elementAt(CUP$FormsParser$top-2)).value;
+		 System.out.println(s.toString()); 
               CUP$FormsParser$result = parser.getSymbolFactory().newSymbol("ini_sol",0, ((java_cup.runtime.Symbol)CUP$FormsParser$stack.elementAt(CUP$FormsParser$top-4)), ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), RESULT);
             }
           return CUP$FormsParser$result;
@@ -1238,9 +1242,9 @@ class CUP$FormsParser$actions {
               Object RESULT =null;
 		int aleft = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).left;
 		int aright = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).right;
-		String a = (String)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
+		Token a = (Token)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
 		
-					RESULT = u.setDate(new User(), a);
+					RESULT = u.setDate(new User(), a.getValue());
 				
               CUP$FormsParser$result = parser.getSymbolFactory().newSymbol("user_date",4, ((java_cup.runtime.Symbol)CUP$FormsParser$stack.elementAt(CUP$FormsParser$top-3)), ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), RESULT);
             }
@@ -1281,8 +1285,8 @@ class CUP$FormsParser$actions {
               Object RESULT =null;
 		int aleft = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).left;
 		int aright = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).right;
-		String a = (String)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
-		 System.out.printf("DateMod = %s\n", a); 
+		Token a = (Token)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
+		 System.out.printf("DateMod = %s\n", a.getValue()); 
               CUP$FormsParser$result = parser.getSymbolFactory().newSymbol("edit_date",11, ((java_cup.runtime.Symbol)CUP$FormsParser$stack.elementAt(CUP$FormsParser$top-3)), ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), RESULT);
             }
           return CUP$FormsParser$result;
@@ -1442,8 +1446,8 @@ class CUP$FormsParser$actions {
               String RESULT =null;
 		int pleft = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).left;
 		int pright = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).right;
-		String p = (String)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
-		 RESULT = p; 
+		Token p = (Token)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
+		 RESULT = p.getValue(); 
               CUP$FormsParser$result = parser.getSymbolFactory().newSymbol("str_param",15, ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), RESULT);
             }
           return CUP$FormsParser$result;
@@ -1454,8 +1458,8 @@ class CUP$FormsParser$actions {
               String RESULT =null;
 		int pleft = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).left;
 		int pright = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).right;
-		String p = (String)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
-		 RESULT = p; 
+		Token p = (Token)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
+		 RESULT = p.getValue(); 
               CUP$FormsParser$result = parser.getSymbolFactory().newSymbol("str_param",15, ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), RESULT);
             }
           return CUP$FormsParser$result;
@@ -1466,8 +1470,8 @@ class CUP$FormsParser$actions {
               String RESULT =null;
 		int pleft = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).left;
 		int pright = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).right;
-		String p = (String)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
-		 RESULT = p; 
+		Token p = (Token)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
+		 RESULT = p.getValue(); 
               CUP$FormsParser$result = parser.getSymbolFactory().newSymbol("str_param",15, ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), RESULT);
             }
           return CUP$FormsParser$result;
@@ -1478,8 +1482,8 @@ class CUP$FormsParser$actions {
               String RESULT =null;
 		int pleft = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).left;
 		int pright = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).right;
-		String p = (String)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
-		 RESULT = p; 
+		Token p = (Token)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
+		 RESULT = p.getValue(); 
               CUP$FormsParser$result = parser.getSymbolFactory().newSymbol("str_param",15, ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), RESULT);
             }
           return CUP$FormsParser$result;
@@ -1490,8 +1494,8 @@ class CUP$FormsParser$actions {
               String RESULT =null;
 		int pleft = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).left;
 		int pright = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).right;
-		String p = (String)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
-		 RESULT = p; 
+		Token p = (Token)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
+		 RESULT = p.getValue(); 
               CUP$FormsParser$result = parser.getSymbolFactory().newSymbol("str_param",15, ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), RESULT);
             }
           return CUP$FormsParser$result;
@@ -1502,8 +1506,8 @@ class CUP$FormsParser$actions {
               String RESULT =null;
 		int pleft = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).left;
 		int pright = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).right;
-		String p = (String)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
-		 RESULT = p; 
+		Token p = (Token)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
+		 RESULT = p.getValue(); 
               CUP$FormsParser$result = parser.getSymbolFactory().newSymbol("str_param",15, ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), RESULT);
             }
           return CUP$FormsParser$result;
@@ -1514,8 +1518,8 @@ class CUP$FormsParser$actions {
               String RESULT =null;
 		int pleft = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).left;
 		int pright = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).right;
-		String p = (String)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
-		 RESULT = p; 
+		Token p = (Token)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
+		 RESULT = p.getValue(); 
               CUP$FormsParser$result = parser.getSymbolFactory().newSymbol("str_param",15, ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), RESULT);
             }
           return CUP$FormsParser$result;
@@ -1526,8 +1530,8 @@ class CUP$FormsParser$actions {
               String RESULT =null;
 		int pleft = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).left;
 		int pright = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).right;
-		String p = (String)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
-		 RESULT = p; 
+		Token p = (Token)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
+		 RESULT = p.getValue(); 
               CUP$FormsParser$result = parser.getSymbolFactory().newSymbol("str_param",15, ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), RESULT);
             }
           return CUP$FormsParser$result;
@@ -1538,8 +1542,8 @@ class CUP$FormsParser$actions {
               String RESULT =null;
 		int pleft = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).left;
 		int pright = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).right;
-		String p = (String)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
-		 RESULT = p; 
+		Token p = (Token)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
+		 RESULT = p.getValue(); 
               CUP$FormsParser$result = parser.getSymbolFactory().newSymbol("str_param",15, ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), RESULT);
             }
           return CUP$FormsParser$result;
@@ -1550,8 +1554,8 @@ class CUP$FormsParser$actions {
               String RESULT =null;
 		int pleft = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).left;
 		int pright = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).right;
-		String p = (String)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
-		 RESULT = p; 
+		Token p = (Token)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
+		 RESULT = p.getValue(); 
               CUP$FormsParser$result = parser.getSymbolFactory().newSymbol("str_param",15, ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), RESULT);
             }
           return CUP$FormsParser$result;
@@ -1562,8 +1566,8 @@ class CUP$FormsParser$actions {
               String RESULT =null;
 		int pleft = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).left;
 		int pright = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).right;
-		String p = (String)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
-		 RESULT = p; 
+		Token p = (Token)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
+		 RESULT = p.getValue(); 
               CUP$FormsParser$result = parser.getSymbolFactory().newSymbol("str_param",15, ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), RESULT);
             }
           return CUP$FormsParser$result;
@@ -1574,8 +1578,8 @@ class CUP$FormsParser$actions {
               String RESULT =null;
 		int pleft = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).left;
 		int pright = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).right;
-		String p = (String)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
-		 RESULT = p; 
+		Token p = (Token)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
+		 RESULT = p.getValue(); 
               CUP$FormsParser$result = parser.getSymbolFactory().newSymbol("str_param",15, ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), RESULT);
             }
           return CUP$FormsParser$result;
@@ -1586,8 +1590,8 @@ class CUP$FormsParser$actions {
               String RESULT =null;
 		int pleft = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).left;
 		int pright = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).right;
-		String p = (String)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
-		 RESULT = p; 
+		Token p = (Token)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
+		 RESULT = p.getValue(); 
               CUP$FormsParser$result = parser.getSymbolFactory().newSymbol("str_param",15, ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), RESULT);
             }
           return CUP$FormsParser$result;
@@ -1598,8 +1602,8 @@ class CUP$FormsParser$actions {
               String RESULT =null;
 		int pleft = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).left;
 		int pright = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).right;
-		String p = (String)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
-		 RESULT = p; 
+		Token p = (Token)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
+		 RESULT = p.getValue(); 
               CUP$FormsParser$result = parser.getSymbolFactory().newSymbol("str_param",15, ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), RESULT);
             }
           return CUP$FormsParser$result;
@@ -1610,8 +1614,8 @@ class CUP$FormsParser$actions {
               String RESULT =null;
 		int pleft = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).left;
 		int pright = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).right;
-		String p = (String)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
-		 RESULT = p; 
+		Token p = (Token)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
+		 RESULT = p.getValue(); 
               CUP$FormsParser$result = parser.getSymbolFactory().newSymbol("str_param",15, ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), RESULT);
             }
           return CUP$FormsParser$result;
@@ -1622,8 +1626,8 @@ class CUP$FormsParser$actions {
               String RESULT =null;
 		int pleft = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).left;
 		int pright = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).right;
-		String p = (String)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
-		 RESULT = p; 
+		Token p = (Token)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
+		 RESULT = p.getValue(); 
               CUP$FormsParser$result = parser.getSymbolFactory().newSymbol("str_param",15, ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), RESULT);
             }
           return CUP$FormsParser$result;

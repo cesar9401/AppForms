@@ -53,7 +53,8 @@ parser code {:
         List<String> expected = new ArrayList<>();
 
         this.cur_token = cur_token;
-        System.out.printf("syntax_error: Linea: %d, columna: %d, sym: %s, nombre: %s, value: \"%s\", parse_state: %d\n", cur_token.left, cur_token.right, cur_token.sym, symbl_name_from_id(cur_token.sym), cur_token.value, cur_token.parse_state);
+		Token t = (Token) cur_token.value;
+        System.out.printf("syntax_error: %s\n", t.toString());
 
         List<Integer> tokens = expected_token_ids();
         System.out.print("Se esperaba ->");
@@ -78,13 +79,13 @@ parser code {:
 
 :}
 
-terminal INIT_SOL, FIN_SOL, INIT_MANY_SOL, FIN_MANY_SOL;
-terminal PARAM, INTEGER, ID, COLON, SMALLER, GREATER, LBRACE, RBRACE, LBRACKET, RBRACKET, COMMA, EXCL;
-terminal PLUS, MINUS, TIMES, DIVIDE;
-terminal ERROR, SYMB, QUOTE;
+terminal Token INIT_SOL, FIN_SOL, INIT_MANY_SOL, FIN_MANY_SOL;
+terminal Token PARAM, INTEGER, ID, COLON, SMALLER, GREATER, LBRACE, RBRACE, LBRACKET, RBRACKET, COMMA, EXCL;
+terminal Token PLUS, MINUS, TIMES, DIVIDE;
+terminal Token ERROR, SYMB, QUOTE;
 
-terminal String STR, STR_N, DATE, ADD_USER, CRED, DATE_ADD, EDIT_USER, DEL_USER, LOGIN, OLD_USER, NEW_USER, NEW_PASS, DATE_MOD, USER, PASS;
-terminal String NEW_FORM, PARAM_F;
+terminal Token STR, STR_N, DATE, ADD_USER, CRED, DATE_ADD, EDIT_USER, DEL_USER, LOGIN, OLD_USER, NEW_USER, NEW_PASS, DATE_MOD, USER, PASS;
+terminal Token NEW_FORM, PARAM_F;
 
 
 non terminal ini_sol, fin_sol, sol, sol_user_nl, user_date, credNew, credEdit, credDel, new_user, pass_user;
@@ -96,7 +97,8 @@ sol			::=	ini_sol sol
 				| ini_sol
 				;
 
-ini_sol		::=	SMALLER EXCL INIT_SOL COLON sol_user_nl
+ini_sol		::=	SMALLER EXCL INIT_SOL:s COLON sol_user_nl
+				{: System.out.println(s.toString()); :}
 				| error EXCL INIT_SOL COLON sol_user_nl
 				| SMALLER error INIT_SOL COLON sol_user_nl
 				| SMALLER EXCL error COLON sol_user_nl
@@ -104,7 +106,7 @@ ini_sol		::=	SMALLER EXCL INIT_SOL COLON sol_user_nl
 				;
 
 sol_user_nl	::=	ADD_USER GREATER credNew /* add user */
-				{: System.out.println("Crear Usuario"); :}
+				{: //System.out.println("Crear Usuario"); :}
 				| error GREATER credNew
 				| ADD_USER error credNew
 				| EDIT_USER GREATER credEdit /* edit user */
@@ -202,7 +204,7 @@ edit_pass	::=	COMMA NEW_PASS COLON str_param:w edit_date RBRACE
 
 user_date	::=	COMMA DATE_ADD COLON DATE:a
 				{:
-					RESULT = u.setDate(new User(), a);
+					RESULT = u.setDate(new User(), a.getValue());
 				:}
 				// | COMMA error COLON DATE: /* REVISAR */
 				| COMMA DATE_ADD error DATE
@@ -214,7 +216,7 @@ user_date	::=	COMMA DATE_ADD COLON DATE:a
 				;
 
 edit_date	::=	COMMA DATE_MOD COLON DATE:a
-				{: System.out.printf("DateMod = %s\n", a); :}
+				{: System.out.printf("DateMod = %s\n", a.getValue()); :}
 				| COMMA error COLON DATE
 				| COMMA DATE_MOD error DATE
 				| COMMA DATE_MOD COLON error
@@ -243,20 +245,20 @@ fin_sol		::= SMALLER FIN_SOL EXCL GREATER
 				{: System.out.println("GREATER"); :}
 				;
 
-str_param	::=	STR:p {: RESULT = p; :}
-				| DATE:p {: RESULT = p; :}
-				| ADD_USER:p {: RESULT = p; :}
-				| CRED:p {: RESULT = p; :}
-				| USER:p {: RESULT = p; :}
-				| PASS:p {: RESULT = p; :}
-				| DATE_ADD:p {: RESULT = p; :}
-				| EDIT_USER:p {: RESULT = p; :}
-				| DEL_USER:p {: RESULT = p; :}
-				| LOGIN:p {: RESULT = p; :}
-				| OLD_USER:p {: RESULT = p; :}
-				| NEW_USER:p {: RESULT = p; :}
-				| NEW_PASS:p {: RESULT = p; :}
-				| DATE_MOD:p {: RESULT = p; :}
-				| NEW_FORM:p {: RESULT = p; :}
-				| PARAM_F:p {: RESULT = p; :}
+str_param	::=	STR:p {: RESULT = p.getValue(); :}
+				| DATE:p {: RESULT = p.getValue(); :}
+				| ADD_USER:p {: RESULT = p.getValue(); :}
+				| CRED:p {: RESULT = p.getValue(); :}
+				| USER:p {: RESULT = p.getValue(); :}
+				| PASS:p {: RESULT = p.getValue(); :}
+				| DATE_ADD:p {: RESULT = p.getValue(); :}
+				| EDIT_USER:p {: RESULT = p.getValue(); :}
+				| DEL_USER:p {: RESULT = p.getValue(); :}
+				| LOGIN:p {: RESULT = p.getValue(); :}
+				| OLD_USER:p {: RESULT = p.getValue(); :}
+				| NEW_USER:p {: RESULT = p.getValue(); :}
+				| NEW_PASS:p {: RESULT = p.getValue(); :}
+				| DATE_MOD:p {: RESULT = p.getValue(); :}
+				| NEW_FORM:p {: RESULT = p.getValue(); :}
+				| PARAM_F:p {: RESULT = p.getValue(); :}
 				;
