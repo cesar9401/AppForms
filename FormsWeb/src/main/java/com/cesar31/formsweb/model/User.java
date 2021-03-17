@@ -2,6 +2,7 @@ package com.cesar31.formsweb.model;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import java.time.LocalDate;
+import java.util.HashMap;
 
 /**
  *
@@ -25,7 +26,7 @@ public class User {
 
     @JsonView(NoView.class)
     private LocalDate creationDate;
-
+    
     public User() {
     }
 

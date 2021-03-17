@@ -15,6 +15,7 @@ parser code {:
 	private Symbol cur_token;
 	private boolean parsed;
 	private UserContainer u;
+	private User usuario;
 
 	public FormsParser(FormsLex lex) {
 		super(lex);
@@ -54,7 +55,7 @@ parser code {:
 
         this.cur_token = cur_token;
 		Token t = (Token) cur_token.value;
-        System.out.printf("syntax_error: %s\n", t.toString());
+        System.out.printf("syntax_error: %s, %s\n", symbl_name_from_id(cur_token.sym), t.toString());
 
         List<Integer> tokens = expected_token_ids();
         System.out.print("Se esperaba ->");
@@ -93,12 +94,15 @@ non terminal edit_user, edit_date, edit_pass, user_n, del_user;
 
 non terminal String str_param;
 
+/* non terminal para crear usuario*/
+non terminal us, pass, date, add_u, add;
+
+
 sol			::=	ini_sol sol
 				| ini_sol
 				;
 
-ini_sol		::=	SMALLER EXCL INIT_SOL:s COLON sol_user_nl
-				{: System.out.println(s.toString()); :}
+ini_sol		::=	SMALLER EXCL INIT_SOL COLON sol_user_nl
 				| error EXCL INIT_SOL COLON sol_user_nl
 				| SMALLER error INIT_SOL COLON sol_user_nl
 				| SMALLER EXCL error COLON sol_user_nl
@@ -106,7 +110,7 @@ ini_sol		::=	SMALLER EXCL INIT_SOL:s COLON sol_user_nl
 				;
 
 sol_user_nl	::=	ADD_USER GREATER credNew /* add user */
-				{: //System.out.println("Crear Usuario"); :}
+				{: System.out.println("Crear Usuario"); :}
 				| error GREATER credNew
 				| ADD_USER error credNew
 				| EDIT_USER GREATER credEdit /* edit user */
@@ -121,10 +125,7 @@ sol_user_nl	::=	ADD_USER GREATER credNew /* add user */
 				;
 
 /* add user */
-credNew	::=		LBRACE CRED COLON LBRACKET new_user:user
-				{:
-					u.addUser((User) user);
-				:}
+credNew	::=		LBRACE CRED COLON LBRACKET new_user
 				| error CRED COLON LBRACKET new_user
 				| LBRACE error COLON LBRACKET new_user
 				| LBRACE CRED error LBRACKET new_user
@@ -148,28 +149,66 @@ credDel		::= LBRACE CRED COLON LBRACKET del_user
 				;
 
 /* add user */
-new_user	::=	LBRACE USER COLON str_param:p pass_user:user RBRACKET RBRACE fin_sol
-				{:
-					RESULT = u.setUser((User) user, p);
-				:}
-				| error USER COLON str_param pass_user RBRACKET RBRACE fin_sol
-				| LBRACE error COLON str_param pass_user RBRACKET RBRACE fin_sol
-				| LBRACE USER error str_param pass_user RBRACKET RBRACE fin_sol
-				| LBRACE USER COLON error pass_user RBRACKET RBRACE fin_sol
-				| LBRACE USER COLON str_param pass_user error RBRACE fin_sol
-				| LBRACE USER COLON str_param pass_user RBRACKET error fin_sol
+new_user	::=	LBRACE add RBRACE RBRACKET RBRACE fin_sol
+				| error add RBRACE RBRACKET RBRACE fin_sol
+				// | LBRACE error RBRACE RBRACKET RBRACE fin_sol
+				| LBRACE add error RBRACKET RBRACE fin_sol
+				| LBRACE add RBRACE error RBRACE fin_sol
+				| LBRACE add RBRACE RBRACKET error fin_sol
 				;
 
-pass_user	::=	COMMA PASS COLON str_param:p user_date:user RBRACE
+/* producciones para crear usuario nuevo */
+us		::=		USER:a COLON str_param:p
 				{:
-					RESULT = u.setPassword((User) user, p);
+					System.out.println("User: " + p);
+					u.setUser(a, p);
 				:}
-				| error PASS COLON str_param user_date RBRACE
-				| COMMA error COLON str_param user_date RBRACE
-				| COMMA PASS error str_param user_date RBRACE
-				| COMMA PASS COLON error user_date RBRACE
-				| COMMA PASS COLON str_param user_date error
+				// | error COLON str_param
+				| USER error str_param
+				| USER COLON error
 				;
+
+pass	::=		PASS:a COLON str_param:p
+				{:
+					System.out.println("pass: " + p);
+					u.setPassword(a, p);
+				:}
+				// | error COLON str_param
+				| PASS error str_param
+				| PASS COLON error
+				;
+
+date	::=		DATE_ADD:a COLON DATE:p
+				{:
+					System.out.println("date: " + p.getValue());
+					u.setDate(a, p.getValue());
+				:}
+				// | error COLON DATE
+				| DATE_ADD error DATE
+				| DATE_ADD COLON error
+				;
+
+add_u	::=		us
+				| pass
+				| date
+				| error
+				;
+
+add		::=		add_u
+				| add_u COMMA add
+				;
+/* producciones para crear usuario nuevo */
+
+// pass_user	::=	COMMA PASS COLON str_param:p user_date:user RBRACE
+// 				{:
+// 					RESULT = u.setPassword((User) user, p);
+// 				:}
+// 				| error PASS COLON str_param user_date RBRACE
+// 				| COMMA error COLON str_param user_date RBRACE
+// 				| COMMA PASS error str_param user_date RBRACE
+// 				| COMMA PASS COLON error user_date RBRACE
+// 				| COMMA PASS COLON str_param user_date error
+// 				;
 
 /* edit user */
 edit_user	::=	LBRACE OLD_USER COLON str_param:u user_n RBRACKET RBRACE fin_sol
@@ -202,18 +241,18 @@ edit_pass	::=	COMMA NEW_PASS COLON str_param:w edit_date RBRACE
 				| COMMA NEW_USER COLON str_param edit_date error
 				;
 
-user_date	::=	COMMA DATE_ADD COLON DATE:a
-				{:
-					RESULT = u.setDate(new User(), a.getValue());
-				:}
-				// | COMMA error COLON DATE: /* REVISAR */
-				| COMMA DATE_ADD error DATE
-				| COMMA DATE_ADD COLON error
-				|
-				{:
-					RESULT = u.setDate(new User(), "");
-				:}
-				;
+// user_date	::=	COMMA DATE_ADD COLON DATE:a
+// 				{:
+// 					RESULT = u.setDate(new User(), a.getValue());
+// 				:}
+// 				// | COMMA error COLON DATE: /* REVISAR */
+// 				| COMMA DATE_ADD error DATE
+// 				| COMMA DATE_ADD COLON error
+// 				|
+// 				{:
+// 					RESULT = u.setDate(new User(), "");
+// 				:}
+// 				;
 
 edit_date	::=	COMMA DATE_MOD COLON DATE:a
 				{: System.out.printf("DateMod = %s\n", a.getValue()); :}
@@ -224,17 +263,17 @@ edit_date	::=	COMMA DATE_MOD COLON DATE:a
 				;
 
 /* delete user */
-del_user	::=	LBRACE USER COLON str_param:u RBRACE RBRACKET RBRACE fin_sol
-				{:
-					System.out.printf("delUser = %s\n", u);
-				:}
-				| error USER COLON str_param RBRACE RBRACKET RBRACE fin_sol
-				| LBRACE error COLON str_param RBRACE RBRACKET RBRACE fin_sol
-				| LBRACE USER error str_param RBRACE RBRACKET RBRACE fin_sol
-				| LBRACE USER COLON str_param error RBRACKET RBRACE fin_sol
-				| LBRACE USER COLON str_param RBRACE error RBRACE fin_sol
-				| LBRACE USER COLON str_param RBRACE RBRACKET error fin_sol
-				;
+// del_user	::=	LBRACE USER COLON str_param:u RBRACE RBRACKET RBRACE fin_sol
+// 				{:
+// 					System.out.printf("delUser = %s\n", u);
+// 				:}
+// 				| error USER COLON str_param RBRACE RBRACKET RBRACE fin_sol
+// 				| LBRACE error COLON str_param RBRACE RBRACKET RBRACE fin_sol
+// 				| LBRACE USER error str_param RBRACE RBRACKET RBRACE fin_sol
+// 				| LBRACE USER COLON str_param error RBRACKET RBRACE fin_sol
+// 				| LBRACE USER COLON str_param RBRACE error RBRACE fin_sol
+// 				| LBRACE USER COLON str_param RBRACE RBRACKET error fin_sol
+// 				;
 
 /* fin solicitud */
 fin_sol		::= SMALLER FIN_SOL EXCL GREATER
@@ -242,7 +281,6 @@ fin_sol		::= SMALLER FIN_SOL EXCL GREATER
 				| SMALLER error EXCL GREATER
 				| SMALLER FIN_SOL error GREATER
 				| SMALLER FIN_SOL EXCL error
-				{: System.out.println("GREATER"); :}
 				;
 
 str_param	::=	STR:p {: RESULT = p.getValue(); :}

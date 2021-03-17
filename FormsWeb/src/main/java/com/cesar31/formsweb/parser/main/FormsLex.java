@@ -856,12 +856,12 @@ public class FormsLex implements java_cup.runtime.Scanner {
   /* user code: */
 
 	private Symbol symbol(int type) {
-		return new Symbol(type, new Token(yyline + 1, yycolumn + 1));
+		return new Symbol(type, new Token(type, yyline + 1, yycolumn + 1));
 		//return new Symbol(type, yyline + 1, yycolumn + 1);
 	}
 
 	private Symbol symbol(int type, Object value) {
-		return new Symbol(type, new Token((String) value, yyline + 1, yycolumn + 1));
+		return new Symbol(type, new Token(type, (String) value, yyline + 1, yycolumn + 1));
 		//return new Symbol(type, yyline + 1, yycolumn + 1, value);
 	}
 
