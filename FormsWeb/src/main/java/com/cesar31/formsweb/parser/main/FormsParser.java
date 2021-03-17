@@ -1240,7 +1240,7 @@ class CUP$FormsParser$actions {
 		int aright = ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()).right;
 		String a = (String)((java_cup.runtime.Symbol) CUP$FormsParser$stack.peek()).value;
 		
-					RESULT = u.setDate(a);
+					RESULT = u.setDate(new User(), a);
 				
               CUP$FormsParser$result = parser.getSymbolFactory().newSymbol("user_date",4, ((java_cup.runtime.Symbol)CUP$FormsParser$stack.elementAt(CUP$FormsParser$top-3)), ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), RESULT);
             }
@@ -1269,7 +1269,7 @@ class CUP$FormsParser$actions {
             {
               Object RESULT =null;
 		
-					RESULT = u.setDate("");
+					RESULT = u.setDate(new User(), "");
 				
               CUP$FormsParser$result = parser.getSymbolFactory().newSymbol("user_date",4, ((java_cup.runtime.Symbol)CUP$FormsParser$stack.peek()), RESULT);
             }

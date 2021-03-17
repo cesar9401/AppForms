@@ -1,6 +1,7 @@
 package com.cesar31.formsweb.parser.db;
 
 import com.cesar31.formsweb.parser.db.DataLex;
+import com.cesar31.formsweb.control.*;
 import com.cesar31.formsweb.model.*;
 import java_cup.runtime.Symbol;
 
@@ -12,17 +13,17 @@ class DataParser;
 parser code {:
 
 	private boolean parsed;
+	private DaoDB dao;
 
 	public DataParser(DataLex lex) {
 		super(lex);
 		this.parsed = true;
+		this.dao = new DaoDB();
 	}
 
 	public void report_fatal_error(String message, Object info) {
         /* parsed */
         this.parsed = false;
-
-
 	}
 
 	public void syntax_error(Symbol cur_token) {
@@ -40,6 +41,10 @@ parser code {:
 
 	public boolean isParsed() {
 		return parsed;
+	}
+
+	public DaoDB getDaoDB() {
+		return dao;
 	}
 :}
 
@@ -63,9 +68,8 @@ make_u	::=	user:p
 
 user	::=	LBRACE USER COLON str:p COMMA PASS COLON str:q COMMA C_DATE COLON str:r COMMA E_DATE COLON str:s RBRACE
 			{:
-				User u = new User(p, q, r, s);
-				System.out.println(u.toString());
-				RESULT = u;
+				User u = dao.createUser(p, q, r, s);
+				dao.setUser(u);
 			:}
 			;
 

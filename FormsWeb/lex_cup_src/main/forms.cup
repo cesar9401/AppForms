@@ -202,14 +202,14 @@ edit_pass	::=	COMMA NEW_PASS COLON str_param:w edit_date RBRACE
 
 user_date	::=	COMMA DATE_ADD COLON DATE:a
 				{:
-					RESULT = u.setDate(a);
+					RESULT = u.setDate(new User(), a);
 				:}
 				// | COMMA error COLON DATE: /* REVISAR */
 				| COMMA DATE_ADD error DATE
 				| COMMA DATE_ADD COLON error
 				|
 				{:
-					RESULT = u.setDate("");
+					RESULT = u.setDate(new User(), "");
 				:}
 				;
 

@@ -1,5 +1,6 @@
 package com.cesar31.formsweb.parser.main;
 
+import com.cesar31.formsweb.control.DaoDB;
 import com.cesar31.formsweb.control.UserContainer;
 import com.cesar31.formsweb.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -67,8 +68,8 @@ public class TestParserMain {
             if (parser.isParsed()) {
                 UserContainer u = parser.getContainer();
                 List<User> user = u.getAddUser();
-                user.add(new User("cesar_12_#", "Huevos9$C", UserContainer.fLD("2020-01-31")));
-                user.add(new User("maria17", "_12>fdas*", UserContainer.fLD("2020-12-31")));
+                user.add(DaoDB.createUser("cesar_12^2", "Huevos_94C", "2020-01-29", "2020-12-19"));
+                user.add(DaoDB.createUser("maria17", "_12>fdas*", "2020-12-31", "null"));
 
                 String json = mapper.writerWithDefaultPrettyPrinter().withView(User.class).writeValueAsString(user);
                 System.out.println(json);

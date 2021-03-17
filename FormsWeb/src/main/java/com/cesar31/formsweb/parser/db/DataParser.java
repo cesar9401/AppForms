@@ -6,6 +6,7 @@
 package com.cesar31.formsweb.parser.db;
 
 import com.cesar31.formsweb.parser.db.DataLex;
+import com.cesar31.formsweb.control.*;
 import com.cesar31.formsweb.model.*;
 import java_cup.runtime.Symbol;
 import java.util.ArrayList;
@@ -125,10 +126,12 @@ public class DataParser extends java_cup.runtime.lr_parser {
 
 
 	private boolean parsed;
+	private DaoDB dao;
 
 	public DataParser(DataLex lex) {
 		super(lex);
 		this.parsed = true;
+		this.dao = new DaoDB();
 	}
 
 	public void report_fatal_error(String message, Object info) {
@@ -153,6 +156,10 @@ public class DataParser extends java_cup.runtime.lr_parser {
 
 	public boolean isParsed() {
 		return parsed;
+	}
+
+	public DaoDB getDaoDB() {
+		return dao;
 	}
 
 
@@ -253,9 +260,8 @@ class CUP$DataParser$actions {
 		int sright = ((java_cup.runtime.Symbol)CUP$DataParser$stack.elementAt(CUP$DataParser$top-1)).right;
 		String s = (String)((java_cup.runtime.Symbol) CUP$DataParser$stack.elementAt(CUP$DataParser$top-1)).value;
 		
-				User u = new User(p, q, r, s);
-				System.out.println(u.toString());
-				RESULT = u;
+				User u = dao.createUser(p, q, r, s);
+				dao.setUser(u);
 			
               CUP$DataParser$result = parser.getSymbolFactory().newSymbol("user",3, ((java_cup.runtime.Symbol)CUP$DataParser$stack.elementAt(CUP$DataParser$top-16)), ((java_cup.runtime.Symbol)CUP$DataParser$stack.peek()), RESULT);
             }
