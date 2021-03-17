@@ -1,6 +1,6 @@
-package com.cesar31.formsweb.lexerandparser;
+package com.cesar31.formsweb.parser.main;
 
-import com.cesar31.formsweb.lexerandparser.FormsLex;
+import com.cesar31.formsweb.parser.main.FormsLex;
 import com.cesar31.formsweb.control.*;
 import com.cesar31.formsweb.model.*;
 
@@ -8,24 +8,26 @@ import java_cup.runtime.Symbol;
 import java.util.ArrayList;
 import java.util.List;
 
-//class FormsParser;
+class FormsParser;
 
 parser code {:
 
 	private Symbol cur_token;
 	private boolean parsed;
-	private ContainerUser u;
+	private UserContainer u;
 
-	// public FormsParser(FormsLex lex) {
-	// 	super(lex);
-	// 	this.parsed = true;
-	// }
-
-	public parser(FormsLex lex) {
+	public FormsParser(FormsLex lex) {
 		super(lex);
 		this.parsed = true;
-		u = new ContainerUser();
+		this.u = new UserContainer();
 	}
+
+	/* Constructor sin cambiar nombre */
+	// public parser(FormsLex lex) {
+	// 	super(lex);
+	// 	this.parsed = true;
+	// 	u = new UserContainer();
+	// }
 
 	public void report_fatal_error(String message, Object info) {
         /* parsed */
@@ -70,7 +72,7 @@ parser code {:
 		return parsed;
 	}
 
-	public ContainerUser getContainer() {
+	public UserContainer getContainer() {
 		return u;
 	}
 

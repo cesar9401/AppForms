@@ -34,6 +34,32 @@ public class User {
         this.password = password;
     }
 
+    /**
+     * Constructor para crear usuarios desde lectura de bd en clase parser
+     *
+     * @param user
+     * @param password
+     * @param cDate
+     * @param eDate
+     */
+    public User(String user, String password, String cDate, String eDate) {
+        this.user = user;
+        this.password = password;
+        this.cDate = cDate;
+        this.eDate = eDate;
+
+        this.creationDate = LocalDate.parse(cDate);
+        if (!eDate.equals("null")) {
+            this.editDate = LocalDate.parse(eDate);
+        }
+    }
+
+    public User(String user, String password, LocalDate creationDate) {
+        this.user = user;
+        this.password = password;
+        this.setCreationDate(creationDate);
+    }
+
     public String getUser() {
         return user;
     }
@@ -94,6 +120,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" + "user=" + user + ", password=" + password + ", creationDate=" + creationDate + '}';
+        return "User{" + "user=" + user + ", password=" + password + ", editDate=" + editDate + ", creationDate=" + creationDate + '}';
     }
 }

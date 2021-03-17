@@ -1,0 +1,78 @@
+package com.cesar31.formsweb.parser.db;
+
+import com.cesar31.formsweb.parser.db.DataLex;
+import com.cesar31.formsweb.model.*;
+import java_cup.runtime.Symbol;
+
+import java.util.ArrayList;
+import java.util.List;
+
+class DataParser;
+
+parser code {:
+
+	private boolean parsed;
+
+	public DataParser(DataLex lex) {
+		super(lex);
+		this.parsed = true;
+	}
+
+	public void report_fatal_error(String message, Object info) {
+        /* parsed */
+        this.parsed = false;
+
+
+	}
+
+	public void syntax_error(Symbol cur_token) {
+        /* parsed */
+        this.parsed = false;
+
+        System.out.printf("syntax_error: Linea: %d, columna: %d, sym: %s, nombre: %s, value: \"%s\", parse_state: %d\n", cur_token.left, cur_token.right, cur_token.sym, symbl_name_from_id(cur_token.sym), cur_token.value, cur_token.parse_state);
+        List<Integer> tokens = expected_token_ids();
+        System.out.print("Se esperaba ->");
+        for(Integer i : tokens) {
+			System.out.printf("%s, ", symbl_name_from_id(i));
+        }
+        System.out.println("");
+	}
+
+	public boolean isParsed() {
+		return parsed;
+	}
+:}
+
+terminal LBRACKET, RBRACKET, LBRACE, RBRACE, COLON, COMMA;
+terminal ERROR;
+terminal String STR, USER, PASS, C_DATE, E_DATE, NULL;
+
+non terminal json_u, make_u;
+non terminal String str;
+non terminal User user;
+
+json_u	::=	LBRACKET make_u RBRACKET
+			;
+
+make_u	::=	user:p
+			{: //System.out.println(p.toString()); :}
+			| user:p COMMA make_u
+			{: //System.out.println(p.toString()); :}
+			|
+			;
+
+user	::=	LBRACE USER COLON str:p COMMA PASS COLON str:q COMMA C_DATE COLON str:r COMMA E_DATE COLON str:s RBRACE
+			{:
+				User u = new User(p, q, r, s);
+				System.out.println(u.toString());
+				RESULT = u;
+			:}
+			;
+
+str		::=	STR:p {: RESULT = p; :}
+			| USER:p {: RESULT = p; :}
+			| PASS:p {: RESULT = p; :}
+			| C_DATE:p {: RESULT = p; :}
+			| E_DATE:p {: RESULT = p; :}
+			| NULL:p {: RESULT = p; :}
+			;

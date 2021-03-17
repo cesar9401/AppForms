@@ -1,6 +1,6 @@
-package com.cesar31.formsweb.lexerandparser;
+package com.cesar31.formsweb.parser.main;
 
-import static com.cesar31.formsweb.lexerandparser.sym.*;
+import static com.cesar31.formsweb.parser.main.FormsParserSym.*;
 import java_cup.runtime.*;
 
 %%
@@ -12,7 +12,7 @@ import java_cup.runtime.*;
 %cup
 %line
 %column
-%cupdebug
+// %cupdebug
 
 %{
 
@@ -26,10 +26,10 @@ import java_cup.runtime.*;
 
 %}
 
-// %eofval{
-// 	return new java_cup.runtime.Symbol(FormsParserSym.EOF);
-// %eofval}
-// %eofclose
+%eofval{
+	return new java_cup.runtime.Symbol(FormsParserSym.EOF);
+%eofval}
+%eofclose
 
 /* Espacios */
 LineTerminator = \r|\n|\r\n
@@ -45,7 +45,6 @@ InputClean = [^\n\r\"\\\t\s\f]+
 
 StringNoClean =  \" ({WhiteSpace} | [\\] | {Input})+ \"
 StringClean =  \" ([\\] | {InputClean})+ \"
-
 
 Quote = \"
 Ql = {Quote} {WhiteSpace}*

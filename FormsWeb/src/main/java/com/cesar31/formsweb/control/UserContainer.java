@@ -9,11 +9,11 @@ import java.util.List;
  *
  * @author cesar31
  */
-public class ContainerUser {
+public class UserContainer {
     
     private List<User> addUser;
     
-    public ContainerUser() {
+    public UserContainer() {
         this.addUser = new ArrayList<>();
     }
     
@@ -50,7 +50,7 @@ public class ContainerUser {
         return string.replace("\"", "").trim();
     }
 
-    public LocalDate fLD(String date) {
+    public static LocalDate fLD(String date) {
         String local = date.replace("\"", "").trim();
         return LocalDate.parse(local);
     }
