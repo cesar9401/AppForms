@@ -24,7 +24,7 @@ public class MainService {
     public Response getRequest(String input) {
         //Write your code here
         HandlerFormParser formInput = new HandlerFormParser();
-        List<User> users = formInput.readInput(input).getAddUser();
+        List<User> users = formInput.readInput(input).getAddUsers();
 
         HandlerDB db = new HandlerDB();
         db.addUser(users);
@@ -45,7 +45,7 @@ public class MainService {
                 + "\n";
         
         HandlerFormParser clientInput = new HandlerFormParser();
-        List<User> users = clientInput.readInput(input).getAddUser();
+        List<User> users = clientInput.readInput(input).getAddUsers();
 
         HandlerDB db = new HandlerDB();
         db.addUser(users);

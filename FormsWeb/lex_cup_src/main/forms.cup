@@ -13,13 +13,11 @@ class FormsParser;
 parser code {:
 
 	private Symbol cur_token;
-	private boolean parsed;
 	private UserContainer u;
 	private User usuario;
 
 	public FormsParser(FormsLex lex) {
 		super(lex);
-		this.parsed = true;
 		this.u = new UserContainer();
 	}
 
@@ -31,39 +29,38 @@ parser code {:
 	// }
 
 	public void report_fatal_error(String message, Object info) {
-        /* parsed */
-        this.parsed = false;
 
         //System.out.println("report_fatal_error");
         //System.out.println("Message: " + message);
         //System.out.println("Object info: " + info);
 
         /* Armando reportes de errores */
-        List<String> expected = new ArrayList<>();
-        List<Integer> tokens = expected_token_ids();
-        for(Integer i : tokens) {
-            expected.add(symbl_name_from_id(i));
-        }
+        // List<String> expected = new ArrayList<>();
+        // List<Integer> tokens = expected_token_ids();
+        // for(Integer i : tokens) {
+        //     expected.add(symbl_name_from_id(i));
+        // }
+
+		// this.u.setError(this.cur_token, symbl_name_from_id(this.cur_token.sym), expected);
 	}
 
 	public void syntax_error(Symbol cur_token) {
-        /* parsed */
-        this.parsed = false;
-        /**/
-
         List<String> expected = new ArrayList<>();
 
         this.cur_token = cur_token;
-		Token t = (Token) cur_token.value;
-        System.out.printf("syntax_error: %s, %s\n", symbl_name_from_id(cur_token.sym), t.toString());
+		//Token t = (Token) cur_token.value;
+        //System.out.printf("syntax_error: %s, %s\n", symbl_name_from_id(cur_token.sym), t.toString());
 
         List<Integer> tokens = expected_token_ids();
-        System.out.print("Se esperaba ->");
+        // System.out.print("Se esperaba ->");
         for(Integer i : tokens) {
-			System.out.printf("%s, ", symbl_name_from_id(i));
+			//System.out.printf("%s, ", symbl_name_from_id(i));
             expected.add(symbl_name_from_id(i));
         }
-        System.out.println("");
+        //System.out.println("");
+
+		/* Reporte de Errores */
+		this.u.setError(cur_token, symbl_name_from_id(cur_token.sym), expected);
 	}
 
 	protected int error_sync_size() {
@@ -71,7 +68,7 @@ parser code {:
 	}
 
 	public boolean isParsed() {
-		return parsed;
+		return u.getErrors().isEmpty();
 	}
 
 	public UserContainer getContainer() {
@@ -90,44 +87,50 @@ terminal Token NEW_FORM, PARAM_F;
 
 
 non terminal ini_sol, fin_sol, sol, sol_user_nl, user_date, credNew, credEdit, credDel, new_user, pass_user;
-non terminal edit_user, edit_date, edit_pass, user_n, del_user;
+non terminal edit_user, del_user;
 
 non terminal String str_param;
 
 /* non terminal para crear usuario*/
 non terminal us, pass, date, add_u, add;
-
+/* not terminal para editar usuario */
+non terminal old_u, new_u, new_p, e_date, edit_u, edit;
 
 sol			::=	ini_sol sol
 				| ini_sol
 				;
 
 ini_sol		::=	SMALLER:q EXCL INIT_SOL COLON sol_user_nl:r
-				{:
-					u.setResult(q, (String) r);
-				:}
-				| error EXCL INIT_SOL COLON sol_user_nl
-				| SMALLER error INIT_SOL COLON sol_user_nl
-				| SMALLER EXCL error COLON sol_user_nl
-				| SMALLER EXCL INIT_SOL error sol_user_nl
+				{: u.setResult(q, (String) r); :}
+				| error EXCL:q INIT_SOL COLON sol_user_nl:r
+				{: u.setResult((Token) q, (String) r); :}
+				| SMALLER:q error INIT_SOL COLON sol_user_nl:r
+				{: u.setResult(q, (String) r); :}
+				| SMALLER:q EXCL error COLON sol_user_nl:r
+				{: u.setResult(q, (String) r); :}
+				| SMALLER:q EXCL INIT_SOL error sol_user_nl:r
+				{: u.setResult(q, (String) r); :}
 				;
 
-sol_user_nl	::=	ADD_USER:t GREATER credNew /* add user */
-				{:
-					RESULT = "CREAR";
-					//System.out.println("Crear Usuario");
-				:}
+sol_user_nl	::=	ADD_USER GREATER credNew /* add user */
+				{: RESULT = "CREAR"; :}
 				| error GREATER credNew
+				{: RESULT = "CREAR"; :}
 				| ADD_USER error credNew
+				{: RESULT = "CREAR"; :}
 				| EDIT_USER GREATER credEdit /* edit user */
+				{: RESULT = "EDIT"; :}
 				| error GREATER credEdit
+				{: RESULT = "EDIT"; :}
 				| EDIT_USER error credEdit
+				{: RESULT = "EDIT"; :}
 				| DEL_USER GREATER credDel /* del user */
 				| error GREATER credDel
 				| DEL_USER error credDel
 				| LOGIN GREATER credNew /* login user */
-				{: System.out.println("Login Usuario"); :}
+				{: RESULT = "LOGIN"; :}
 				| LOGIN error credNew
+				{: RESULT = "LOGIN"; :}
 				;
 
 /* add user */
@@ -154,20 +157,11 @@ credDel		::= LBRACE CRED COLON LBRACKET del_user
 				| LBRACE CRED COLON error del_user
 				;
 
-/* add user */
-new_user	::=	LBRACE add RBRACE RBRACKET RBRACE fin_sol
-				| error add RBRACE RBRACKET RBRACE fin_sol
-				// | LBRACE error RBRACE RBRACKET RBRACE fin_sol
-				| LBRACE add error RBRACKET RBRACE fin_sol
-				| LBRACE add RBRACE error RBRACE fin_sol
-				| LBRACE add RBRACE RBRACKET error fin_sol
-				;
-
-/* producciones para crear usuario nuevo */
+/* ----------------------------------------------------------- producciones para crear usuario nuevo */
 us		::=		USER:a COLON str_param:p
 				{:
-					System.out.println("User: " + p);
-					u.setUser(a, p);
+					u.setNewParam(a, p, "USUARIO");
+					System.out.println("USUARIO");
 				:}
 				// | error COLON str_param
 				| USER error str_param
@@ -176,8 +170,8 @@ us		::=		USER:a COLON str_param:p
 
 pass	::=		PASS:a COLON str_param:p
 				{:
-					System.out.println("pass: " + p);
-					u.setPassword(a, p);
+					u.setNewParam(a, p, "PASSWORD");
+					System.out.println("PASSWORD");
 				:}
 				// | error COLON str_param
 				| PASS error str_param
@@ -186,8 +180,8 @@ pass	::=		PASS:a COLON str_param:p
 
 date	::=		DATE_ADD:a COLON DATE:p
 				{:
-					System.out.println("date: " + p.getValue());
-					u.setDate(a, p.getValue());
+					u.setNewParam(a, p.getValue(), "FECHA_CREACION");
+					System.out.println("FECHA_CREACION");
 				:}
 				// | error COLON DATE
 				| DATE_ADD error DATE
@@ -197,89 +191,82 @@ date	::=		DATE_ADD:a COLON DATE:p
 add_u	::=		us
 				| pass
 				| date
-				| error
+				// | error
 				;
 
 add		::=		add_u
 				| add_u COMMA add
 				;
-/* producciones para crear usuario nuevo */
 
-// pass_user	::=	COMMA PASS COLON str_param:p user_date:user RBRACE
-// 				{:
-// 					RESULT = u.setPassword((User) user, p);
-// 				:}
-// 				| error PASS COLON str_param user_date RBRACE
-// 				| COMMA error COLON str_param user_date RBRACE
-// 				| COMMA PASS error str_param user_date RBRACE
-// 				| COMMA PASS COLON error user_date RBRACE
-// 				| COMMA PASS COLON str_param user_date error
-// 				;
+new_user	::=	LBRACE add RBRACE RBRACKET RBRACE fin_sol
+				| error add RBRACE RBRACKET RBRACE fin_sol
+				// | LBRACE error RBRACE RBRACKET RBRACE fin_sol
+				| LBRACE add error RBRACKET RBRACE fin_sol
+				| LBRACE add RBRACE error RBRACE fin_sol
+				| LBRACE add RBRACE RBRACKET error fin_sol
+				;
+/* ----------------------------------------------------------- producciones para crear usuario nuevo */
 
-/* edit user */
-edit_user	::=	LBRACE OLD_USER COLON str_param:u user_n RBRACKET RBRACE fin_sol
+/* ----------------------------------------------------------- producciones para modificar usuario */
+old_u	::=		OLD_USER:a COLON str_param:p
 				{:
-					System.out.printf("oldUser = %s\n", u);
+					u.setEditParam(a, p, "USUARIO_ANTIGUO");
+					// System.out.println("USUARIO_ANTIGUO");
 				:}
-				| error OLD_USER COLON str_param user_n RBRACKET RBRACE fin_sol
-				| LBRACE error COLON str_param user_n RBRACKET RBRACE fin_sol
-				| LBRACE OLD_USER error str_param user_n RBRACKET RBRACE fin_sol
-				| LBRACE OLD_USER COLON str_param user_n error RBRACE fin_sol
-				| LBRACE OLD_USER COLON str_param user_n RBRACKET error fin_sol
+				// | error COLON str_param
+				| OLD_USER error str_param
+				| OLD_USER COLON error
 				;
 
-user_n		::=	COMMA NEW_USER COLON str_param:v edit_pass
+new_u	::=		NEW_USER:a COLON str_param:p
 				{:
-					System.out.printf("newUser = %s\n", v);
+					u.setEditParam(a, p, "USUARIO_NUEVO");
+					// System.out.println("USUARIO_NUEVO");
 				:}
-				| error NEW_USER COLON str_param edit_pass
-				| COMMA error COLON str_param edit_pass
-				| COMMA NEW_USER error str_param edit_pass
+				// | error COLON str_param
+				| NEW_USER error str_param
+				| NEW_USER COLON error
 				;
 
-edit_pass	::=	COMMA NEW_PASS COLON str_param:w edit_date RBRACE
+new_p	::=		NEW_PASS:a COLON str_param:p
 				{:
-					System.out.printf("newPass = %s\n", w);
+					u.setEditParam(a, p, "NUEVO_PASSWORD");
+					// System.out.println("NUEVO_PASSWORD");
 				:}
-				| error NEW_PASS COLON str_param edit_date RBRACE
-				| COMMA error COLON str_param edit_date RBRACE
-				| COMMA NEW_PASS error str_param edit_date RBRACE
-				| COMMA NEW_USER COLON str_param edit_date error
+				// | error COLON str_param
+				| NEW_PASS error str_param
+				| NEW_PASS COLON error
 				;
 
-// user_date	::=	COMMA DATE_ADD COLON DATE:a
-// 				{:
-// 					RESULT = u.setDate(new User(), a.getValue());
-// 				:}
-// 				// | COMMA error COLON DATE: /* REVISAR */
-// 				| COMMA DATE_ADD error DATE
-// 				| COMMA DATE_ADD COLON error
-// 				|
-// 				{:
-// 					RESULT = u.setDate(new User(), "");
-// 				:}
-// 				;
-
-edit_date	::=	COMMA DATE_MOD COLON DATE:a
-				{: System.out.printf("DateMod = %s\n", a.getValue()); :}
-				| COMMA error COLON DATE
-				| COMMA DATE_MOD error DATE
-				| COMMA DATE_MOD COLON error
-				|
+e_date	::=		DATE_MOD:a COLON DATE:p
+				{:
+					u.setEditParam(a, p.getValue(), "FECHA_MODIFICACION");
+					// System.out.println("FECHA_MODIFICACION");
+				:}
+				// | error COLON DATE
+				| DATE_MOD error DATE
+				| DATE_MOD COLON error
 				;
 
-/* delete user */
-// del_user	::=	LBRACE USER COLON str_param:u RBRACE RBRACKET RBRACE fin_sol
-// 				{:
-// 					System.out.printf("delUser = %s\n", u);
-// 				:}
-// 				| error USER COLON str_param RBRACE RBRACKET RBRACE fin_sol
-// 				| LBRACE error COLON str_param RBRACE RBRACKET RBRACE fin_sol
-// 				| LBRACE USER error str_param RBRACE RBRACKET RBRACE fin_sol
-// 				| LBRACE USER COLON str_param error RBRACKET RBRACE fin_sol
-// 				| LBRACE USER COLON str_param RBRACE error RBRACE fin_sol
-// 				| LBRACE USER COLON str_param RBRACE RBRACKET error fin_sol
-// 				;
+edit_u	::=		old_u
+				| new_u
+				| new_p
+				| e_date
+				// | error
+				;
+
+edit	::=		edit_u
+				| edit_u COMMA edit
+				;
+
+edit_user	::=	LBRACE edit RBRACE RBRACKET RBRACE fin_sol
+				| error edit RBRACE RBRACKET RBRACE fin_sol
+				// | LBRACE error RBRACE RBRACKET RBRACE fin_sol
+				| LBRACE edit error RBRACKET RBRACE fin_sol
+				| LBRACE edit RBRACE error RBRACE fin_sol
+				| LBRACE edit RBRACE RBRACKET error fin_sol
+				;
+/* ----------------------------------------------------------- producciones para modificar usuario */
 
 /* fin solicitud */
 fin_sol		::= SMALLER FIN_SOL EXCL GREATER

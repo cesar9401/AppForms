@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java_cup.runtime.Symbol;
 
 /**
  *
@@ -13,22 +14,63 @@ import java.util.List;
  */
 public class UserContainer {
 
-    private List<User> addUser;
+    private List<User> addUsers;
+    private List<User> editUsers;
     private List<Error> errors;
-    private HashMap<String, String> params;
+    private List<Error> currents;
+    private HashMap<String, String> create;
+    private HashMap<String, String> edit;
 
     public UserContainer() {
-        this.addUser = new ArrayList<>();
+        this.addUsers = new ArrayList<>();
         this.errors = new ArrayList<>();
-        params = new HashMap<>();
+        this.create = new HashMap<>();
+        this.edit = new HashMap<>();
+        this.editUsers = new ArrayList<>();
+        this.currents = new ArrayList<>();
     }
 
     public void setResult(Token t, String result) {
-        switch (result) {
-            case "CREAR":
-                addUser(t);
-                break;
+        if (result != null && t != null) {
+            switch (result) {
+                case "CREAR":
+                    addUser(t);
+                    break;
+                case "EDIT":
+                    editUser(t);
+                    break;
+
+                case "LOGIN":
+                    System.out.println("Login");
+                    break;
+            }
+        } else {
+            System.out.println("Result/token = null");
         }
+
+    }
+
+    public void setError(Symbol symbol, String type, List<String> expectedTokens) {
+        Token t = (Token) symbol.value;
+        String typeError = (type.equals("SYMB") || type.equals("ERROR")) ? "LEXICO" : "SINTACTICO";
+
+        Error e = new Error(t.getValue(), typeError, t.getX(), t.getY());
+
+        String description = (typeError.equals("LEXICO")) ? "La cadena no se reconoce en el lenguaje. " : "";
+        description += "Se esperaba: ";
+        for (int i = 0; i < expectedTokens.size(); i++) {
+            if (!expectedTokens.get(i).equals("error")) {
+                description = description.concat("'" + expectedTokens.get(i) + "'");
+                if (i == expectedTokens.size() - 1) {
+                    description = description.concat(".");
+                } else {
+                    description = description.concat(", ");
+                }
+            }
+        }
+        e.setDescription(description);
+
+        errors.add(e);
     }
 
     /**
@@ -40,133 +82,156 @@ public class UserContainer {
         boolean created = true;
         User u = new User();
 
-        if (!params.containsKey("USUARIO")) {
-            Error e = new Error("", "SINTACTITO", t.getX(), t.getY());
-            e.setDescription("En la peticion para CREAR_USUARIO, fila = " + t.getX() + ", columna = " + t.getY() + ", se debe incluir USUARIO");
-            errors.add(e);
-
-            //System.out.println("En la peticion para CREAR_USUARIO, fila = " + t.getX() + ", columna = " + t.getY() + ", se debe incluir USUARIO");
-            created = false;
-        } else {
-            u.setUser(params.get("USUARIO"));
-        }
-
-        if (!params.containsKey("PASSWORD")) {
+        if (!create.containsKey("USUARIO")) {
             Error e = new Error("", "SINTACTICO", t.getX(), t.getY());
-            e.setDescription("En la peticion para CREAR_USUARIO, fila = " + t.getX() + ", columna = " + t.getY() + ", se debe incluir PASSWORD");
+            e.setDescription("En la peticion para CREAR_USUARIO, fila = " + t.getX() + ", columna = " + t.getY() + ", se debe incluir USUARIO.");
             errors.add(e);
-            
-            //System.out.println("En la peticion para CREAR_USUARIO, fila = " + t.getX() + ", columna = " + t.getY() + ", se debe incluir PASSWORD");
+
             created = false;
         } else {
-            u.setPassword(params.get("PASSWORD"));
+            u.setUser(create.get("USUARIO"));
         }
 
-        if (!params.containsKey("FECHA_CREACION")) {
+        if (!create.containsKey("PASSWORD")) {
+            Error e = new Error("", "SINTACTICO", t.getX(), t.getY());
+            e.setDescription("En la peticion para CREAR_USUARIO, fila = " + t.getX() + ", columna = " + t.getY() + ", se debe incluir PASSWORD.");
+            errors.add(e);
+
+            created = false;
+        } else {
+            u.setPassword(create.get("PASSWORD"));
+        }
+
+        if (!create.containsKey("FECHA_CREACION")) {
             u.setCreationDate(LocalDate.now());
             u.setcDate(LocalDate.now().toString());
         } else {
-            u.setCreationDate(fLD(params.get("FECHA_CREACION")));
-            u.setcDate(params.get("FECHA_CREACION"));
+            u.setCreationDate(fLD(create.get("FECHA_CREACION")));
+            u.setcDate(create.get("FECHA_CREACION"));
         }
 
         if (created) {
-            System.out.println(u.toString());
-            addUser.add(u);
+            addUsers.add(u);
         }
 
         // Limpiar HashMap
-        params.clear();
+        create.clear();
     }
 
-    /**
-     * Agregar username
-     *
-     * @param t
-     * @param user
-     */
-    public void setUser(Token t, String user) {
-        if (!params.containsKey("USUARIO")) {
-            params.put("USUARIO", fS(user));
-            //System.out.println("Se agrego user");
+    public void setNewParam(Token t, String u, String param) {
+        if (!create.containsKey(param)) {
+            if (param.equals("FECHA_CREACION")) {
+                create.put(param, fS_(u));
+            } else {
+                create.put(param, fS(u));
+            }
+            //System.out.println(param + ": " + edit.get(param));
         } else {
-            Error e = new Error("USUARIO", "SINTACTICO", t.getX(), t.getY());
-            e.setDescription("Ya se ha indicado username para el usuario que se desea crear");
+            Error e = new Error(param, "SINTACTICO", t.getX(), t.getY());
+            String description = "Ya se ha indicado " + param + " para el usuario que desea crear.";
+            e.setDescription(description);
+            System.out.println(e.toString());
+            
+            //Revisar currents
+            currents.add(e);
             errors.add(e);
-            
-            System.out.println("El usuario ya tiene user -> " + t.toString());
         }
     }
 
     /**
-     * Agregar password
+     * Usuarios que seran editados
      *
      * @param t
-     * @param pass
      */
-    public void setPassword(Token t, String pass) {
-        if (!params.containsKey("PASSWORD")) {
-            params.put("PASSWORD", fS(pass));
-            //System.out.println("Se agrego password");
+    public void editUser(Token t) {
+        boolean created = true;
+        User u = new User();
+
+        if (!edit.containsKey("USUARIO_ANTIGUO")) {
+            errors.add(getEditError(t, "USUARIO_ANTIGUO"));
+            created = false;
         } else {
-            Error e = new Error("PASSWORD", "SINTACTICO", t.getX(), t.getY());
-            e.setDescription("Ya se ha indicado un password para el usuario que se desea crear");
-            
-            System.out.println("El usuario ya posee password -> " + t.toString());
+            u.setUser(edit.get("USUARIO_ANTIGUO"));
         }
+
+        if (!edit.containsKey("USUARIO_NUEVO")) {
+            errors.add(getEditError(t, "USUARIO_NUEVO"));
+            created = false;
+        } else {
+            u.setNewUser(edit.get("USUARIO_NUEVO"));
+        }
+
+        if (!edit.containsKey("NUEVO_PASSWORD")) {
+            errors.add(getEditError(t, "NUEVO_PASSWORD"));
+            created = false;
+        } else {
+            u.setPassword(edit.get("NUEVO_PASSWORD"));
+        }
+
+        if (!edit.containsKey("FECHA_MODIFICACION")) {
+            u.setEditDate(LocalDate.now());
+            u.seteDate(LocalDate.now().toString());
+        } else {
+            u.setEditDate(fLD(edit.get("FECHA_MODIFICACION")));
+            u.seteDate(edit.get("FECHA_MODIFICACION"));
+        }
+
+        if (created) {
+            editUsers.add(u);
+        }
+
+        // Limpiar HashMap
+        edit.clear();
+    }
+
+    private Error getEditError(Token t, String param) {
+        Error e = new Error("", "SINTACTICO", t.getX(), t.getY());
+        e.setDescription("En la peticion para MODIFICAR_USUARIO, fila = " + t.getX() + ", columna = " + t.getY() + ", se debe incluir " + param + ".");
+        return e;
     }
 
     /**
-     * Agregar fecha
+     * Obtener los parametros para los usuarios que seran editados
      *
      * @param t
-     * @param date
+     * @param u
+     * @param param
      */
-    public void setDate(Token t, String date) {
-        if (!params.containsKey("FECHA_CREACION")) {
-            params.put("FECHA_CREACION", fS_(date));
-            //System.out.println("Se agrego fecha de creacion");
+    public void setEditParam(Token t, String u, String param) {
+        if (!edit.containsKey(param)) {
+            if (param.equals("FECHA_MODIFICACION")) {
+                edit.put(param, fS_(u));
+            } else {
+                edit.put(param, fS(u));
+            }
+            //System.out.println(param + ": " + edit.get(param));
         } else {
-            Error e = new Error("FECHA_CREACION", "SINTACTICO", t.getX(), t.getY());
-            e.setDescription("Ya se ha indicado una fecha de cracion para el usuario que se desea crear");
+            Error e = new Error(param, "SINTACTICO", t.getX(), t.getY());
+            String description = "Ya se ha indicado " + param + " para el usuario que desea modificar.";
+            e.setDescription(description);
+            //System.out.println(e.toString());
             errors.add(e);
-            
-            System.out.println("EL usuario ya tiene fecha de creacion -> " + t.toString());
         }
     }
 
-    /**
-     * Eliminar comillas
-     *
-     * @param string
-     * @return
-     */
     public String fS(String string) {
         return string.replace("\"", "");
     }
 
-    /**
-     * Eliminar comillas y espacios al inicio y final
-     *
-     * @param string
-     * @return
-     */
     public String fS_(String string) {
         return string.replace("\"", "").trim();
     }
 
-    /**
-     * String a LocalDate
-     *
-     * @param date
-     * @return
-     */
     public static LocalDate fLD(String date) {
         return LocalDate.parse(date);
     }
 
-    public List<User> getAddUser() {
-        return addUser;
+    public List<User> getAddUsers() {
+        return addUsers;
+    }
+
+    public List<User> getEditUsers() {
+        return editUsers;
     }
 
     public List<Error> getErrors() {

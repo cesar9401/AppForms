@@ -75,4 +75,9 @@ public class Error {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public String toString() {
+        return "Error{" + "lexema=" + lexema + ", type=" + type + ", line=" + line + ", column=" + column + ", description=" + description + '}';
+    }
 }

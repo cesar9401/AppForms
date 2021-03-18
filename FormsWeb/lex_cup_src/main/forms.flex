@@ -37,7 +37,7 @@ WhiteSpace = {LineTerminator}|[\s\t\f]
 
 //Param = [\w\-\$\^\*\+\.\/\?\(\)@#%&~`¿,:;¡|]+
 Param = \w+
-Symbol = ([\\] | {Param})+
+Symbol = ([\\\*\.\(\)\?\^&@¡#$%;¿] | {Param})+
 Integer =  0|[1-9][0-9]*
 Date = \d{4,4}\-\d{2,2}\-\d{2,2}
 Input = [^\n\r\"\\]+
@@ -54,18 +54,11 @@ Qr = {WhiteSpace}* {Quote}
 Ini = [Ii][Nn][Ii]
 Sol = [Ss][Oo][Ll][Ii][Cc][Ii][Tt][Uu][Dd]
 Fin = [Ff][Ii][Nn]
-//Res = [Rr][Ee][Ss][Pp][Uu][Ee][Ss][Tt][Aa]
 
 Ini_sol = {Ini} "_" {Sol}
 Fin_sol = {Fin} "_" {Sol}
 Ini_m_sol = {Ini} "_" {Sol}[Ee][Ss]
 Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
-
-/* Para respuestas del servidor */
-// Ini_res = {Ini} "_" {Res}
-// Fin_res =  {Fin} "_" {Res}
-// Ini_m_res = {Ini} "_" {Res}[Ss]
-// Fin_m_res = {Fin} "_" {Res}[Ss]
 
 %%
 
