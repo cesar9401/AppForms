@@ -1,8 +1,6 @@
 package com.cesar31.formsweb.parser.main;
 
-import com.cesar31.formsweb.control.UserContainer;
 import com.cesar31.formsweb.control.Error;
-import com.cesar31.formsweb.model.User;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
@@ -16,11 +14,10 @@ public class TestParserMain {
 
     public static void main(String[] args) {
 
-        String input1 = "<!INi_solicitud  : \"\n\tCREAR_USUARIO\t\n\" \n >"
+        String input1 = "<!ini_solicitud  : \"\n\tCREAR_USUARIO\t\n\" \n >"
                 + "{ \"    CREDENCIALES_USUARIO\" : [{ \n "
                 + "\"PASSWORD\" : \"123._()321\"\n  ,"
-                + "\"USUARIO\" : \"cesar@user_31\",\n"
-                + "\"FECHA_CREACION  \":  \"2020-01-31\"\n"
+                + "\"USUARIO\" : \"cesar@user_31\"\n,"
                 + " }\n "
                 + "  ] \n"
                 + "} \n "
@@ -48,35 +45,66 @@ public class TestParserMain {
 
         String input4 = "<!ini_solicitud:\"LOGIN_USUARIO\">\n"
                 + "     { \"CREDENCIALES_USUARIO\":[{\n"
-                + "            \"USUARIO\": \"juanito619\",\n"
                 + "            \"PASSWORD\": \"12345678\",\n"
-                + "            \"USUARIO\": \"juanito619\"\n"
+                + "\"USUARIO\": \"juanito619\"\n"
                 + "           }         \n"
                 + "         ]\n"
                 + "      }      \n"
                 + "<fin_solicitud!>";
 
+        String input5 = "<!ini_solicitud:\"NUEVO_FORMULARIO\">\n"
+                + "      { \"PARAMETROS_FORMULARIO\":[{\n"
+                + "            \"TEMA\": \"Dark\"\n,"
+                + "            \"ID\": \"$form1\",\n"
+                + "            \"TITULO\": \"Formulario para encuesta 1\",\n"
+                + "            \"NOMBRE\": \"formulario_encuesta_1\",\n"
+                + "            \"FECHA_CREACION   \": \" 2020-12-31 \",\n"
+                + "            \"USUARIO_CREACION\": \"cesar_31\"\n"
+                + "           }         \n"
+                + "         ]\n"
+                + "      }\n"
+                + "<fin_solicitud!>";
+
+        String input6 = "<!ini_solicitud:\"ELIMINAR_FORMULARIO\">\n"
+                + "      { \"PARAMETROS_FORMULARIO\":[{\n"
+                + "            \"ID\": \"$form1\"\n"
+                + "           }         \n"
+                + "         ]\n"
+                + "      }\n"
+                + "<fin_solicitud!>";
+
+        String input7 = "<!ini_solicitud:\"MODIFICAR_FORMULARIO\">"
+                + "      { \"PARAMETROS_FORMULARIO\":[{\n"
+                + "            \"ID\": \"$form1\",\n"
+                + "            \"TITULO\": \"Formulario Modificado para encuesta 1\",\n"
+                + "            \"NOMBRE\": \"formulario_encuesta_1_v2\",\n"
+                + "            \"TEMA\": \"Blue\"\n"
+                + "           }         \n"
+                + "         ]\n"
+                + "      }\n"
+                + "<fin_solicitud!>";
+
         //debug(input2);
-        FormsLex lexer = new FormsLex(new StringReader(input4));
+        FormsLex lexer = new FormsLex(new StringReader(input7));
         FormsParser parser = new FormsParser(lexer);
 
         try {
             parser.parse();
-//            if (parser.isParsed()) {
+            if (parser.isParsed()) {
 //                UserContainer u = parser.getContainer();
-//                List<User> user = u.getEditUsers();
-//                System.out.println("Editar -> ");
+//                List<User> user = u.getAddUsers();
+//                System.out.println("Agregar -> ");
 //                user.forEach(t -> {
 //                    System.out.println(t.toString());
 //                });
-//
-//            } else {
-//                List<Error> errors = parser.getContainer().getErrors();
-//                System.out.println("\n\nErrores: ");
-//                errors.forEach(e -> {
-//                    System.out.println(e.toString());
-//                });
-//            }
+
+            } else {
+                List<Error> errors = parser.getContainer().getErrors();
+                System.out.println("\n\nErrores: ");
+                errors.forEach(e -> {
+                    System.out.println(e.toString());
+                });
+            }
         } catch (Exception ex) {
             ex.printStackTrace(System.out);
         }

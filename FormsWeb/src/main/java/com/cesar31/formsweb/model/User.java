@@ -2,7 +2,6 @@ package com.cesar31.formsweb.model;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import java.time.LocalDate;
-import java.util.HashMap;
 
 /**
  *
@@ -38,7 +37,7 @@ public class User {
     public User(String user, String password, LocalDate creationDate) {
         this.user = user;
         this.password = password;
-        this.setCreationDate(creationDate);
+        this.creationDate = creationDate;
     }
 
     public String getUser() {

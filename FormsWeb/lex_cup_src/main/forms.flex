@@ -37,11 +37,12 @@ WhiteSpace = {LineTerminator}|[\s\t\f]
 
 //Param = [\w\-\$\^\*\+\.\/\?\(\)@#%&~`¿,:;¡|]+
 Param = \w+
-Symbol = ([\\\*\.\(\)\?\^&@¡#$%;¿] | {Param})+
+Symbol = ([\\\*\.\(\)\?\^&@¡#%;¿] | {Param})+
 Integer =  0|[1-9][0-9]*
 Date = \d{4,4}\-\d{2,2}\-\d{2,2}
 Input = [^\n\r\"\\]+
 InputClean = [^\n\r\"\\\t\s\f]+
+Id = \" [\_\-\$] ([\_\-\$] | \w )+ \"
 
 StringNoClean =  \" ({WhiteSpace} | [\\] | {Input})+ \"
 StringClean =  \" ([\\] | {InputClean})+ \"
@@ -81,11 +82,9 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 	{ return symbol(DATE, yytext()); }
 
 	/* Palabras reservadas con comillas */
+	/* Usuarios */
 	{Ql} "CREAR_USUARIO" {Qr}
 	{ return symbol(ADD_USER, yytext()); }
-
-	{Ql} "NUEVO_FORMULARIO" {Qr}
-	{ return symbol(NEW_FORM, yytext()); }
 
 	{Ql} "CREDENCIALES_USUARIO" {Qr}
 	{ return symbol(CRED, yytext()); }
@@ -120,15 +119,114 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 	{Ql} "FECHA_MODIFICACION" {Qr}
 	{ return symbol(DATE_MOD, yytext()); }
 
+	/* Formularios */
+	{Ql} "NUEVO_FORMULARIO" {Qr}
+	{ return symbol(NEW_FORM, yytext()); }
+
 	{Ql} "PARAMETROS_FORMULARIO" {Qr}
 	{ return symbol(PARAM_F, yytext()); }
 
+	{Ql} "ID" {Qr}
+	{ return symbol(ID, yytext()); }
+
+	{Id}
+	{ return symbol(ID_, yytext()); }
+
+	{Ql} "TITULO" {Qr}
+	{ return symbol(TITLE, yytext()); }
+
+	{Ql} "NOMBRE" {Qr}
+	{ return symbol(NAME, yytext()); }
+
+	{Ql} "TEMA" {Qr}
+	{ return symbol(THEME, yytext()); }
+
+	{Ql} "USUARIO_CREACION" {Qr}
+	{ return symbol(USER_C, yytext()); }
+
+	{Ql} "ELIMINAR_FORMULARIO" {Qr}
+	{ return symbol(DEL_FORM, yytext()); }
+
+	{Ql} "MODIFICAR_FORMULARIO" {Qr}
+	{ return symbol(EDIT_FORM, yytext()); }
+
+	{Ql} "AGREGAR_COMPONENTE" {Qr}
+	{ return symbol(ADD_COMP, yytext()); }
+
+	{Ql} "PARAMETROS_COMPONENTE" {Qr}
+	{ return symbol(PARAM_C, yytext()); }
+
+	{Ql} "NOMBRE_CAMPO" {Qr}
+	{ return symbol(FIELD_N, yytext()); }
+
+	{Ql} "FORMULARIO" {Qr}
+	{ return symbol(FORM, yytext()); }
+
+	{Ql} "CLASE" {Qr}
+	{ return symbol(CLASS, yytext()); }
+
+	/* CLASE COMPONENTE */
+	{Ql} "CAMPO_TEXTO" {Qr}
+	{ return symbol(TEXT_FIELD, yytext()); }
+
+	{Ql} "AREA_TEXTO" {Qr}
+	{ return symbol(TEXT_AREA, yytext()); }
+
+	{Ql} "CHECKBOX" {Qr}
+	{ return symbol(CHECKBOX, yytext()); }
+
+	{Ql} "RADIO" {Qr}
+	{ return symbol(RADIO, yytext()); }
+
+	{Ql} "FICHERO" {Qr}
+	{ return symbol(FILE, yytext()); }
+
+	{Ql} "IMAGEN" {Qr}
+	{ return symbol(IMG, yytext()); }
+
+	{Ql} "COMBO" {Qr}
+	{ return symbol(COMBO, yytext()); }
+
+	{Ql} "BOTON" {Qr}
+	{ return symbol(BTN, yytext()); }
+	/* CLASE COMPONENTE */
+
+	{Ql} "INDICE" {Qr}
+	{ return symbol(INDEX, yytext()); }
+
+	{Ql} "TEXTO_VISIBLE" {Qr}
+	{ return symbol(TEXT, yytext()); }
+
+	{Ql} "ALINEACION" {Qr}
+	{ return symbol(ALIGN, yytext()); }
+
+	{Ql} "REQUERIDO" {Qr}
+	{ return symbol(REQUIRED, yytext()); }
+
+	{Ql} "OPCIONES" {Qr}
+	{ return symbol(OPTION, yytext()); }
+
+	{Ql} "FILAS" {Qr}
+	{ return symbol(ROWS, yytext()); }
+
+	{Ql} "COLUMNAS" {Qr}
+	{ return symbol(COLUMNS, yytext()); }
+
+	{Ql} "URL" {Qr}
+	{ return symbol(URL, yytext()); }
+
+	{Ql} "ELIMINAR_COMPONENTE" {Qr}
+	{ return symbol(DEL_COMP, yytext()); }
+
+	{Ql} "MODIFICAR_COMPONENTE" {Qr}
+	{ return symbol(EDIT_COMP, yytext()); }
+
 	/* Input con comillas */
-	{StringClean}
+	{StringNoClean}
 	{ return symbol(STR, yytext()); }
 
-	{StringNoClean}
-	{ return symbol(STR_N, yytext()); }
+	// {StringNoClean}
+	// { return symbol(STR_N, yytext()); }
 
 	":"
 	{ return symbol(COLON, yytext()); }
@@ -170,26 +268,20 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 	{ return symbol(DIVIDE, yytext()); }
 
 	{Integer}
-	{
-		return symbol(INTEGER, yytext());
-	}
+	{ return symbol(INTEGER, yytext()); }
 
 	{Param}
-	{
-		return symbol(PARAM, yytext());
-	}
+	{ return symbol(PARAM, yytext()); }
 
 	{Symbol}
-	{
-		return symbol(SYMB, yytext());
-	}
-
-	{WhiteSpace}
-	{ /* Ignore */ }
+	{ return symbol(SYMB, yytext()); }
 
 	/* Comillas */
 	{Quote}
 	{ return symbol(QUOTE, yytext()); }
+
+	{WhiteSpace}
+	{ /* Ignore */ }
 }
 
 [^]
