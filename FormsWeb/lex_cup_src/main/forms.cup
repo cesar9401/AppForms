@@ -80,11 +80,12 @@ parser code {:
 terminal Token INIT_SOL, FIN_SOL, INIT_MANY_SOL, FIN_MANY_SOL;
 terminal Token PARAM, INTEGER, COLON, SMALLER, GREATER, LBRACE, RBRACE, LBRACKET, RBRACKET, COMMA, EXCL;
 terminal Token PLUS, MINUS, TIMES, DIVIDE;
-terminal Token ERROR, SYMB, QUOTE;
+terminal Token ERROR, SYMB, QUOTE, EMPTY;
 
 terminal Token STR, STR_N, DATE, ADD_USER, CRED, DATE_ADD, EDIT_USER, DEL_USER, LOGIN, OLD_USER, NEW_USER, NEW_PASS, DATE_MOD, USER, PASS;
 terminal Token NEW_FORM, PARAM_F, ID, TITLE, NAME, THEME, DEL_FORM, EDIT_FORM, ADD_COMP, PARAM_C, FIELD_N, FORM, CLASS, TEXT_FIELD, TEXT_AREA, CHECKBOX, RADIO;
 terminal Token FILE, IMG, COMBO, BTN, INDEX, TEXT, ALIGN, REQUIRED, OPTION, ROWS, COLUMNS, URL, DEL_COMP, EDIT_COMP, ID_, USER_C;
+terminal Token CENTER, LEFT, RIGHT, JUSTIFY, YES, OPTION_V, STR_NUMBER;
 
 non terminal ini_sol, fin_sol, sol, request, req_u, credEdit, body;
 non terminal edit_user;
@@ -92,8 +93,10 @@ non terminal edit_user;
 non terminal us, pass, date, add_u, add, old_u, new_u, new_p, e_date, edit_u, edit;
 /* formularios */
 non terminal forms, id, title, name, theme, user_c;
+/* componentes */
+non terminal field_n, form, kind, index, text, opt, url, kind_a, req, rows, columns, comp;
 
-non terminal String str_param;
+non terminal String str_param, class_o, align;
 
 sol			::=	ini_sol sol
 				| ini_sol
@@ -149,19 +152,24 @@ request		::=	ADD_USER GREATER req_u /* add user */
 				| DEL_FORM error forms
 				{: RESULT = "ELIMINAR_FORMULARIO"; :}
 				| EDIT_FORM GREATER forms
-				{: RESULT = "MODIFICAR_FORMULARIO"; :}
+				{: RESULT = "MODIFICAR_FORMULARIO"; :} /* MODIFICAR_FORMULARIO */
 				| EDIT_FORM error forms
 				{: RESULT = "MODIFICAR_FORMULARIO"; :}
+
+				/* Componentes para formulario */
+				| ADD_COMP GREATER comp
+				{: RESULT = "AGREGAR_COMPONENTE"; :} /* AGREGAR_COMPONENTE */
+				| error GREATER comp
+				{: RESULT = "AGREGAR_COMPONENTE"; :}
+				| ADD_COMP error comp
+				{: RESULT = "AGREGAR_COMPONENTE"; :}
+				| DEL_COMP GREATER comp
+				{: RESULT = "ELIMINAR_COMPONENTE"; :} /* ELIMINAR_COMPONENTE */
+				| DEL_COMP error comp
+				{: RESULT = "ELIMINAR_COMPONENTE"; :}
 				;
 
-forms		::=	LBRACE PARAM_F COLON LBRACKET body
-				| error PARAM_F COLON LBRACKET body
-				// | LBRACE error COLON LBRACKET body
-				| LBRACE PARAM_F error LBRACKET body
-				| LBRACE PARAM_F COLON error body
-				;
-
-/* add user */
+/* add, del, edit user */
 req_u		::=	LBRACE CRED COLON LBRACKET body
 				| error CRED COLON LBRACKET body
 				| LBRACE error COLON LBRACKET body
@@ -177,38 +185,21 @@ credEdit	::=	LBRACE CRED COLON LBRACKET edit_user
 				| LBRACE CRED COLON error edit_user
 				;
 
-/* ----------------------------------------------------------- producciones formularios */
-id			::=	ID:a COLON ID_:p
-				{: u.setNewParam(a, p.getValue(), "ID"); :}
-				| ID error ID_
-				| ID COLON error
+/* operaciones con formularios */
+forms		::=	LBRACE PARAM_F COLON LBRACKET body
+				| error PARAM_F COLON LBRACKET body
+				// | LBRACE error COLON LBRACKET body
+				| LBRACE PARAM_F error LBRACKET body
+				| LBRACE PARAM_F COLON error body
 				;
 
-title		::=	TITLE:a COLON str_param:p
-				{: u.setNewParam(a, p, "TITULO"); :}
-				| TITLE error str_param
-				| TITLE COLON error
+/* Operaciones con componentes para formulario */
+comp		::=	LBRACE PARAM_C COLON LBRACKET body
+				| error PARAM_C COLON LBRACKET body
+				// | LBRACE error COLON LBRACKET body
+				| LBRACE PARAM_C error LBRACKET body
+				| LBRACE PARAM_C COLON error body
 				;
-
-name		::=	NAME:a COLON str_param:p
-				{: u.setNewParam(a, p, "NOMBRE"); :}
-				| NAME error str_param
-				| NAME COLON error
-				;
-
-theme		::=	THEME:a COLON str_param:p
-				{: u.setNewParam(a, p, "TEMA"); :}
-				| THEME error str_param
-				| THEME COLON error
-				;
-
-user_c		::=	USER_C:a COLON str_param:p
-				{: u.setNewParam(a, p, "USUARIO_CREACION"); :}
-				| USER_C error str_param
-				| USER_C COLON error
-				;
-/* ----------------------------------------------------------- producciones formularios */
-
 /* ----------------------------------------------------------- producciones para crear usuario nuevo */
 us			::=	USER:a COLON str_param:p
 				{:
@@ -248,13 +239,24 @@ add_u		::=	us
 				| name
 				| theme
 				| user_c
+				| field_n
+				| form
+				| kind
+				| index
+				| text
+				| kind_a
+				| req
+				| opt
+				| rows
+				| columns
+				| url
 				;
 
 add			::=	add_u
 				| add_u COMMA add
 				;
 
-body	::=	LBRACE add RBRACE RBRACKET RBRACE fin_sol
+body		::=	LBRACE add RBRACE RBRACKET RBRACE fin_sol
 				| error add RBRACE RBRACKET RBRACE fin_sol
 				// | LBRACE error RBRACE RBRACKET RBRACE fin_sol
 				| LBRACE add error RBRACKET RBRACE fin_sol
@@ -262,6 +264,106 @@ body	::=	LBRACE add RBRACE RBRACKET RBRACE fin_sol
 				| LBRACE add RBRACE RBRACKET error fin_sol
 				;
 /* ----------------------------------------------------------- producciones para crear usuario nuevo */
+
+/* ----------------------------------------------------------- producciones para formularios */
+id			::=	ID:a COLON ID_:p
+				{: u.setNewParam(a, p.getValue(), "ID"); :}
+				| ID error ID_
+				| ID COLON error
+				;
+
+title		::=	TITLE:a COLON str_param:p
+				{: u.setNewParam(a, p, "TITULO"); :}
+				| TITLE error str_param
+				| TITLE COLON error
+				;
+
+name		::=	NAME:a COLON str_param:p
+				{: u.setNewParam(a, p, "NOMBRE"); :}
+				| NAME error str_param
+				| NAME COLON error
+				;
+
+theme		::=	THEME:a COLON str_param:p
+				{: u.setNewParam(a, p, "TEMA"); :}
+				| THEME error str_param
+				| THEME COLON error
+				;
+
+user_c		::=	USER_C:a COLON str_param:p
+				{: u.setNewParam(a, p, "USUARIO_CREACION"); :}
+				| USER_C error str_param
+				| USER_C COLON error
+				;
+/* ----------------------------------------------------------- producciones para formularios */
+
+/* ----------------------------------------------------------- producciones para componentes */
+field_n		::=	FIELD_N:a COLON str_param:p
+				{: u.setNewParam(a, p, "NOMBRE_CAMPO"); :}
+				| FIELD_N error str_param
+				| FIELD_N COLON error
+				;
+
+form		::=	FORM:a COLON ID_:p
+				{: u.setNewParam(a, p.getValue(), "FORMULARIO"); :}
+				| FORM error ID
+				| FORM COLON error
+				;
+
+kind		::=	CLASS:a COLON class_o:p
+				{: u.setNewParam(a, p, "CLASE"); :}
+				| CLASS error class_o
+				| CLASS COLON error
+				;
+
+index		::=	INDEX:a COLON STR_NUMBER:p
+				{: u.setNewParam(a, p.getValue(), "INDICE"); :}
+				| INDEX error STR_NUMBER
+				| INDEX COLON error
+				;
+
+text		::=	TEXT:a COLON str_param:p
+				{: u.setNewParam(a, p, "TEXTO_VISIBLE"); :}
+				| TEXT error str_param
+				| TEXT COLON error
+				;
+
+kind_a		::=	ALIGN:a COLON align:p
+				{: u.setNewParam(a, p, "ALINEACION"); :}
+				| ALIGN error align
+				| ALIGN COLON error
+				;
+
+req			::=	REQUIRED:a COLON YES:p
+				{: u.setNewParam(a, p.getValue(), "REQUERIDO"); :}
+				| REQUIRED error YES
+				| REQUIRED COLON error
+				;
+
+opt			::=	OPTION:a COLON OPTION_V:p
+				{: u.setNewParam(a, p.getValue(), "OPCIONES"); :}
+				| OPTION error OPTION_V
+				| OPTION COLON error
+				;
+
+rows		::=	ROWS:a COLON STR_NUMBER:p
+				{: u.setNewParam(a, p.getValue(), "FILAS"); :}
+				| ROWS error STR_NUMBER
+				| ROWS COLON error
+				;
+
+columns		::=	COLUMNS:a COLON STR_NUMBER:p
+				{: u.setNewParam(a, p.getValue(), "COLUMNAS"); :}
+				| COLUMNS error STR_NUMBER
+				| COLUMNS COLON error
+				;
+
+url			::=	URL:a COLON str_param:p
+				{: u.setNewParam(a, p, "URL"); :}
+				| URL error str_param
+				| URL COLON error
+				;
+/* ----------------------------------------------------------- producciones para componentes */
 
 /* ----------------------------------------------------------- producciones para modificar usuario */
 old_u	::=		OLD_USER:a COLON str_param:p
@@ -360,6 +462,7 @@ str_param	::=	STR:p {: RESULT = p.getValue(); :}
 				| FORM:p {: RESULT = p.getValue(); :}
 				| CLASS:p {: RESULT = p.getValue(); :}
 				| TEXT_FIELD:p {: RESULT = p.getValue(); :}
+				| TEXT_AREA:p {: RESULT = p.getValue(); :}
 				| CHECKBOX:p {: RESULT = p.getValue(); :}
 				| RADIO:p {: RESULT = p.getValue(); :}
 				| FILE:p {: RESULT = p.getValue(); :}
@@ -376,4 +479,27 @@ str_param	::=	STR:p {: RESULT = p.getValue(); :}
 				| URL:p {: RESULT = p.getValue(); :}
 				| DEL_COMP:p {: RESULT = p.getValue(); :}
 				| EDIT_COMP:p {: RESULT = p.getValue(); :}
+				| CENTER:p {: RESULT = p.getValue(); :}
+				| LEFT:p {: RESULT = p.getValue(); :}
+				| RIGHT:p {: RESULT = p.getValue(); :}
+				| JUSTIFY:p {: RESULT = p.getValue(); :}
+				| YES:p {: RESULT = p.getValue(); :}
+				| OPTION_V:p {: RESULT = p.getValue(); :}
+				| STR_NUMBER:p {: RESULT = p.getValue(); :}
+				;
+
+class_o		::=	TEXT_FIELD:p {: RESULT = p.getValue(); :}
+				| TEXT_AREA:p {: RESULT = p.getValue(); :}
+				| CHECKBOX:p {: RESULT = p.getValue(); :}
+				| RADIO:p {: RESULT = p.getValue(); :}
+				| FILE:p {: RESULT = p.getValue(); :}
+				| IMG:p {: RESULT = p.getValue(); :}
+				| COMBO:p {: RESULT = p.getValue(); :}
+				| BTN:p {: RESULT = p.getValue(); :}
+				;
+
+align		::= CENTER:p {: RESULT = p.getValue(); :}
+				| LEFT:p {: RESULT = p.getValue(); :}
+				| RIGHT:p {: RESULT = p.getValue(); :}
+				| JUSTIFY:p {: RESULT = p.getValue(); :}
 				;

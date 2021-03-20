@@ -40,12 +40,19 @@ Param = \w+
 Symbol = ([\\\*\.\(\)\?\^&@¡#%;¿] | {Param})+
 Integer =  0|[1-9][0-9]*
 Date = \d{4,4}\-\d{2,2}\-\d{2,2}
-Input = [^\n\r\"\\]+
-InputClean = [^\n\r\"\\\t\s\f]+
+Input = [^\n\r\"\\\|]+
+InputClean = [^\n\r\"\\\t\s\f\|]+
 Id = \" [\_\-\$] ([\_\-\$] | \w )+ \"
 
-StringNoClean =  \" ({WhiteSpace} | [\\] | {Input})+ \"
-StringClean =  \" ([\\] | {InputClean})+ \"
+str = {WhiteSpace}* {InputClean} ({WhiteSpace} | [\\] | {Input})+
+
+// str_c = {WhiteSpace}* \w {str}*
+
+StringNoClean = \" {str} \"
+
+//StringClean =  \" ([\\] | {InputClean})+ \"
+
+Options	= \" ({str} \| )* {str} \"
 
 Quote = \"
 Ql = {Quote} {WhiteSpace}*
@@ -80,6 +87,9 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 	/* Fecha */
 	{Ql} {Date} {Qr}
 	{ return symbol(DATE, yytext()); }
+
+	{Ql} {Integer} {Qr}
+	{ return symbol(STR_NUMBER, yytext()); }
 
 	/* Palabras reservadas con comillas */
 	/* Usuarios */
@@ -200,8 +210,25 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 	{Ql} "ALINEACION" {Qr}
 	{ return symbol(ALIGN, yytext()); }
 
+	/* Opciones alineacion */
+	{Ql} "CENTRO" {Qr}
+	{ return symbol(CENTER, yytext()); }
+
+	{Ql} "IZQUIERDA" {Qr}
+	{ return symbol(LEFT, yytext()); }
+
+	{Ql} "DERECHA" {Qr}
+	{ return symbol(RIGHT, yytext()); }
+
+	{Ql} "JUSTIFICAR" {Qr}
+	{ return symbol(JUSTIFY, yytext()); }
+	/* Opciones alineacion */
+
 	{Ql} "REQUERIDO" {Qr}
 	{ return symbol(REQUIRED, yytext()); }
+
+	{Ql} "SI" {Qr}
+	{ return symbol(YES, yytext()); }
 
 	{Ql} "OPCIONES" {Qr}
 	{ return symbol(OPTION, yytext()); }
@@ -224,6 +251,10 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 	/* Input con comillas */
 	{StringNoClean}
 	{ return symbol(STR, yytext()); }
+
+	/* opciones para radio y combo */
+	{Options}
+	{ return symbol(OPTION_V, yytext()); }
 
 	// {StringNoClean}
 	// { return symbol(STR_N, yytext()); }
@@ -279,6 +310,9 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 	/* Comillas */
 	{Quote}
 	{ return symbol(QUOTE, yytext()); }
+
+	{Qr} {WhiteSpace}* {Ql}
+	{ return symbol(EMPTY, yytext()); }
 
 	{WhiteSpace}
 	{ /* Ignore */ }

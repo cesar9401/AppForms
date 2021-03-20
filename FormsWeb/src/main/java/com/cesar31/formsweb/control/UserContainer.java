@@ -23,6 +23,7 @@ public class UserContainer {
     private HashMap<String, String> editP;
 
     private FormContainer form;
+    private ComponentContainer component;
 
     public UserContainer() {
         this.addUsers = new ArrayList<>();
@@ -34,6 +35,7 @@ public class UserContainer {
         this.currentErrors = new ArrayList<>();
 
         this.form = new FormContainer(this);
+        this.component = new ComponentContainer(this);
     }
 
     /**
@@ -48,6 +50,7 @@ public class UserContainer {
                 case "CREAR":
                     addUser(t);
                     break;
+                    
                 case "EDIT":
                     editUser(t);
                     break;
@@ -63,13 +66,21 @@ public class UserContainer {
                 case "NUEVO_FORMULARIO":
                     form.addForm(t);
                     break;
-                    
+
                 case "ELIMINAR_FORMULARIO":
                     form.delForm(t);
                     break;
-                    
+
                 case "MODIFICAR_FORMULARIO":
                     form.editForm(t);
+                    break;
+
+                case "AGREGAR_COMPONENTE":
+                    component.addComponent(t);
+                    break;
+                    
+                case "ELIMINAR_COMPONENTE":
+                    component.delComponent(t);
                     break;
             }
         } else {
@@ -384,6 +395,7 @@ public class UserContainer {
         Error e = new Error(t.getValue(), typeError, t.getX(), t.getY());
 
         String description = (typeError.equals("LEXICO")) ? "La cadena no se reconoce en el lenguaje. " : "";
+        description += "Se encontro: " + type + ". ";
         description += "Se esperaba: ";
         for (int i = 0; i < expectedTokens.size(); i++) {
             if (!expectedTokens.get(i).equals("error")) {

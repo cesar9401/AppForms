@@ -75,17 +75,57 @@ public class TestParserMain {
 
         String input7 = "<!ini_solicitud:\"MODIFICAR_FORMULARIO\">"
                 + "      { \"PARAMETROS_FORMULARIO\":[{\n"
-                + "            \"ID\": \"$form1\",\n"
+                + "            \"ID\": \"$_ID1\",\n"
                 + "            \"TITULO\": \"Formulario Modificado para encuesta 1\",\n"
-                + "            \"NOMBRE\": \"formulario_encuesta_1_v2\",\n"
-                + "            \"TEMA\": \"Blue\"\n"
+                + "            \"NOMBRE\": \"fdsa\",\n"
+                + "            \"TEMA\": \"1fadsf\"\n"
+                + "           }         \n"
+                + "         ]\n"
+                + "      }\n"
+                + "<fin_solicitud!>";
+
+        String input8 = "<!ini_solicitud:\"AGREGAR_COMPONENTE\">\n"
+                + "      { \"PARAMETROS_COMPONENTE\":[{\n"
+                + "            \"ID\": \"$_text_cliente\",\n"
+                + "            \"NOMBRE_CAMPO\": \"Cliente\",\n"
+                + "            \"FILAS\": \"20\",\n"
+                + "            \"COLUMNAS\": \"10\",\n"
+                + "            \"FORMULARIO\": \"$form1\",\n"
+                + "            \"CLASE\": \"AREA_TEXTO \",\n"
+                + "            \"TEXTO_VISIBLE\": \"Nombre de cliente: \",\n"
+                + "            \"ALINEACION\": \"CENTRO\",\n"
+                + "            \"REQUERIDO\": \"SI\"\n"
+                + "           }         \n"
+                + "         ]\n"
+                + "      }\n"
+                + "<fin_solicitud!>";
+
+        String input9 = "<!ini_solicitud:\"AGREGAR_COMPONENTE\">\n"
+                + "      { \"PARAMETROS_COMPONENTE\":[{\n"
+                + "            \"ID\": \"$_grupo_paises\",\n"
+                + "            \"NOMBRE_CAMPO\": \"Pais\",\n"
+                + "            \"FORMULARIO\": \"$form1\",\n"
+                + "            \"CLASE\": \"CHECKBOX\",\n"
+                + "            \"TEXTO_VISIBLE\": \"Pais de Origen: \",\n"
+                + "            \"ALINEACION\": \"CENTRO\",\n"
+                + "            \"REQUERIDO\": \"SI\",\n"
+                + "            \"OPCIONES\": \"Guatemala|El Salvador|Honduras|OTRO\"\n"
+                + "           }         \n"
+                + "         ]\n"
+                + "      }\n"
+                + "<fin_solicitud!>";
+
+        String input10 = "<!ini_solicitud:\"ELIMINAR_COMPONENTE\">\n"
+                + "      { \"PARAMETROS_COMPONENTE\":[{\n"
+                + "            \"ID\": \"$_grupo_paises\",\n"
+                + "            \"FORMULARIO\": \"$form1\"\n"
                 + "           }         \n"
                 + "         ]\n"
                 + "      }\n"
                 + "<fin_solicitud!>";
 
         //debug(input2);
-        FormsLex lexer = new FormsLex(new StringReader(input7));
+        FormsLex lexer = new FormsLex(new StringReader(input10));
         FormsParser parser = new FormsParser(lexer);
 
         try {
