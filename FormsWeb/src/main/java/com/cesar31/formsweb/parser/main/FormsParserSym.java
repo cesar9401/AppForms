@@ -9,85 +9,88 @@ package com.cesar31.formsweb.parser.main;
 public class FormsParserSym {
   /* terminals */
   public static final int INIT_MANY_SOL = 4;
-  public static final int OLD_USER = 34;
-  public static final int LEFT = 74;
-  public static final int THEME = 45;
+  public static final int OLD_USER = 36;
+  public static final int LEFT = 76;
+  public static final int THEME = 47;
   public static final int TIMES = 19;
-  public static final int USER_C = 72;
-  public static final int DEL_FORM = 46;
-  public static final int STR_NUMBER = 79;
+  public static final int OPTION_SPACE = 26;
+  public static final int USER_C = 74;
+  public static final int DEL_FORM = 48;
+  public static final int STR_NUMBER = 82;
   public static final int PARAM = 6;
-  public static final int RIGHT = 75;
-  public static final int DATE_MOD = 37;
-  public static final int ROWS = 66;
-  public static final int CHECKBOX = 55;
-  public static final int NAME = 44;
-  public static final int PASS = 39;
-  public static final int STR_N = 26;
-  public static final int ID_ = 71;
+  public static final int RIGHT = 77;
+  public static final int DATE_MOD = 39;
+  public static final int ROWS = 68;
+  public static final int CHECKBOX = 57;
+  public static final int NAME = 46;
+  public static final int PASS = 41;
+  public static final int STR_N = 28;
+  public static final int ID_ = 73;
   public static final int COMMA = 15;
   public static final int RBRACE = 12;
   public static final int INTEGER = 7;
-  public static final int EDIT_USER = 31;
+  public static final int EDIT_USER = 33;
   public static final int LBRACE = 11;
-  public static final int LOGIN = 33;
-  public static final int DATE_ADD = 30;
-  public static final int CENTER = 73;
-  public static final int TEXT = 62;
-  public static final int ADD_COMP = 48;
+  public static final int LOGIN = 35;
+  public static final int DATE_ADD = 32;
+  public static final int CENTER = 75;
+  public static final int TEXT = 64;
+  public static final int ADD_COMP = 50;
   public static final int ERROR = 21;
-  public static final int REQUIRED = 64;
-  public static final int STR = 25;
-  public static final int NEW_FORM = 40;
+  public static final int REQUIRED = 66;
+  public static final int STR = 27;
+  public static final int NEW_FORM = 42;
   public static final int INIT_SOL = 2;
   public static final int EMPTY = 24;
-  public static final int DEL_USER = 32;
-  public static final int CLASS = 52;
+  public static final int DEL_USER = 34;
+  public static final int CLASS = 54;
+  public static final int STR_SPACE = 25;
   public static final int PLUS = 17;
   public static final int QUOTE = 23;
   public static final int DIVIDE = 20;
-  public static final int INDEX = 61;
-  public static final int ALIGN = 63;
-  public static final int JUSTIFY = 76;
+  public static final int INDEX = 63;
+  public static final int ALIGN = 65;
+  public static final int JUSTIFY = 78;
   public static final int SYMB = 22;
-  public static final int TEXT_FIELD = 53;
+  public static final int TEXT_FIELD = 55;
   public static final int GREATER = 10;
-  public static final int YES = 77;
-  public static final int EDIT_COMP = 70;
-  public static final int CRED = 29;
-  public static final int URL = 68;
-  public static final int FORM = 51;
+  public static final int YES = 79;
+  public static final int EDIT_COMP = 72;
+  public static final int CRED = 31;
+  public static final int URL = 70;
+  public static final int FORM = 53;
   public static final int EOF = 0;
-  public static final int OPTION_V = 78;
-  public static final int TEXT_AREA = 54;
-  public static final int NEW_USER = 35;
+  public static final int OPTION_V = 81;
+  public static final int TEXT_AREA = 56;
+  public static final int NEW_USER = 37;
   public static final int MINUS = 18;
   public static final int FIN_MANY_SOL = 5;
-  public static final int TITLE = 43;
-  public static final int DATE = 27;
+  public static final int TITLE = 45;
+  public static final int DATE = 29;
   public static final int error = 1;
   public static final int EXCL = 16;
-  public static final int DEL_COMP = 69;
-  public static final int ID = 42;
-  public static final int COLUMNS = 67;
+  public static final int DEL_COMP = 71;
+  public static final int ID = 44;
+  public static final int COLUMNS = 69;
   public static final int COLON = 8;
-  public static final int IMG = 58;
-  public static final int FILE = 57;
-  public static final int RADIO = 56;
-  public static final int NEW_PASS = 36;
+  public static final int IMG = 60;
+  public static final int FILE = 59;
+  public static final int RADIO = 58;
+  public static final int NEW_PASS = 38;
   public static final int RBRACKET = 14;
-  public static final int BTN = 60;
-  public static final int OPTION = 65;
-  public static final int EDIT_FORM = 47;
-  public static final int COMBO = 59;
+  public static final int BTN = 62;
+  public static final int OPTION = 67;
+  public static final int EDIT_FORM = 49;
+  public static final int COMBO = 61;
   public static final int FIN_SOL = 3;
   public static final int SMALLER = 9;
-  public static final int ADD_USER = 28;
+  public static final int NO = 80;
+  public static final int ADD_USER = 30;
   public static final int LBRACKET = 13;
-  public static final int PARAM_F = 41;
-  public static final int FIELD_N = 50;
-  public static final int USER = 38;
-  public static final int PARAM_C = 49;
+  public static final int PARAM_F = 43;
+  public static final int FIELD_N = 52;
+  public static final int USER = 40;
+  public static final int PARAM_C = 51;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -114,6 +117,8 @@ public class FormsParserSym {
   "SYMB",
   "QUOTE",
   "EMPTY",
+  "STR_SPACE",
+  "OPTION_SPACE",
   "STR",
   "STR_N",
   "DATE",
@@ -167,6 +172,7 @@ public class FormsParserSym {
   "RIGHT",
   "JUSTIFY",
   "YES",
+  "NO",
   "OPTION_V",
   "STR_NUMBER"
   };

@@ -44,15 +44,20 @@ Input = [^\n\r\"\\\|]+
 InputClean = [^\n\r\"\\\t\s\f\|]+
 Id = \" [\_\-\$] ([\_\-\$] | \w )+ \"
 
-str = {WhiteSpace}* {InputClean} ({WhiteSpace} | [\\] | {Input})+
+str = {WhiteSpace}* {InputClean} ( [\\] | {Input} )+ {WhiteSpace}*
+
+str_space = ({WhiteSpace} | [\\] | {Input})+
 
 // str_c = {WhiteSpace}* \w {str}*
 
 StringNoClean = \" {str} \"
+StringSpace = \" {str_space} \"
 
 //StringClean =  \" ([\\] | {InputClean})+ \"
 
 Options	= \" ({str} \| )* {str} \"
+Options_space	= \" ({str_space} \| )* {str_space} \"
+
 
 Quote = \"
 Ql = {Quote} {WhiteSpace}*
@@ -230,6 +235,9 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 	{Ql} "SI" {Qr}
 	{ return symbol(YES, yytext()); }
 
+	{Ql} "NO" {Qr}
+	{ return symbol(NO, yytext()); }
+
 	{Ql} "OPCIONES" {Qr}
 	{ return symbol(OPTION, yytext()); }
 
@@ -313,6 +321,12 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 
 	{Qr} {WhiteSpace}* {Ql}
 	{ return symbol(EMPTY, yytext()); }
+
+	{StringSpace}
+	{ return symbol(STR_SPACE, yytext()); }
+
+	{Options_space}
+	{ return symbol(OPTION_SPACE, yytext()); }
 
 	{WhiteSpace}
 	{ /* Ignore */ }

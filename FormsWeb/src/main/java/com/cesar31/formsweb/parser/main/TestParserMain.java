@@ -16,8 +16,9 @@ public class TestParserMain {
 
         String input1 = "<!ini_solicitud  : \"\n\tCREAR_USUARIO\t\n\" \n >"
                 + "{ \"    CREDENCIALES_USUARIO\" : [{ \n "
+                + "\"FECHA_CREACION   \": \" 2020-13-31 \",\n"
                 + "\"PASSWORD\" : \"123._()321\"\n  ,"
-                + "\"USUARIO\" : \"cesar@user_31\"\n,"
+                + "\"USUARIO\" : \"cesar@user_31\"\n"
                 + " }\n "
                 + "  ] \n"
                 + "} \n "
@@ -29,7 +30,7 @@ public class TestParserMain {
                 + "            \"NUEVO_PASSWORD\": \"12345678910\",\n"
                 + "            \"USUARIO_ANTIGUO\": \"juanito619\",\n"
                 + "            \"USUARIO_NUEVO\": \"juanito619lopez\",\n"
-                + "             \"FECHA_MODIFICACION\" : \"2002-12-21\"  \n"
+                + "\"FECHA_MODIFICACION\" : \"2002-12-32\"  \n"
                 + "}    \n"
                 + "          ]\n"
                 + "      }\n"
@@ -56,7 +57,7 @@ public class TestParserMain {
                 + "      { \"PARAMETROS_FORMULARIO\":[{\n"
                 + "            \"TEMA\": \"Dark\"\n,"
                 + "            \"ID\": \"$form1\",\n"
-                + "            \"TITULO\": \"Formulario para encuesta 1\",\n"
+                + "            \"TITULO\": \"\tFormulariopara encuesta 1\",\n"
                 + "            \"NOMBRE\": \"formulario_encuesta_1\",\n"
                 + "            \"FECHA_CREACION   \": \" 2020-12-31 \",\n"
                 + "            \"USUARIO_CREACION\": \"cesar_31\"\n"
@@ -91,10 +92,10 @@ public class TestParserMain {
                 + "            \"FILAS\": \"20\",\n"
                 + "            \"COLUMNAS\": \"10\",\n"
                 + "            \"FORMULARIO\": \"$form1\",\n"
-                + "            \"CLASE\": \"AREA_TEXTO \",\n"
+                + "            \"CLASE\": \" \tAREA_TEXTO \",\n"
                 + "            \"TEXTO_VISIBLE\": \"Nombre de cliente: \",\n"
                 + "            \"ALINEACION\": \"CENTRO\",\n"
-                + "            \"REQUERIDO\": \"SI\"\n"
+                + "            \"REQUERIDO\": \"NO\"\n"
                 + "           }         \n"
                 + "         ]\n"
                 + "      }\n"
@@ -124,8 +125,44 @@ public class TestParserMain {
                 + "      }\n"
                 + "<fin_solicitud!>";
 
+        String input11 = "<!ini_solicitud:\"MODIFICAR_COMPONENTE\">\n"
+                + "      { \"PARAMETROS_COMPONENTE\":[{\n"
+                + "            \"ID\": \"$_grupo_paises\",\n"
+                + "            \"FORMULARIO\": \"$form1\",\n"
+                + "            \"CLASE\": \"CHECKBOX\",\n"
+                + "            \"INDICE\": \"1\",\n"
+                + "            \"ALINEACION\": \"DERECHA\","
+                + "            \"FILAS\": \"15\","
+                + "            \"OPCIONES\": \"\tGuatemala\t\n|\tEl Salvador|Honduras|OTRO\"\n"
+                + "           }         \n"
+                + "         ]\n"
+                + "      }\n"
+                + "<fin_solicitud!>";
+
+        String input = "<!ini_solicitudes>\n"
+                + "    <!ini_solicitud:\"CREAR_USUARIO\">\n"
+                + "        { \"CREDENCIALES_USUARIO\":[{\n"
+                + "\" FECHA_CREACION \" : \" 2020-12-31 \","
+                + "                \"USUARIO\": \"juanito619\"\n"
+                + "                \"PASSWORD\": \"12345678\"\n"
+                + "            }         \n"
+                + "            ]\n"
+                + "        }\n"
+                + "    <fin_solicitud!>\n"
+                + "\n"
+                + "    <!ini_solicitud:\"CREAR_USUARIO\">\n"
+                + "        { \"CREDENCIALES_USUARIO\":[{\n"
+                + "                \"PASSWORD\": \"#$pass_21\",\n"
+                + "                \"USUARIO\": \"jose_12\"\n"
+                + "            }         \n"
+                + "            ]\n"
+                + "        }\n"
+                + "    <fin_solicitud!>\n"
+                + "    \n"
+                + "<!fin_solicitudes>";
+
         //debug(input2);
-        FormsLex lexer = new FormsLex(new StringReader(input10));
+        FormsLex lexer = new FormsLex(new StringReader(input));
         FormsParser parser = new FormsParser(lexer);
 
         try {
@@ -148,6 +185,18 @@ public class TestParserMain {
         } catch (Exception ex) {
             ex.printStackTrace(System.out);
         }
+
+//        String entrada = "\t entrada \n";
+//        System.out.println("entrada = " + entrada);
+//        String entrada1 = entrada.strip();
+//        System.out.println("entrada1 = " + entrada1);
+//        System.out.println("entrada = "  + entrada);
+//        
+//        String entrada2 = entrada.trim();
+//        System.out.println("entrada2 = " + entrada2);
+//        System.out.println("entrada = " + entrada);
+//        
+//        System.out.println(entrada1.equals(entrada2));
     }
 
     public static void debug(String str) {

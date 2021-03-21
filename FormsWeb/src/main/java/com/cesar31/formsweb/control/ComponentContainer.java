@@ -15,6 +15,11 @@ public class ComponentContainer {
         this.container = container;
     }
 
+    /**
+     * Procesar solicitudes para agregar componentes
+     *
+     * @param t
+     */
     public void addComponent(Token t) {
         boolean created = true;
         Component c = new Component();
@@ -52,9 +57,7 @@ public class ComponentContainer {
                     created = isPresent("URL");
                     getUrl(t, r, kind, c);
                     break;
-                default:
             }
-
         }
 
         if (!isPresent("ID")) {
@@ -68,7 +71,12 @@ public class ComponentContainer {
             setError(t, "NOMBRE_CAMPO", r);
             created = false;
         } else {
-            c.setFieldName(getParam("NOMBRE_CAMPO"));
+            if (!container.haveSpace("NOMBRE_CAMPO")) {
+                c.setFieldName(getParam("NOMBRE_CAMPO"));
+            } else {
+                container.setErrorSpace(t, r, "NOMBRE_CAMPO");
+                created = false;
+            }
         }
 
         if (!isPresent("FORMULARIO")) {
@@ -97,8 +105,17 @@ public class ComponentContainer {
             c.setAling(getParam("ALINEACION"));
         }
 
-        boolean required = getParam("REQUERIDO") != null;
-        c.setRequired(required);
+        if (isPresent("REQUERIDO")) {
+            String answer = getParam("REQUERIDO");
+            if (answer.equals("SI") || answer.equals("NO")) {
+                boolean required = answer.equals("SI");
+                c.setRequired(required);
+            } else {
+                created = false;
+            }
+        } else {
+            c.setRequired(false);
+        }
 
         if (!container.getCurrentErrors().isEmpty()) {
             container.getCurrentErrors().forEach(e -> {
@@ -117,7 +134,7 @@ public class ComponentContainer {
         }
 
         if (created) {
-            System.out.println(c.toString());
+            System.out.println("Crear Componente -> " + c.toString());
             System.out.println("Lineas -> " + c.getRows());
             System.out.println("Columnas -> " + c.getColumns());
             System.out.println("URL -> " + c.getUrl());
@@ -126,50 +143,170 @@ public class ComponentContainer {
                 System.out.print(p + "   ");
             });
         }
-        
+
         clearHash();
     }
-    
+
+    /**
+     * Porcesar solicitudes para eliminar componente
+     *
+     * @param t
+     */
     public void delComponent(Token t) {
         boolean created = true;
         Component c = new Component();
         String r = "ELIMINAR_COMPONENTE";
-        
-        if(!isPresent("ID")) {
+
+        if (!isPresent("ID")) {
             setError(t, "ID", r);
             created = false;
         } else {
             c.setId(getParam("ID"));
         }
-        
-        if(!isPresent("FORMULARIO")) {
+
+        if (!isPresent("FORMULARIO")) {
             setError(t, "FORMULARIO", r);
             created = false;
         } else {
             c.setForm(getParam("FORMULARIO"));
         }
-        
-        if(!container.getCurrentErrors().isEmpty()) {
+
+        if (!container.getCurrentErrors().isEmpty()) {
             container.getCurrentErrors().forEach(e -> {
                 String s = e.getLexema();
-                if(s.equals("ID") || s.equals("FORMULARIO")) {
+                if (s.equals("ID") || s.equals("FORMULARIO")) {
                     setCurrentErrors(e, s, r);
                 }
             });
             container.getCurrentErrors().clear();
             created = false;
         }
-        
-        if(!container.getTokens().isEmpty()) {
+
+        if (!container.getTokens().isEmpty()) {
             container.freeTokens(r);
             created = false;
         }
-        
-        if(created) {
+
+        if (created) {
             System.out.println("Eliminar componente -> " + c.toString());
         }
-        
+
         //Limpiar HashMaps
+        clearHash();
+    }
+
+    /**
+     * Procesar solicitud para editar componentes
+     *
+     * @param t
+     */
+    public void editComponent(Token t) {
+        boolean created = true;
+        Component c = new Component();
+        String r = "MODIFICAR_COMPONENTE";
+
+        if (!isPresent("ID")) {
+            setError(t, "ID", r);
+            created = false;
+        } else {
+            c.setId(getParam("ID"));
+        }
+
+        if (!isPresent("FORMULARIO")) {
+            setError(t, "FORMULARIO", r);
+            created = false;
+        } else {
+            c.setForm(getParam("FORMULARIO"));
+        }
+
+        if (!container.getParams().isEmpty()) {
+            if (isPresent("NOMBRE_CAMPO")) {
+                if (!container.haveSpace("NOMBRE_CAMPO")) {
+                    c.setFieldName(getParam("NOMBRE_CAMPO"));
+                } else {
+                    container.setErrorSpace(t, r, "NOMBRE_CAMPO");
+                    created = false;
+                }
+            }
+
+            if (isPresent("CLASE")) {
+                c.setKind(getParam("CLASE"));
+            }
+
+            if (isPresent("INDICE")) {
+                c.setIndex(Integer.valueOf(getParam("INDICE")));
+            }
+
+            if (isPresent("TEXTO_VISIBLE")) {
+                c.setText(getParam("TEXTO_VISIBLE"));
+            }
+
+            if (isPresent("ALINEACION")) {
+                c.setAling(getParam("ALINEACION"));
+            }
+
+            if (isPresent("REQUERIDO")) {
+                String answer = getParam("REQUERIDO");
+                if (answer.equals("SI") || answer.equals("NO")) {
+                    boolean required = answer.equals("SI");
+                    c.setRequired(required);
+                } else {
+                    created = false;
+                }
+            }
+
+            if (isPresent("OPCIONES")) {
+                getOptions(t, r, "", c);
+            }
+
+            if (isPresent("URL")) {
+                getUrl(t, r, "", c);
+            }
+
+            if (isPresent("FILAS")) {
+                c.setRows(Integer.valueOf(getParam("FILAS")));
+            }
+
+            if (isPresent("COLUMNAS")) {
+                c.setRows(Integer.valueOf(getParam("COLUMNAS")));
+            }
+        } else {
+            Error e = new Error("", "SINTACTICO", t.getX(), t.getY());
+            String description = "En la peticion " + r + ", fila = " + t.getX() + ", columna = " + t.getY() + ", se deben incluir lo parametros que se quieran modificar.";
+            description += "(e.g., INDICE, CLASE, OPCIONES, ALINEACION)";
+            e.setDescription(description);
+            container.getErrors().add(e);
+            created = false;
+        }
+
+        if (!container.getCurrentErrors().isEmpty()) {
+            container.getCurrentErrors().forEach(e -> {
+                String s = e.getLexema();
+                if (s.equals("ID") || s.equals("CLASE") || s.equals("NOMBRE_CAMPO") || s.equals("FORMULARIO") || s.equals("TEXTO_VISIBLE") || s.equals("ALINEACION") || s.equals("REQUERIDO") || s.equals("FILAS") || s.equals("COLUMNAS") || s.equals("INDICE")) {
+                    setCurrentErrors(e, s, r);
+                }
+            });
+            container.getCurrentErrors().clear();
+            created = false;
+        }
+
+        if (!container.getTokens().isEmpty()) {
+            container.freeTokens(r);
+            created = false;
+        }
+
+        if (created) {
+            System.out.println("Editar componente: " + c.toString());
+            System.out.println("Lineas -> " + c.getRows());
+            System.out.println("Columnas -> " + c.getColumns());
+            System.out.println("URL -> " + c.getUrl());
+            System.out.print("Opciones -> ");
+            c.getOptions().forEach(p -> {
+                System.out.print(p + "   ");
+            });
+        }
+
+        // Limpiar HashMaps
         clearHash();
     }
 
@@ -259,27 +396,56 @@ public class ComponentContainer {
         }
     }
 
+    /**
+     * Errores de atributos repetidos
+     *
+     * @param e
+     * @param param
+     * @param request
+     */
     private void setCurrentErrors(Error e, String param, String request) {
         String description = "Ya se ha indicado " + param + " para la peticion " + request + ".";
         e.setDescription(description);
         container.getErrors().add(e);
     }
 
+    /**
+     * Limpiar HashMaps de atributos y tokens
+     */
     private void clearHash() {
         container.getParams().clear();
         container.getTokens().clear();
     }
 
+    /**
+     * Agregar errores de atributos que deberian estar en alguna solicitud
+     *
+     * @param t
+     * @param param
+     * @param request
+     */
     private void setError(Token t, String param, String request) {
         container.getErrors().add(container.getRequestError(t, param, request));
     }
 
+    /**
+     * Verificar si algun parametro de alguna solicitud esta presente
+     *
+     * @param param
+     * @return
+     */
     private boolean isPresent(String param) {
         return container.getParams().containsKey(param);
     }
 
+    /**
+     * Obtener el parametro de alguna solicitud y removerlo de HashMaps
+     *
+     * @param param
+     * @return
+     */
     private String getParam(String param) {
         container.getTokens().remove(param);
-        return container.getParams().remove(param);
+        return container.getParams().remove(param).strip();
     }
 }

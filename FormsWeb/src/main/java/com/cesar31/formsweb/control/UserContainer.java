@@ -3,6 +3,7 @@ package com.cesar31.formsweb.control;
 import com.cesar31.formsweb.model.User;
 import com.cesar31.formsweb.parser.main.Token;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,9 +21,11 @@ public class UserContainer {
     private List<Error> currentErrors;
     private HashMap<String, String> params;
     private HashMap<String, Token> tokens;
-    private HashMap<String, String> editP;
 
+    // Formularios
     private FormContainer form;
+
+    // Componentes
     private ComponentContainer component;
 
     public UserContainer() {
@@ -30,7 +33,6 @@ public class UserContainer {
         this.errors = new ArrayList<>();
         this.params = new HashMap<>();
         this.tokens = new HashMap<>();
-        this.editP = new HashMap<>();
         this.editUsers = new ArrayList<>();
         this.currentErrors = new ArrayList<>();
 
@@ -50,7 +52,7 @@ public class UserContainer {
                 case "CREAR":
                     addUser(t);
                     break;
-                    
+
                 case "EDIT":
                     editUser(t);
                     break;
@@ -78,9 +80,13 @@ public class UserContainer {
                 case "AGREGAR_COMPONENTE":
                     component.addComponent(t);
                     break;
-                    
+
                 case "ELIMINAR_COMPONENTE":
                     component.delComponent(t);
+                    break;
+
+                case "MODIFICAR_COMPONENTE":
+                    component.editComponent(t);
                     break;
             }
         } else {
@@ -97,11 +103,7 @@ public class UserContainer {
      */
     public void setNewParam(Token t, String u, String param) {
         if (!params.containsKey(param)) {
-            if (param.equals("FECHA_CREACION")) {
-                params.put(param, fS_(u));
-            } else {
-                params.put(param, fS(u));
-            }
+            params.put(param, fS(u));
             tokens.put(param, t);
             //System.out.println(param + ": " + edit.get(param));
         } else {
@@ -129,27 +131,38 @@ public class UserContainer {
             errors.add(getRequestError(t, "USUARIO", r));
             created = false;
         } else {
-            u.setUser(params.remove("USUARIO"));
-            tokens.remove("USUARIO");
+            if (!haveSpace("USUARIO")) {
+                u.setUser(getParam("USUARIO"));
+            } else {
+                setErrorSpace(t, r, "USUARIO");
+                created = false;
+            }
         }
 
         if (!params.containsKey("PASSWORD")) {
             errors.add(getRequestError(t, "PASSWORD", r));
             created = false;
         } else {
-            u.setPassword(params.remove("PASSWORD"));
-            tokens.remove("PASSWORD");
+            if (!haveSpace("PASSWORD")) {
+                u.setPassword(getParam("PASSWORD"));
+            } else {
+                setErrorSpace(t, r, "PASSWORD");
+                created = false;
+            }
         }
 
         if (!params.containsKey("FECHA_CREACION")) {
             u.setCreationDate(LocalDate.now());
             u.setcDate(LocalDate.now().toString());
         } else {
-            u.setCreationDate(fLD(params.get("FECHA_CREACION")));
-            u.setcDate(params.get("FECHA_CREACION"));
-
-            params.remove("FECHA_CREACION");
-            tokens.remove("FECHA_CREACION");
+            String string = params.get("FECHA_CREACION");
+            LocalDate date = getDate(tokens.get("FECHA_CREACION"), "FECHA_CREACION", r);
+            if (date != null) {
+                u.setCreationDate(date);
+                u.setcDate(string);
+            } else {
+                created = false;
+            }
         }
 
         // Revisar Errores en currentErrors
@@ -194,18 +207,25 @@ public class UserContainer {
         if (!params.containsKey("USUARIO")) {
             errors.add(getRequestError(t, "USUARIO", r));
             created = false;
-
         } else {
-            u.setUser(params.remove("USUARIO"));
-            tokens.remove("USUARIO");
+            if (!haveSpace("USUARIO")) {
+                u.setUser(getParam("USUARIO"));
+            } else {
+                setErrorSpace(t, r, "USUARIO");
+                created = false;
+            }
         }
 
         if (!params.containsKey("PASSWORD")) {
             errors.add(getRequestError(t, "PASSWORD", r));
             created = false;
         } else {
-            u.setPassword(params.remove("PASSWORD"));
-            tokens.remove("PASSWORD");
+            if (!haveSpace("PASSWORD")) {
+                u.setPassword(getParam("PASSWORD"));
+            } else {
+                setErrorSpace(t, r, "PASSWORD");
+                created = false;
+            }
         }
 
         //Verificar errores
@@ -250,8 +270,12 @@ public class UserContainer {
             errors.add(getRequestError(t, "USUARIO", r));
             created = false;
         } else {
-            u.setUser(params.remove("USUARIO"));
-            tokens.remove("USUARIO");
+            if (!haveSpace("USUARIO")) {
+                u.setUser(getParam("USUARIO"));
+            } else {
+                setErrorSpace(t, r, "USUARIO");
+                created = false;
+            }
         }
 
         //Verificar errores
@@ -283,30 +307,6 @@ public class UserContainer {
     }
 
     /**
-     * Obtener los parametros para los usuarios que seran editados
-     *
-     * @param t
-     * @param u
-     * @param param
-     */
-    public void setEditParam(Token t, String u, String param) {
-        if (!editP.containsKey(param)) {
-            if (param.equals("FECHA_MODIFICACION")) {
-                editP.put(param, fS_(u));
-            } else {
-                editP.put(param, fS(u));
-            }
-            //System.out.println(param + ": " + edit.get(param));
-        } else {
-            Error e = new Error(param, "SINTACTICO", t.getX(), t.getY());
-            String description = "Ya se ha indicado " + param + " para la peticion.";
-            e.setDescription(description);
-            //System.out.println(e.toString());
-            errors.add(e);
-        }
-    }
-
-    /**
      * Procesar peticiones para editar usuarios
      *
      * @param t
@@ -316,33 +316,72 @@ public class UserContainer {
         User u = new User();
         String r = "MODIFICAR_USUARIO";
 
-        if (!editP.containsKey("USUARIO_ANTIGUO")) {
+        if (!params.containsKey("USUARIO_ANTIGUO")) {
             errors.add(getRequestError(t, "USUARIO_ANTIGUO", r));
             created = false;
         } else {
-            u.setUser(editP.get("USUARIO_ANTIGUO"));
+            if (!haveSpace("USUARIO_ANTIGUO")) {
+                u.setUser(getParam("USUARIO_ANTIGUO"));
+            } else {
+                setErrorSpace(t, r, "USUARIO_ANTIGUO");
+                created = false;
+            }
         }
 
-        if (!editP.containsKey("USUARIO_NUEVO")) {
+        if (!params.containsKey("USUARIO_NUEVO")) {
             errors.add(getRequestError(t, "USUARIO_NUEVO", r));
             created = false;
         } else {
-            u.setNewUser(editP.get("USUARIO_NUEVO"));
+            if (!haveSpace("USUARIO_NUEVO")) {
+                u.setNewUser(getParam("USUARIO_NUEVO"));
+            } else {
+                setErrorSpace(t, r, "USUARIO_NUEVO");
+                created = false;
+            }
         }
 
-        if (!editP.containsKey("NUEVO_PASSWORD")) {
+        if (!params.containsKey("NUEVO_PASSWORD")) {
             errors.add(getRequestError(t, "NUEVO_PASSWORD", r));
             created = false;
         } else {
-            u.setPassword(editP.get("NUEVO_PASSWORD"));
+            if (!haveSpace("NUEVO_PASSWORD")) {
+                u.setPassword(getParam("NUEVO_PASSWORD"));
+            } else {
+                setErrorSpace(t, r, "NUEVO_PASSWORD");
+                created = false;
+            }
         }
 
-        if (!editP.containsKey("FECHA_MODIFICACION")) {
+        if (!params.containsKey("FECHA_MODIFICACION")) {
             u.setEditDate(LocalDate.now());
             u.seteDate(LocalDate.now().toString());
         } else {
-            u.setEditDate(fLD(editP.get("FECHA_MODIFICACION")));
-            u.seteDate(editP.get("FECHA_MODIFICACION"));
+            String string = params.get("FECHA_MODIFICACION");
+            LocalDate date = getDate(tokens.get("FECHA_MODIFICACION"), "FECHA_MODIFICACION", r);
+            if (date != null) {
+                u.setEditDate(date);
+                u.setcDate(string);
+            } else {
+                created = false;
+            }
+        }
+
+        if (!currentErrors.isEmpty()) {
+            currentErrors.forEach(e -> {
+                String s = e.getLexema();
+                if (s.equals("USUARIO_ANTIGUO") || s.equals("USUARIO_NUEVO") || s.equals("NUEVO_PASSWORD") || s.equals("FECHA_MODIFICACION")) {
+                    String description = "Ya se ha indicado " + s + " para la peticion " + r + ".";
+                    e.setDescription(description);
+                    errors.add(e);
+                }
+            });
+            currentErrors.clear();
+            created = false;
+        }
+
+        if (!tokens.isEmpty()) {
+            freeTokens(r);
+            created = false;
         }
 
         if (created) {
@@ -351,7 +390,8 @@ public class UserContainer {
         }
 
         // Limpiar HashMap
-        editP.clear();
+        params.clear();
+        tokens.clear();
     }
 
     /**
@@ -410,6 +450,55 @@ public class UserContainer {
         e.setDescription(description);
 
         errors.add(e);
+    }
+
+    private String getParam(String param) {
+        this.tokens.remove(param);
+        return this.params.remove(param).strip();
+    }
+
+    /**
+     * Verificar si no tiene espacios
+     *
+     * @param param
+     * @return
+     */
+    public boolean haveSpace(String param) {
+        //return params.get(param).contains(" "); //Solo espacios
+        return params.get(param).contains(" ") || params.get(param).contains("\t") || params.get(param).contains("\n");
+    }
+
+    /**
+     * Errores por espacios
+     *
+     * @param t
+     * @param r
+     * @param param
+     */
+    public void setErrorSpace(Token t, String r, String param) {
+        Error e = new Error(param, "SINTACTICO", t.getX(), t.getY());
+        String description = "En la peticion " + r + ", el valor para el parametro " + param + ", no debe de incluir espacios, tabulaciones o saltos de linea.";
+        e.setDescription(description);
+        errors.add(e);
+
+        // Eliminar de tokens y params
+        //tokens.remove(param);
+        //params.remove(param);
+        getParam(param);
+    }
+
+    public LocalDate getDate(Token t, String param, String r) {
+        LocalDate date = null;
+        String string = getParam(param);
+        try {
+            date = LocalDate.parse(string);
+        } catch (DateTimeParseException ex) {
+            Error e = new Error(r, "SEMANTICO", t.getX(), t.getY());
+            String description = "En la peticion " + r + ", el valor para el parametro " + param + "(" + string + "), no es valido";
+            e.setDescription(description);
+            errors.add(e);
+        }
+        return date;
     }
 
     public String fS(String string) {
