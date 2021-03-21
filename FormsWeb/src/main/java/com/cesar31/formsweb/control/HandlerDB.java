@@ -10,9 +10,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -20,7 +23,7 @@ import java.util.List;
  */
 public class HandlerDB {
 
-    public final String DB_URL = "forms.db";
+    public static final String DB_URL = "forms.db";
 
     public HandlerDB() {
     }
@@ -53,7 +56,7 @@ public class HandlerDB {
 
         return data;
     }
-
+    
     /**
      * Vereficar si el usuario esta disponible y agregar a DB
      *
@@ -128,5 +131,16 @@ public class HandlerDB {
     private boolean isInSystem(String user) {
         List<User> usersSystem = readUsers();
         return usersSystem.stream().anyMatch(u -> (u.getUser().equals(user)));
+    }
+    
+    public static void writeDate(String json) {
+        File file = new File(DB_URL);
+        try {
+            try (PrintWriter writer = new PrintWriter(file)) {
+                writer.write(json);
+            }
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace(System.out);
+        }
     }
 }

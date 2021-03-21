@@ -15,19 +15,22 @@ public class TestParserDB {
         HandlerDB db = new HandlerDB();
         String data = db.readDate("forms.db");
         //System.out.println(data);
+        
+        Boolean value = Boolean.valueOf("true");
+        System.out.println(value);
 
-        DataLex lex = new DataLex(new StringReader(data));
-        DataParser parser = new DataParser(lex);
-        try {
-            parser.parse();
-            if(parser.isParsed()) {
-                List<User> users = parser.getDaoDB().getUsers();
-                users.forEach(u -> {
-                    System.out.println(u);
-                });
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace(System.out);
-        }
+//        DataLex lex = new DataLex(new StringReader(data));
+//        DataParser parser = new DataParser(lex);
+//        try {
+//            parser.parse();
+//            if(parser.isParsed()) {
+//                List<User> users = parser.getDaoDB().getUsers();
+//                users.forEach(u -> {
+//                    System.out.println(u);
+//                });
+//            }
+//        } catch (Exception ex) {
+//            ex.printStackTrace(System.out);
+//        }
     }
 }

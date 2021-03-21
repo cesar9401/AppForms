@@ -1,6 +1,7 @@
 package com.cesar31.formsweb.control;
 
 import com.cesar31.formsweb.model.Component;
+import com.cesar31.formsweb.model.Operation;
 import com.cesar31.formsweb.parser.main.Token;
 
 /**
@@ -37,12 +38,9 @@ public class ComponentContainer {
             c.setKind(getParam("CLASE"));
             switch (kind) {
                 case "CHECKBOX":
-                    System.out.println("CHECKBOX");
                 case "RADIO":
-                    System.out.println("RADIO");
                 case "COMBO":
                     created = isPresent("OPCIONES");
-                    System.out.println("COMBO");
                     getOptions(t, r, kind, c);
                     break;
 
@@ -134,14 +132,9 @@ public class ComponentContainer {
         }
 
         if (created) {
-            System.out.println("Crear Componente -> " + c.toString());
-            System.out.println("Lineas -> " + c.getRows());
-            System.out.println("Columnas -> " + c.getColumns());
-            System.out.println("URL -> " + c.getUrl());
-            System.out.print("Opciones -> ");
-            c.getOptions().forEach(p -> {
-                System.out.print(p + "   ");
-            });
+            //System.out.println("Crear Componente -> " + c.toString());
+            c.setOp(Operation.ADD);
+            container.addRequest(c);
         }
 
         clearHash();
@@ -188,7 +181,9 @@ public class ComponentContainer {
         }
 
         if (created) {
-            System.out.println("Eliminar componente -> " + c.toString());
+            //System.out.println("Eliminar componente -> " + c.toString());
+            c.setOp(Operation.DEL);
+            container.addRequest(c);
         }
 
         //Limpiar HashMaps
@@ -296,14 +291,9 @@ public class ComponentContainer {
         }
 
         if (created) {
-            System.out.println("Editar componente: " + c.toString());
-            System.out.println("Lineas -> " + c.getRows());
-            System.out.println("Columnas -> " + c.getColumns());
-            System.out.println("URL -> " + c.getUrl());
-            System.out.print("Opciones -> ");
-            c.getOptions().forEach(p -> {
-                System.out.print(p + "   ");
-            });
+            //System.out.println("Editar componente: " + c.toString());
+            c.setOp(Operation.EDIT);
+            container.addRequest(c);
         }
 
         // Limpiar HashMaps

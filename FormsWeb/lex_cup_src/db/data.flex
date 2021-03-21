@@ -20,16 +20,51 @@ import java_cup.runtime.*;
 	private Symbol setType(int type, Object value) {
 		String s = value.toString();
 
-		if(s.equals("user"))
-			return symbol(USER, s);
-		if(s.equals("password"))
-			return symbol(PASS, s);
-		if(s.equals("cDate"))
-			return symbol(C_DATE, s);
-		if(s.equals("eDate"))
-			return symbol(E_DATE, s);
+		switch(s) {
+			case "user":
+				return symbol(USER, s);
+			case "password":
+				return symbol(PASS, s);
+			case "cDate":
+				return symbol(C_DATE, s);
+			case "eDate":
+				return symbol(E_DATE, s);
+			case "id":
+				return symbol(ID, s);
+			case "title":
+				return symbol(TITLE, s);
+			case "name":
+				return symbol(NAME, s);
+			case "theme":
+				return symbol(THEME, s);
+			case "components":
+				return symbol(COMP, s);
+			case "fieldName":
+				return symbol(FIELD_N, s);
+			case "form":
+				return symbol(FORM, s);
+			case "kind":
+				return symbol(TIPO, s);
+			case "index":
+				return symbol(INDEX, s);
+			case "text":
+				return symbol(TEXT, s);
+			case "aling":
+				return symbol(ALING, s);
+			case "required":
+				return symbol(REQUIRED, s);
+			case "url":
+				return symbol(URL, s);
+			case "options":
+				return symbol(OPT, s);
+			case "rows":
+				return symbol(ROWS, s);
+			case "columns":
+				return symbol(COLUMNS, s);
 
-		return symbol(STR, value.toString());
+			default:
+				return symbol(STR, s);
+		}
 	}
 
 	private Symbol symbol(int type) {
@@ -47,16 +82,36 @@ import java_cup.runtime.*;
 %eofval}
 %eofclose
 
+/* Integer */
+Integer = 0 | [1-9][0-9]*
+
 /* Espacios */
 LineTerminator = \r|\n|\r\n
 WhiteSpace = {LineTerminator}|[\s\t\f]
-Null = "null"
 
 %state STRING
 
 %%
 
 <YYINITIAL> {
+
+	"USERS"
+	{ return symbol(USERS); }
+
+	"FORMS"
+	{ return symbol(FORMS); }
+
+	"null"
+	{ return symbol(NULL, String.valueOf(yytext())); }
+
+	"true"
+	{ return symbol(TRUE, Boolean.valueOf(yytext())); }
+
+	"false"
+	{ return symbol(FALSE, Boolean.valueOf(yytext())); }
+
+	{Integer}
+	{ return symbol(INTEGER, Integer.valueOf(yytext())); }
 
 	"["
 	{ return symbol(LBRACKET); }
@@ -75,9 +130,6 @@ Null = "null"
 
 	","
 	{ return symbol(COMMA); }
-
-	{Null}
-	{ return symbol(NULL, new String(yytext())); }
 
 	\"
 	{

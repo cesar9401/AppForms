@@ -2,12 +2,14 @@ package com.cesar31.formsweb.model;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author cesar31
  */
-public class Form {
+public class Form extends Request{
 
     public interface NoView {
     };
@@ -18,11 +20,14 @@ public class Form {
     private String theme;
     private String user;
     private String cDate;
+    
+    private List<Component> components;
 
     @JsonView(NoView.class)
     private LocalDate creationDate;
 
     public Form() {
+        components = new ArrayList<>();
     }
 
     public Form(String id, String title, String name) {
@@ -87,8 +92,16 @@ public class Form {
         this.creationDate = creationDate;
     }
 
+    public List<Component> getComponents() {
+        return components;
+    }
+
+    public void setComponents(List<Component> components) {
+        this.components = components;
+    }
+    
     @Override
     public String toString() {
-        return "Form{" + "id=" + id + ", title=" + title + ", name=" + name + ", theme=" + theme + ", user=" + user + ", creationDate=" + creationDate + '}';
+        return super.toString() + " Form{" + "id=" + id + ", title=" + title + ", name=" + name + ", theme=" + theme + ", user=" + user + ", creationDate=" + creationDate + '}';
     }
 }

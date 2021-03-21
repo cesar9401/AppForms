@@ -7,7 +7,7 @@ import java.util.List;
  *
  * @author cesar31
  */
-public class Component {
+public class Component extends Request {
 
     private String id;
     private String fieldName;
@@ -136,6 +136,6 @@ public class Component {
 
     @Override
     public String toString() {
-        return "Component{" + "id=" + id + ", fieldName=" + fieldName + ", form=" + form + ", kind=" + kind + ", index=" + index + ", text=" + text + ", aling=" + aling + ", required=" + required + '}';
+        return super.toString() + " Component{" + "id=" + id + ", fieldName=" + fieldName + ", form=" + form + ", kind=" + kind + ", index=" + index + ", text=" + text + ", aling=" + aling + ", required=" + required + '}';
     }
 }

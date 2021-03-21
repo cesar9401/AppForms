@@ -1,6 +1,7 @@
 package com.cesar31.formsweb.control;
 
 import com.cesar31.formsweb.model.Form;
+import com.cesar31.formsweb.model.Operation;
 import com.cesar31.formsweb.parser.main.Token;
 import java.time.LocalDate;
 
@@ -101,7 +102,9 @@ public class FormContainer {
         }
 
         if (created) {
-            System.out.println("Nuevo formulario: " + f.toString());
+            //System.out.println("Nuevo formulario: " + f.toString());
+            f.setOp(Operation.ADD);
+            container.addRequest(f);
         }
 
         // Limpiar HashMaps
@@ -142,7 +145,9 @@ public class FormContainer {
         }
 
         if (created) {
-            System.out.println("Eliminar formulario: " + f.toString());
+            //System.out.println("Eliminar formulario: " + f.toString());
+            f.setOp(Operation.DEL);
+            container.getRequests().add(f);
         }
 
         // Limpiar HashMaps
@@ -211,7 +216,9 @@ public class FormContainer {
         }
 
         if (created) {
-            System.out.println("Editar formulario: " + f.toString());
+            //System.out.println("Editar formulario: " + f.toString());
+            f.setOp(Operation.EDIT);
+            container.addRequest(f);
         }
 
         // Limpiar HashMaps

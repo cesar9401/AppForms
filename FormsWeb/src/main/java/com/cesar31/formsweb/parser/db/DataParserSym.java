@@ -8,24 +8,47 @@ package com.cesar31.formsweb.parser.db;
 /** CUP generated class containing symbol constants. */
 public class DataParserSym {
   /* terminals */
-  public static final int LBRACE = 4;
-  public static final int COLON = 6;
-  public static final int STR = 9;
-  public static final int C_DATE = 12;
-  public static final int USER = 10;
-  public static final int NULL = 14;
-  public static final int ERROR = 8;
+  public static final int FORM = 23;
+  public static final int LBRACKET = 4;
+  public static final int TIPO = 24;
+  public static final int STR = 11;
+  public static final int INTEGER = 35;
+  public static final int USERS = 3;
+  public static final int ROWS = 31;
+  public static final int PASS = 13;
+  public static final int COMMA = 9;
+  public static final int REQUIRED = 28;
+  public static final int COMP = 21;
+  public static final int FIELD_N = 22;
+  public static final int ID = 17;
   public static final int EOF = 0;
-  public static final int RBRACKET = 3;
+  public static final int RBRACKET = 5;
+  public static final int TRUE = 33;
   public static final int error = 1;
-  public static final int COMMA = 7;
-  public static final int PASS = 11;
-  public static final int E_DATE = 13;
-  public static final int LBRACKET = 2;
-  public static final int RBRACE = 5;
+  public static final int NULL = 16;
+  public static final int URL = 29;
+  public static final int NAME = 19;
+  public static final int ERROR = 10;
+  public static final int COLON = 8;
+  public static final int LBRACE = 6;
+  public static final int INDEX = 25;
+  public static final int TITLE = 18;
+  public static final int THEME = 20;
+  public static final int ALING = 27;
+  public static final int FORMS = 2;
+  public static final int COLUMNS = 32;
+  public static final int C_DATE = 14;
+  public static final int RBRACE = 7;
+  public static final int E_DATE = 15;
+  public static final int OPT = 30;
+  public static final int TEXT = 26;
+  public static final int USER = 12;
+  public static final int FALSE = 34;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
+  "FORMS",
+  "USERS",
   "LBRACKET",
   "RBRACKET",
   "LBRACE",
@@ -38,7 +61,26 @@ public class DataParserSym {
   "PASS",
   "C_DATE",
   "E_DATE",
-  "NULL"
+  "NULL",
+  "ID",
+  "TITLE",
+  "NAME",
+  "THEME",
+  "COMP",
+  "FIELD_N",
+  "FORM",
+  "TIPO",
+  "INDEX",
+  "TEXT",
+  "ALING",
+  "REQUIRED",
+  "URL",
+  "OPT",
+  "ROWS",
+  "COLUMNS",
+  "TRUE",
+  "FALSE",
+  "INTEGER"
   };
 }
 

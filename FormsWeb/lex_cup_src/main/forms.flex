@@ -44,7 +44,7 @@ Input = [^\n\r\"\\\|]+
 InputClean = [^\n\r\"\\\t\s\f\|]+
 Id = \" [\_\-\$] ([\_\-\$] | \w )+ \"
 
-str = {WhiteSpace}* {InputClean} ( [\\] | {Input} )+ {WhiteSpace}*
+str = {WhiteSpace}* ([\\] | {InputClean})+ ( [\\] | {Input} )+ {WhiteSpace}*
 
 str_space = ({WhiteSpace} | [\\] | {Input})+
 
@@ -155,6 +155,12 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 
 	{Ql} "TEMA" {Qr}
 	{ return symbol(THEME, yytext()); }
+
+	{Ql} "DARK" {Qr}
+	{ return symbol(DARK, yytext()); }
+
+	{Ql} "LIGHT" {Qr}
+	{ return symbol(LIGHT, yytext()); }
 
 	{Ql} "USUARIO_CREACION" {Qr}
 	{ return symbol(USER_C, yytext()); }

@@ -13,6 +13,7 @@ public class FormsParserSym {
   public static final int LEFT = 76;
   public static final int THEME = 47;
   public static final int TIMES = 19;
+  public static final int DARK = 83;
   public static final int OPTION_SPACE = 26;
   public static final int USER_C = 74;
   public static final int DEL_FORM = 48;
@@ -28,6 +29,7 @@ public class FormsParserSym {
   public static final int ID_ = 73;
   public static final int COMMA = 15;
   public static final int RBRACE = 12;
+  public static final int LIGHT = 84;
   public static final int INTEGER = 7;
   public static final int EDIT_USER = 33;
   public static final int LBRACE = 11;
@@ -174,7 +176,9 @@ public class FormsParserSym {
   "YES",
   "NO",
   "OPTION_V",
-  "STR_NUMBER"
+  "STR_NUMBER",
+  "DARK",
+  "LIGHT"
   };
 }
 

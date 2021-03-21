@@ -48,35 +48,110 @@ parser code {:
 	}
 :}
 
-terminal LBRACKET, RBRACKET, LBRACE, RBRACE, COLON, COMMA;
+terminal FORMS, USERS, LBRACKET, RBRACKET, LBRACE, RBRACE, COLON, COMMA;
 terminal ERROR;
-terminal String STR, USER, PASS, C_DATE, E_DATE, NULL;
+terminal String STR, USER, PASS, C_DATE, E_DATE, NULL, ID, TITLE, NAME, THEME, COMP, FIELD_N;
+terminal String FORM, TIPO, INDEX, TEXT, ALING, REQUIRED, URL, OPT, ROWS, COLUMNS;
+terminal Boolean TRUE, FALSE;
+terminal Integer INTEGER;
 
-non terminal json_u, make_u;
-non terminal String str;
-non terminal User user;
+non terminal json, json_form, make_u, opt, opts, user, users, make_op, components, comps, comp, make_comp, cmp;
+non terminal value;
+non terminal String str, colon;
+non terminal Boolean boolean_v;
+non terminal User us;
+non terminal Form form;
 
-json_u	::=	LBRACKET make_u RBRACKET
-			;
+json		::=	USERS LBRACKET make_u RBRACKET json_form
+				;
 
-make_u	::=	user:p
-			{: //System.out.println(p.toString()); :}
-			| user:p COMMA make_u
-			{: //System.out.println(p.toString()); :}
-			|
-			;
+// json_form 	::=	FORMS
 
-user	::=	LBRACE USER COLON str:p COMMA PASS COLON str:q COMMA C_DATE COLON str:r COMMA E_DATE COLON str:s RBRACE
-			{:
-				User u = dao.createUser(p, q, r, s);
-				dao.setUser(u);
-			:}
-			;
+make_u		::=	users
+				|
+				;
 
-str		::=	STR:p {: RESULT = p; :}
-			| USER:p {: RESULT = p; :}
-			| PASS:p {: RESULT = p; :}
-			| C_DATE:p {: RESULT = p; :}
-			| E_DATE:p {: RESULT = p; :}
-			| NULL:p {: RESULT = p; :}
-			;
+users		::=	user
+				| users COMMA user
+				;
+
+user		::=	LBRACE us:u RBRACE
+				{:
+					dao.setUser(u);
+				:}
+				;
+
+/* Usuarios */
+us			::=	USER colon:p COMMA PASS colon:q COMMA C_DATE colon:r COMMA E_DATE colon:s
+				{: RESULT = dao.createUser(p, q, r, s); :}
+				;
+
+/* Formularios */
+form		::=	ID colon COMMA TITLE colon COMMA NAME colon COMMA THEME colon COMMA USER colon COMMA C_DATE colon  COMMA components
+				;
+
+/*Componentes*/
+components	::=	COMP COLON LBRACKET comps RBRACKET
+				;
+
+comps		::=	make_comp
+				|
+				;
+
+make_comp	::=	comp
+				| make_comp COMMA comp
+				;
+
+comp		::=	LBRACE cmp RBRACE
+				;
+
+cmp			::= ID colon COMMA FIELD_N colon COMMA FORM colon COMMA TIPO colon COMMA INDEX COLON INTEGER COMMA TEXT colon COMMA ALING colon COMMA REQUIRED COLON boolean_v COMMA URL colon COMMA OPT COLON opt COMMA ROWS COLON value COMMA COLUMNS COLON value
+				;
+
+/* Options */
+opt			::=	LBRACKET make_op RBRACKET
+				;
+
+make_op		::= opts
+				|
+				;
+
+opts		::=	str:p
+				| opts COMMA str:p
+				;
+
+colon		::=	COLON str:p
+				{: RESULT = p; :}
+				;
+
+str			::=	STR:p {: RESULT = p; :}
+				| USER:p {: RESULT = p; :}
+				| PASS:p {: RESULT = p; :}
+				| C_DATE:p {: RESULT = p; :}
+				| E_DATE:p {: RESULT = p; :}
+				| NULL:p {: RESULT = p; :}
+				| ID:p {: RESULT = p; :}
+				| TITLE:p {: RESULT = p; :}
+				| NAME:p {: RESULT = p; :}
+				| THEME:p {: RESULT = p; :}
+				| COMP:p {: RESULT = p; :}
+				| FIELD_N:p {: RESULT = p; :}
+				| FORM:p {: RESULT = p; :}
+				| TIPO:p {: RESULT = p; :}
+				| INDEX:p {: RESULT = p; :}
+				| TEXT:p {: RESULT = p; :}
+				| ALING:p {: RESULT = p; :}
+				| REQUIRED:p {: RESULT = p; :}
+				| URL:p {: RESULT = p; :}
+				| OPT:p {: RESULT = p; :}
+				| ROWS:p {: RESULT = p; :}
+				| COLUMNS:p {: RESULT = p; :}
+				;
+
+boolean_v	::= TRUE:p {: RESULT = p; :}
+				| FALSE:p {: RESULT = p; :}
+				;
+
+value		::=	INTEGER:p {: RESULT = p; :}
+				| NULL:p {: RESULT = p; :}
+				;

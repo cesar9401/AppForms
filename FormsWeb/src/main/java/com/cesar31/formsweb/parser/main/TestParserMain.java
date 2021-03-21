@@ -1,8 +1,16 @@
 package com.cesar31.formsweb.parser.main;
 
 import com.cesar31.formsweb.control.Error;
+import com.cesar31.formsweb.control.HandlerDB;
+import com.cesar31.formsweb.model.Component;
+import com.cesar31.formsweb.model.Form;
+import com.cesar31.formsweb.model.Request;
+import com.cesar31.formsweb.model.User;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
 import java_cup.runtime.Symbol;
 
@@ -13,167 +21,36 @@ import java_cup.runtime.Symbol;
 public class TestParserMain {
 
     public static void main(String[] args) {
+        List<User> users = new ArrayList<>();
+        List<Form> forms = new ArrayList<>();
+        List<Component> components = new ArrayList<>();
 
-        String input1 = "<!ini_solicitud  : \"\n\tCREAR_USUARIO\t\n\" \n >"
-                + "{ \"    CREDENCIALES_USUARIO\" : [{ \n "
-                + "\"FECHA_CREACION   \": \" 2020-13-31 \",\n"
-                + "\"PASSWORD\" : \"123._()321\"\n  ,"
-                + "\"USUARIO\" : \"cesar@user_31\"\n"
-                + " }\n "
-                + "  ] \n"
-                + "} \n "
-                + "<fiN_solicitud!>"
-                + "\n";
+        HandlerDB db = new HandlerDB();
+        String data = db.readDate("request.indigo");
 
-        String input2 = "<!ini_solicitud:\"MODIFICAR_USUARIO\">\n"
-                + "      { \"CREDENCIALES_USUARIO\":[{\n"
-                + "            \"NUEVO_PASSWORD\": \"12345678910\",\n"
-                + "            \"USUARIO_ANTIGUO\": \"juanito619\",\n"
-                + "            \"USUARIO_NUEVO\": \"juanito619lopez\",\n"
-                + "\"FECHA_MODIFICACION\" : \"2002-12-32\"  \n"
-                + "}    \n"
-                + "          ]\n"
-                + "      }\n"
-                + "<fin_solicitud!>";
-
-        String input3 = "< ! ini_solicitud : \"ELIMINAR_USUARIO\">\n"
-                + "      { \"CREDENCIALES_USUARIO\":[{\n"
-                + "            \"USUARIO\": \"juanito619lopez\"\n"
-                + "           }         \n"
-                + "         ]\n"
-                + "      }\n"
-                + "<fin_solicitud !>";
-
-        String input4 = "<!ini_solicitud:\"LOGIN_USUARIO\">\n"
-                + "     { \"CREDENCIALES_USUARIO\":[{\n"
-                + "            \"PASSWORD\": \"12345678\",\n"
-                + "\"USUARIO\": \"juanito619\"\n"
-                + "           }         \n"
-                + "         ]\n"
-                + "      }      \n"
-                + "<fin_solicitud!>";
-
-        String input5 = "<!ini_solicitud:\"NUEVO_FORMULARIO\">\n"
-                + "      { \"PARAMETROS_FORMULARIO\":[{\n"
-                + "            \"TEMA\": \"Dark\"\n,"
-                + "            \"ID\": \"$form1\",\n"
-                + "            \"TITULO\": \"\tFormulariopara encuesta 1\",\n"
-                + "            \"NOMBRE\": \"formulario_encuesta_1\",\n"
-                + "            \"FECHA_CREACION   \": \" 2020-12-31 \",\n"
-                + "            \"USUARIO_CREACION\": \"cesar_31\"\n"
-                + "           }         \n"
-                + "         ]\n"
-                + "      }\n"
-                + "<fin_solicitud!>";
-
-        String input6 = "<!ini_solicitud:\"ELIMINAR_FORMULARIO\">\n"
-                + "      { \"PARAMETROS_FORMULARIO\":[{\n"
-                + "            \"ID\": \"$form1\"\n"
-                + "           }         \n"
-                + "         ]\n"
-                + "      }\n"
-                + "<fin_solicitud!>";
-
-        String input7 = "<!ini_solicitud:\"MODIFICAR_FORMULARIO\">"
-                + "      { \"PARAMETROS_FORMULARIO\":[{\n"
-                + "            \"ID\": \"$_ID1\",\n"
-                + "            \"TITULO\": \"Formulario Modificado para encuesta 1\",\n"
-                + "            \"NOMBRE\": \"fdsa\",\n"
-                + "            \"TEMA\": \"1fadsf\"\n"
-                + "           }         \n"
-                + "         ]\n"
-                + "      }\n"
-                + "<fin_solicitud!>";
-
-        String input8 = "<!ini_solicitud:\"AGREGAR_COMPONENTE\">\n"
-                + "      { \"PARAMETROS_COMPONENTE\":[{\n"
-                + "            \"ID\": \"$_text_cliente\",\n"
-                + "            \"NOMBRE_CAMPO\": \"Cliente\",\n"
-                + "            \"FILAS\": \"20\",\n"
-                + "            \"COLUMNAS\": \"10\",\n"
-                + "            \"FORMULARIO\": \"$form1\",\n"
-                + "            \"CLASE\": \" \tAREA_TEXTO \",\n"
-                + "            \"TEXTO_VISIBLE\": \"Nombre de cliente: \",\n"
-                + "            \"ALINEACION\": \"CENTRO\",\n"
-                + "            \"REQUERIDO\": \"NO\"\n"
-                + "           }         \n"
-                + "         ]\n"
-                + "      }\n"
-                + "<fin_solicitud!>";
-
-        String input9 = "<!ini_solicitud:\"AGREGAR_COMPONENTE\">\n"
-                + "      { \"PARAMETROS_COMPONENTE\":[{\n"
-                + "            \"ID\": \"$_grupo_paises\",\n"
-                + "            \"NOMBRE_CAMPO\": \"Pais\",\n"
-                + "            \"FORMULARIO\": \"$form1\",\n"
-                + "            \"CLASE\": \"CHECKBOX\",\n"
-                + "            \"TEXTO_VISIBLE\": \"Pais de Origen: \",\n"
-                + "            \"ALINEACION\": \"CENTRO\",\n"
-                + "            \"REQUERIDO\": \"SI\",\n"
-                + "            \"OPCIONES\": \"Guatemala|El Salvador|Honduras|OTRO\"\n"
-                + "           }         \n"
-                + "         ]\n"
-                + "      }\n"
-                + "<fin_solicitud!>";
-
-        String input10 = "<!ini_solicitud:\"ELIMINAR_COMPONENTE\">\n"
-                + "      { \"PARAMETROS_COMPONENTE\":[{\n"
-                + "            \"ID\": \"$_grupo_paises\",\n"
-                + "            \"FORMULARIO\": \"$form1\"\n"
-                + "           }         \n"
-                + "         ]\n"
-                + "      }\n"
-                + "<fin_solicitud!>";
-
-        String input11 = "<!ini_solicitud:\"MODIFICAR_COMPONENTE\">\n"
-                + "      { \"PARAMETROS_COMPONENTE\":[{\n"
-                + "            \"ID\": \"$_grupo_paises\",\n"
-                + "            \"FORMULARIO\": \"$form1\",\n"
-                + "            \"CLASE\": \"CHECKBOX\",\n"
-                + "            \"INDICE\": \"1\",\n"
-                + "            \"ALINEACION\": \"DERECHA\","
-                + "            \"FILAS\": \"15\","
-                + "            \"OPCIONES\": \"\tGuatemala\t\n|\tEl Salvador|Honduras|OTRO\"\n"
-                + "           }         \n"
-                + "         ]\n"
-                + "      }\n"
-                + "<fin_solicitud!>";
-
-        String input = "<!ini_solicitudes>\n"
-                + "    <!ini_solicitud:\"CREAR_USUARIO\">\n"
-                + "        { \"CREDENCIALES_USUARIO\":[{\n"
-                + "\" FECHA_CREACION \" : \" 2020-12-31 \","
-                + "                \"USUARIO\": \"juanito619\"\n"
-                + "                \"PASSWORD\": \"12345678\"\n"
-                + "            }         \n"
-                + "            ]\n"
-                + "        }\n"
-                + "    <fin_solicitud!>\n"
-                + "\n"
-                + "    <!ini_solicitud:\"CREAR_USUARIO\">\n"
-                + "        { \"CREDENCIALES_USUARIO\":[{\n"
-                + "                \"PASSWORD\": \"#$pass_21\",\n"
-                + "                \"USUARIO\": \"jose_12\"\n"
-                + "            }         \n"
-                + "            ]\n"
-                + "        }\n"
-                + "    <fin_solicitud!>\n"
-                + "    \n"
-                + "<!fin_solicitudes>";
-
-        //debug(input2);
-        FormsLex lexer = new FormsLex(new StringReader(input));
+        FormsLex lexer = new FormsLex(new StringReader(data));
         FormsParser parser = new FormsParser(lexer);
 
         try {
             parser.parse();
             if (parser.isParsed()) {
-//                UserContainer u = parser.getContainer();
-//                List<User> user = u.getAddUsers();
-//                System.out.println("Agregar -> ");
-//                user.forEach(t -> {
-//                    System.out.println(t.toString());
-//                });
+                List<Request> reqs = parser.getContainer().getRequests();
+                reqs.forEach(r -> {
+                    if (r instanceof User) {
+                        users.add((User) r);
+                    }
+
+                    if (r instanceof Form) {
+                        forms.add((Form) r);
+                    }
+
+                    if (r instanceof Component) {
+                        components.add((Component) r);
+                    }
+
+                });
+
+                operation(users, forms, components);
 
             } else {
                 List<Error> errors = parser.getContainer().getErrors();
@@ -185,18 +62,41 @@ public class TestParserMain {
         } catch (Exception ex) {
             ex.printStackTrace(System.out);
         }
+    }
 
-//        String entrada = "\t entrada \n";
-//        System.out.println("entrada = " + entrada);
-//        String entrada1 = entrada.strip();
-//        System.out.println("entrada1 = " + entrada1);
-//        System.out.println("entrada = "  + entrada);
-//        
-//        String entrada2 = entrada.trim();
-//        System.out.println("entrada2 = " + entrada2);
-//        System.out.println("entrada = " + entrada);
-//        
-//        System.out.println(entrada1.equals(entrada2));
+    public static void operation(List<User> u, List<Form> f, List<Component> c) {
+        c.forEach(comp -> {
+            for (Form form : f) {
+                if (comp.getForm().equals(form.getId())) {
+                    comp.setIndex(form.getComponents().size() + 1);
+                    form.getComponents().add(comp);
+                }
+            }
+        });
+
+//        f.forEach(form -> {
+//            System.out.println(form.toString());
+//            form.getComponents().forEach(comp -> {
+//                System.out.println(comp.toString());
+//            });
+//        });
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            String json = "USERS\n";
+            json += mapper.writerWithDefaultPrettyPrinter().withView(User.class).writeValueAsString(u);
+            json += "\n\n";
+            
+            json += "FORMS\n";
+            json += mapper.writerWithDefaultPrettyPrinter().withView(Form.class).writeValueAsString(f);
+            json += "\n";
+            
+            System.out.println(json);
+            
+            HandlerDB.writeDate(json);
+        } catch (JsonProcessingException ex) {
+            ex.printStackTrace(System.out);
+        }
     }
 
     public static void debug(String str) {

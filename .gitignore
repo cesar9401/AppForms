@@ -13,3 +13,6 @@ FormsWeb/lex_cup_src/*/*java~
 
 # archivos creados para almacenamiento
 *.db
+
+# archivos con solicitudes
+*.indigo

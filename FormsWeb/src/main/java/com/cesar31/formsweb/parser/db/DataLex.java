@@ -67,11 +67,14 @@ public class DataLex implements java_cup.runtime.Scanner {
 
   private static final String ZZ_CMAP_BLOCKS_PACKED_0 =
     "\11\0\1\1\1\2\2\1\1\3\22\0\1\1\1\0"+
-    "\1\4\11\0\1\5\15\0\1\6\40\0\1\7\1\10"+
-    "\1\11\16\0\1\12\1\0\1\13\3\0\1\14\1\0"+
-    "\1\15\1\16\5\0\1\17\1\0\1\20\7\0\1\1"+
-    "\32\0\1\1\u01df\0\1\1\177\0\13\1\35\0\2\1"+
-    "\5\0\1\1\57\0\1\1\240\0\1\1\377\0";
+    "\1\4\11\0\1\5\3\0\1\6\11\7\1\10\12\0"+
+    "\1\11\1\12\6\0\1\13\1\0\1\14\2\0\1\15"+
+    "\1\16\1\0\1\17\5\0\1\20\1\21\1\22\3\0"+
+    "\1\23\3\0\1\24\1\25\5\0\1\26\1\0\1\27"+
+    "\3\0\1\30\1\31\1\32\1\33\5\0\1\34\1\0"+
+    "\1\35\7\0\1\1\32\0\1\1\u01df\0\1\1\177\0"+
+    "\13\1\35\0\2\1\5\0\1\1\57\0\1\1\240\0"+
+    "\1\1\377\0";
 
   private static int [] zzUnpackcmap_blocks() {
     int [] result = new int[1280];
@@ -98,12 +101,13 @@ public class DataLex implements java_cup.runtime.Scanner {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\2\0\1\1\2\2\1\3\1\4\1\5\1\6\1\7"+
-    "\1\1\1\10\1\11\1\12\1\13\1\14\1\0\1\15"+
-    "\1\16\1\17\1\20\1\0\1\21";
+    "\2\0\1\1\2\2\1\3\1\4\2\5\1\6\2\1"+
+    "\1\7\1\10\3\1\1\11\1\12\1\13\1\14\1\15"+
+    "\5\0\1\16\1\17\1\20\1\21\10\0\1\22\1\23"+
+    "\1\24\1\25\1\26";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[23];
+    int [] result = new int[44];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -128,12 +132,15 @@ public class DataLex implements java_cup.runtime.Scanner {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\21\0\42\0\42\0\63\0\42\0\42\0\42"+
-    "\0\42\0\42\0\104\0\42\0\42\0\125\0\42\0\146"+
-    "\0\167\0\42\0\42\0\42\0\42\0\210\0\42";
+    "\0\0\0\36\0\74\0\74\0\132\0\74\0\74\0\74"+
+    "\0\170\0\74\0\226\0\264\0\74\0\74\0\322\0\360"+
+    "\0\u010e\0\74\0\74\0\u012c\0\74\0\u014a\0\u0168\0\u0186"+
+    "\0\u01a4\0\u01c2\0\u01e0\0\74\0\74\0\74\0\74\0\u01fe"+
+    "\0\u021c\0\u023a\0\u0258\0\u0276\0\u0294\0\u02b2\0\u02d0\0\74"+
+    "\0\74\0\74\0\74\0\74";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[23];
+    int [] result = new int[44];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -156,15 +163,20 @@ public class DataLex implements java_cup.runtime.Scanner {
   private static final int [] ZZ_TRANS = zzUnpackTrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\3\2\4\1\5\1\6\1\7\1\10\1\11\1\3"+
-    "\1\12\1\3\1\13\3\3\1\14\1\15\2\16\2\3"+
-    "\1\17\3\16\1\20\10\16\23\0\1\4\34\0\1\21"+
-    "\2\0\2\16\3\0\3\16\1\0\10\16\4\0\1\22"+
-    "\6\0\1\23\1\24\1\25\15\0\1\26\20\0\1\27"+
-    "\6\0";
+    "\1\3\2\4\1\5\1\6\1\7\1\10\1\11\1\12"+
+    "\1\3\1\13\4\3\1\14\1\15\1\3\1\16\2\3"+
+    "\1\17\1\3\1\20\2\3\1\21\1\3\1\22\1\23"+
+    "\2\24\2\3\1\25\14\24\1\26\14\24\40\0\1\4"+
+    "\41\0\2\11\42\0\1\27\37\0\1\30\42\0\1\31"+
+    "\45\0\1\32\32\0\1\33\5\0\2\24\3\0\14\24"+
+    "\1\0\14\24\4\0\1\34\22\0\1\35\1\36\1\0"+
+    "\1\37\20\0\1\40\31\0\1\41\52\0\1\42\35\0"+
+    "\1\43\42\0\1\44\15\0\1\45\37\0\1\46\51\0"+
+    "\1\47\32\0\1\50\33\0\1\51\27\0\1\52\35\0"+
+    "\1\53\43\0\1\54\11\0";
 
   private static int [] zzUnpackTrans() {
-    int [] result = new int[153];
+    int [] result = new int[750];
     int offset = 0;
     offset = zzUnpackTrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -207,11 +219,12 @@ public class DataLex implements java_cup.runtime.Scanner {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\2\0\2\11\1\1\5\11\1\1\2\11\1\1\1\11"+
-    "\1\1\1\0\4\11\1\0\1\11";
+    "\2\0\2\11\1\1\3\11\1\1\1\11\2\1\2\11"+
+    "\3\1\2\11\1\1\1\11\1\1\5\0\4\11\10\0"+
+    "\5\11";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[23];
+    int [] result = new int[44];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -293,16 +306,52 @@ public class DataLex implements java_cup.runtime.Scanner {
 	private Symbol setType(int type, Object value) {
 		String s = value.toString();
 
-		if(s.equals("user"))
-			return symbol(USER, s);
-		if(s.equals("password"))
-			return symbol(PASS, s);
-		if(s.equals("cDate"))
-			return symbol(C_DATE, s);
-		if(s.equals("eDate"))
-			return symbol(E_DATE, s);
+		switch(s) {
+			case "user":
+				return symbol(USER, s);
+			case "password":
+				return symbol(PASS, s);
+			case "cDate":
+				return symbol(C_DATE, s);
+			case "eDate":
+				return symbol(E_DATE, s);
+			case "id":
+				return symbol(ID, s);
+			case "title":
+				return symbol(TITLE, s);
+			case "name":
+				return symbol(NAME, s);
+			case "theme":
+				return symbol(THEME, s);
+			case "components":
+				return symbol(COMP, s);
+			case "fieldName":
+				return symbol(FIELD_N, s);
+			//Agregar desde aqui
+			case "form":
+				return symbol(FORM, s);
+			case "kind":
+				return symbol(TIPO, s);
+			case "index":
+				return symbol(INDEX, s);
+			case "text":
+				return symbol(TEXT, s);
+			case "aling":
+				return symbol(ALING, s);
+			case "required":
+				return symbol(REQUIRED, s);
+			case "url":
+				return symbol(URL, s);
+			case "options":
+				return symbol(OPT, s);
+			case "rows":
+				return symbol(ROWS, s);
+			case "columns":
+				return symbol(COLUMNS, s);
 
-		return symbol(STR, value.toString());
+			default:
+				return symbol(STR, s);
+		}
 	}
 
 	private Symbol symbol(int type) {
@@ -726,89 +775,114 @@ public class DataLex implements java_cup.runtime.Scanner {
 	// throw new Error("Ilegal character: <" + yytext() + ">");
             }
             // fall through
-          case 18: break;
+          case 23: break;
           case 2:
             { /* Ignore */
             }
             // fall through
-          case 19: break;
+          case 24: break;
           case 3:
             { string.setLength(0);
 		yybegin(STRING);
             }
             // fall through
-          case 20: break;
+          case 25: break;
           case 4:
             { return symbol(COMMA);
             }
             // fall through
-          case 21: break;
-          case 5:
-            { return symbol(COLON);
-            }
-            // fall through
-          case 22: break;
-          case 6:
-            { return symbol(LBRACKET);
-            }
-            // fall through
-          case 23: break;
-          case 7:
-            { return symbol(RBRACKET);
-            }
-            // fall through
-          case 24: break;
-          case 8:
-            { return symbol(LBRACE);
-            }
-            // fall through
-          case 25: break;
-          case 9:
-            { return symbol(RBRACE);
-            }
-            // fall through
           case 26: break;
-          case 10:
-            { string.append( yytext() );
+          case 5:
+            { return symbol(INTEGER, Integer.valueOf(yytext()));
             }
             // fall through
           case 27: break;
+          case 6:
+            { return symbol(COLON);
+            }
+            // fall through
+          case 28: break;
+          case 7:
+            { return symbol(LBRACKET);
+            }
+            // fall through
+          case 29: break;
+          case 8:
+            { return symbol(RBRACKET);
+            }
+            // fall through
+          case 30: break;
+          case 9:
+            { return symbol(LBRACE);
+            }
+            // fall through
+          case 31: break;
+          case 10:
+            { return symbol(RBRACE);
+            }
+            // fall through
+          case 32: break;
           case 11:
+            { string.append( yytext() );
+            }
+            // fall through
+          case 33: break;
+          case 12:
             { yybegin(YYINITIAL);
 		return setType(STR, string.toString());
             }
             // fall through
-          case 28: break;
-          case 12:
+          case 34: break;
+          case 13:
             { string.append('\\');
             }
             // fall through
-          case 29: break;
-          case 13:
+          case 35: break;
+          case 14:
             { string.append('\"');
             }
             // fall through
-          case 30: break;
-          case 14:
+          case 36: break;
+          case 15:
             { string.append('\n');
             }
             // fall through
-          case 31: break;
-          case 15:
+          case 37: break;
+          case 16:
             { string.append('\r');
             }
             // fall through
-          case 32: break;
-          case 16:
+          case 38: break;
+          case 17:
             { string.append('\t');
             }
             // fall through
-          case 33: break;
-          case 17:
-            { return symbol(NULL, new String(yytext()));
+          case 39: break;
+          case 18:
+            { return symbol(NULL, String.valueOf(yytext()));
             }
             // fall through
-          case 34: break;
+          case 40: break;
+          case 19:
+            { return symbol(TRUE, Boolean.valueOf(yytext()));
+            }
+            // fall through
+          case 41: break;
+          case 20:
+            { return symbol(FORMS);
+            }
+            // fall through
+          case 42: break;
+          case 21:
+            { return symbol(USERS);
+            }
+            // fall through
+          case 43: break;
+          case 22:
+            { return symbol(FALSE, Boolean.valueOf(yytext()));
+            }
+            // fall through
+          case 44: break;
           default:
             zzScanError(ZZ_NO_MATCH);
         }

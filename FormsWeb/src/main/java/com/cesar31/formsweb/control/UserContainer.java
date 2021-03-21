@@ -1,5 +1,7 @@
 package com.cesar31.formsweb.control;
 
+import com.cesar31.formsweb.model.Operation;
+import com.cesar31.formsweb.model.Request;
 import com.cesar31.formsweb.model.User;
 import com.cesar31.formsweb.parser.main.Token;
 import java.time.LocalDate;
@@ -15,12 +17,13 @@ import java_cup.runtime.Symbol;
  */
 public class UserContainer {
 
-    private List<User> addUsers;
-    private List<User> editUsers;
     private List<Error> errors;
     private List<Error> currentErrors;
     private HashMap<String, String> params;
     private HashMap<String, Token> tokens;
+    
+    // Request
+    private List<Request> requests;
 
     // Formularios
     private FormContainer form;
@@ -29,15 +32,15 @@ public class UserContainer {
     private ComponentContainer component;
 
     public UserContainer() {
-        this.addUsers = new ArrayList<>();
         this.errors = new ArrayList<>();
         this.params = new HashMap<>();
         this.tokens = new HashMap<>();
-        this.editUsers = new ArrayList<>();
         this.currentErrors = new ArrayList<>();
 
         this.form = new FormContainer(this);
         this.component = new ComponentContainer(this);
+        
+        this.requests = new ArrayList<>();
     }
 
     /**
@@ -185,8 +188,9 @@ public class UserContainer {
         }
 
         if (created) {
-            System.out.println("Agregado: " + u.toString());
-            addUsers.add(u);
+            //System.out.println("Agregado: " + u.toString());
+            u.setOp(Operation.ADD);
+            addRequest(u);
         }
 
         // Limpiar HashMap
@@ -248,7 +252,9 @@ public class UserContainer {
         }
 
         if (created) {
-            System.out.println("login: " + u.toString());
+            //System.out.println("login: " + u.toString());
+            u.setOp(Operation.LOGIN);
+            addRequest(u);
         }
 
         // Limpiar HashMap
@@ -298,7 +304,9 @@ public class UserContainer {
         }
 
         if (created) {
-            System.out.println("Eliminado: " + u.toString());
+            //System.out.println("Eliminado: " + u.toString());
+            u.setOp(Operation.DEL);
+            addRequest(u);
         }
 
         // Limpiar HashMap
@@ -385,8 +393,9 @@ public class UserContainer {
         }
 
         if (created) {
-            System.out.println("Editar: " + u.toString());
-            editUsers.add(u);
+            //System.out.println("Editar: " + u.toString());
+            u.setOp(Operation.EDIT);
+            addRequest(u);
         }
 
         // Limpiar HashMap
@@ -500,6 +509,11 @@ public class UserContainer {
         }
         return date;
     }
+    
+    public void addRequest(Request r) {
+        r.setNumber(requests.size() + 1);
+        requests.add(r);
+    }
 
     public String fS(String string) {
         return string.replace("\"", "");
@@ -511,14 +525,6 @@ public class UserContainer {
 
     public LocalDate fLD(String date) {
         return LocalDate.parse(date.replace("\"", "").trim());
-    }
-
-    public List<User> getAddUsers() {
-        return addUsers;
-    }
-
-    public List<User> getEditUsers() {
-        return editUsers;
     }
 
     public List<Error> getErrors() {
@@ -535,5 +541,9 @@ public class UserContainer {
 
     public HashMap<String, Token> getTokens() {
         return tokens;
+    }
+
+    public List<Request> getRequests() {
+        return requests;
     }
 }
