@@ -11,7 +11,7 @@ public class User extends Request {
 
     private String user;
     private String password;
-    private String cDate;
+    private String cDate_user;
     private String eDate;
 
     @JsonView(NoView.class)
@@ -77,12 +77,12 @@ public class User extends Request {
         this.editDate = editDate;
     }
 
-    public String getcDate() {
-        return cDate;
+    public String getcDate_user() {
+        return cDate_user;
     }
 
-    public void setcDate(String cDate) {
-        this.cDate = cDate;
+    public void setcDate_user(String cDate_user) {
+        this.cDate_user = cDate_user;
     }
 
     public String geteDate() {
@@ -95,6 +95,6 @@ public class User extends Request {
 
     @Override
     public String toString() {
-        return super.toString() + " User{" + "user=" + user + ", password=" + password + ", cDate=" + cDate + ", eDate=" + eDate + ", newUser=" + newUser + ", editDate=" + editDate + ", creationDate=" + creationDate + '}';
+        return super.toString() + " User{" + "user=" + user + ", password=" + password + ", cDate_user=" + cDate_user + ", eDate=" + eDate + ", newUser=" + newUser + ", editDate=" + editDate + ", creationDate=" + creationDate + '}';
     }
 }

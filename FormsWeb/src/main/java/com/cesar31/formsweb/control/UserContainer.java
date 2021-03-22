@@ -156,13 +156,13 @@ public class UserContainer {
 
         if (!params.containsKey("FECHA_CREACION")) {
             u.setCreationDate(LocalDate.now());
-            u.setcDate(LocalDate.now().toString());
+            u.setcDate_user(LocalDate.now().toString());
         } else {
             String string = params.get("FECHA_CREACION");
             LocalDate date = getDate(tokens.get("FECHA_CREACION"), "FECHA_CREACION", r);
             if (date != null) {
                 u.setCreationDate(date);
-                u.setcDate(string);
+                u.setcDate_user(string);
             } else {
                 created = false;
             }
@@ -368,7 +368,7 @@ public class UserContainer {
             LocalDate date = getDate(tokens.get("FECHA_MODIFICACION"), "FECHA_MODIFICACION", r);
             if (date != null) {
                 u.setEditDate(date);
-                u.setcDate(string);
+                u.seteDate(string);
             } else {
                 created = false;
             }

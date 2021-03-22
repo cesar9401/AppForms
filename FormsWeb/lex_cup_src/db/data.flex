@@ -25,24 +25,30 @@ import java_cup.runtime.*;
 				return symbol(USER, s);
 			case "password":
 				return symbol(PASS, s);
-			case "cDate":
-				return symbol(C_DATE, s);
+			case "cDate_user":
+				return symbol(DATE_USER, s);
 			case "eDate":
 				return symbol(E_DATE, s);
-			case "id":
-				return symbol(ID, s);
+			case "id_form":
+				return symbol(ID_FORM, s);
 			case "title":
 				return symbol(TITLE, s);
 			case "name":
 				return symbol(NAME, s);
 			case "theme":
 				return symbol(THEME, s);
+			case "user_creation":
+				return symbol(USER_C, s);
+			case "cDate_form":
+				return symbol(DATE_FORM, s);
 			case "components":
 				return symbol(COMP, s);
+			case "id_component":
+				return symbol(ID_COMP, s);
 			case "fieldName":
 				return symbol(FIELD_N, s);
-			case "form":
-				return symbol(FORM, s);
+			case "form_id":
+				return symbol(FORM_ID, s);
 			case "kind":
 				return symbol(TIPO, s);
 			case "index":

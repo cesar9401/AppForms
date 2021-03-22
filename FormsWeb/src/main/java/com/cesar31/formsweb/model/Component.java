@@ -9,9 +9,9 @@ import java.util.List;
  */
 public class Component extends Request {
 
-    private String id;
+    private String id_component;
     private String fieldName;
-    private String form;
+    private String form_id;
     private String kind;
     private Integer index;
     private String text;
@@ -32,18 +32,19 @@ public class Component extends Request {
         this.options = new ArrayList<>();
     }
 
-    public Component(String id, String fieldName, String form) {
-        this.id = id;
+    public Component(String id_component, String fieldName, String form_id) {
+        this();
+        this.id_component = id_component;
         this.fieldName = fieldName;
-        this.form = form;
+        this.form_id = form_id;
     }
 
-    public String getId() {
-        return id;
+    public String getId_component() {
+        return id_component;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId_component(String id_component) {
+        this.id_component = id_component;
     }
 
     public String getFieldName() {
@@ -54,12 +55,12 @@ public class Component extends Request {
         this.fieldName = fieldName;
     }
 
-    public String getForm() {
-        return form;
+    public String getForm_id() {
+        return form_id;
     }
 
-    public void setForm(String form) {
-        this.form = form;
+    public void setForm_id(String form_id) {
+        this.form_id = form_id;
     }
 
     public String getKind() {
@@ -136,6 +137,6 @@ public class Component extends Request {
 
     @Override
     public String toString() {
-        return super.toString() + " Component{" + "id=" + id + ", fieldName=" + fieldName + ", form=" + form + ", kind=" + kind + ", index=" + index + ", text=" + text + ", aling=" + aling + ", required=" + required + '}';
+        return super.toString() + " Component{" + "id_component=" + id_component + ", fieldName=" + fieldName + ", form_id=" + form_id + ", kind=" + kind + ", index=" + index + ", text=" + text + ", aling=" + aling + ", required=" + required + '}';
     }
 }

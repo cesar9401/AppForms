@@ -14,12 +14,12 @@ public class Form extends Request{
     public interface NoView {
     };
 
-    private String id;
+    private String id_form;
     private String title;
     private String name;
     private String theme;
-    private String user;
-    private String cDate;
+    private String user_creation;
+    private String cDate_form;
     
     private List<Component> components;
 
@@ -30,20 +30,21 @@ public class Form extends Request{
         components = new ArrayList<>();
     }
 
-    public Form(String id, String title, String name) {
-        this.id = id;
+    public Form(String id_form, String title, String name) {
+        this();
+        this.id_form = id_form;
         this.title = title;
         this.name = name;
     }
+
+    public String getId_form() {
+        return id_form;
+    }
+
+    public void setId_form(String id_form) {
+        this.id_form = id_form;
+    }
     
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -68,20 +69,20 @@ public class Form extends Request{
         this.theme = theme;
     }
 
-    public String getUser() {
-        return user;
+    public String getUser_creation() {
+        return user_creation;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUser_creation(String user_creation) {
+        this.user_creation = user_creation;
     }
 
-    public String getcDate() {
-        return cDate;
+    public String getcDate_form() {
+        return cDate_form;
     }
 
-    public void setcDate(String cDate) {
-        this.cDate = cDate;
+    public void setcDate_form(String cDate_form) {
+        this.cDate_form = cDate_form;
     }
 
     public LocalDate getCreationDate() {
@@ -102,6 +103,6 @@ public class Form extends Request{
     
     @Override
     public String toString() {
-        return super.toString() + " Form{" + "id=" + id + ", title=" + title + ", name=" + name + ", theme=" + theme + ", user=" + user + ", creationDate=" + creationDate + '}';
+        return super.toString() + " Form{" + "id_form=" + id_form + ", title=" + title + ", name=" + name + ", theme=" + theme + ", user_creation=" + user_creation + ", creationDate=" + creationDate + '}';
     }
 }

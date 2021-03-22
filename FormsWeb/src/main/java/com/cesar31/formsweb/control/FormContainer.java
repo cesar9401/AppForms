@@ -31,7 +31,7 @@ public class FormContainer {
             setError(t, "ID", r);
             created = false;
         } else {
-            f.setId(getParam("ID"));
+            f.setId_form(getParam("ID"));
         }
 
         if (!isPresent("TITULO")) {
@@ -65,7 +65,7 @@ public class FormContainer {
 
         } else {
             if (!container.haveSpace("USUARIO_CREACION")) {
-                f.setUser(getParam("USUARIO_CREACION"));
+                f.setUser_creation(getParam("USUARIO_CREACION"));
             } else {
                 container.setErrorSpace(t, r, "USUARIO_CREACION");
             }
@@ -73,13 +73,13 @@ public class FormContainer {
 
         if (!isPresent("FECHA_CREACION")) {
             f.setCreationDate(LocalDate.now());
-            f.setcDate(LocalDate.now().toString());
+            f.setcDate_form(LocalDate.now().toString());
         } else {
             String string = container.getParams().get("FECHA_CREACION");
             LocalDate date = container.getDate(container.getTokens().get("FECHA_CREACION"), "FECHA_CREACION", r);
             if (date != null) {
                 f.setCreationDate(date);
-                f.setcDate(string);
+                f.setcDate_form(string);
             } else {
                 created = false;
             }
@@ -125,7 +125,7 @@ public class FormContainer {
             setError(t, "ID", r);
             created = false;
         } else {
-            f.setId(getParam("ID"));
+            f.setId_form(getParam("ID"));
         }
 
         if (!container.getCurrentErrors().isEmpty()) {
@@ -168,7 +168,7 @@ public class FormContainer {
             setError(t, "ID", r);
             created = false;
         } else {
-            f.setId(getParam("ID"));
+            f.setId_form(getParam("ID"));
         }
 
         if (!isPresent("TITULO")) {

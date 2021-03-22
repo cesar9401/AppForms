@@ -50,23 +50,30 @@ parser code {:
 
 terminal FORMS, USERS, LBRACKET, RBRACKET, LBRACE, RBRACE, COLON, COMMA;
 terminal ERROR;
-terminal String STR, USER, PASS, C_DATE, E_DATE, NULL, ID, TITLE, NAME, THEME, COMP, FIELD_N;
-terminal String FORM, TIPO, INDEX, TEXT, ALING, REQUIRED, URL, OPT, ROWS, COLUMNS;
+terminal String USER, PASS, DATE_USER, E_DATE, NULL, ID_FORM, TITLE, NAME, THEME, USER_C, DATE_FORM, COMP, ID_COMP, FIELD_N;
+terminal String FORM_ID, TIPO, INDEX, TEXT, ALING, REQUIRED, URL, OPT, ROWS, COLUMNS, STR;
 terminal Boolean TRUE, FALSE;
 terminal Integer INTEGER;
 
-non terminal json, json_form, make_u, opt, opts, user, users, make_op, components, comps, comp, make_comp, cmp;
-non terminal value;
-non terminal String str, colon;
+non terminal json, json_form, make_u, opt, user, users, make_op, components, comps, comp, make_c, cm;
+non terminal value, u_keys, f_keys, c_keys, json_user;
+non terminal make_f, forms, fm;
+non terminal String str;
 non terminal Boolean boolean_v;
 non terminal User us;
 non terminal Form form;
+non terminal ArrayList<String> opts;
 
-json		::=	USERS LBRACKET make_u RBRACKET json_form
+json		::=	json_user json_form
 				;
 
-// json_form 	::=	FORMS
+json_user	::=	USERS LBRACKET make_u RBRACKET
+				;
 
+json_form 	::=	FORMS LBRACKET make_f RBRACKET
+				;
+
+/* Usuarios */
 make_u		::=	users
 				|
 				;
@@ -75,37 +82,102 @@ users		::=	user
 				| users COMMA user
 				;
 
-user		::=	LBRACE us:u RBRACE
-				{:
-					dao.setUser(u);
-				:}
+/* USUARIO */
+user		::=	LBRACE us RBRACE
+				{: dao.createUser(); :}
 				;
 
-/* Usuarios */
-us			::=	USER colon:p COMMA PASS colon:q COMMA C_DATE colon:r COMMA E_DATE colon:s
-				{: RESULT = dao.createUser(p, q, r, s); :}
+us			::=	u_keys
+				| us COMMA u_keys
+				;
+
+u_keys		::=	USER COLON str:p
+				{: dao.setParam("user", p); :}
+				| PASS COLON str:p
+				{: dao.setParam("pass", p); :}
+				| DATE_USER COLON str:p
+				{: dao.setParam("cDate", p); :}
+				| E_DATE COLON str:p
+				{: dao.setParam("eDate", p); :}
 				;
 
 /* Formularios */
-form		::=	ID colon COMMA TITLE colon COMMA NAME colon COMMA THEME colon COMMA USER colon COMMA C_DATE colon  COMMA components
-				;
-
-/*Componentes*/
-components	::=	COMP COLON LBRACKET comps RBRACKET
-				;
-
-comps		::=	make_comp
+make_f		::=	forms
 				|
 				;
 
-make_comp	::=	comp
-				| make_comp COMMA comp
+forms		::=	form
+				| forms COMMA form
 				;
 
-comp		::=	LBRACE cmp RBRACE
+/* FORMULARIO */
+form		::=	LBRACE fm RBRACE
+				{: dao.createForms(); :}
 				;
 
-cmp			::= ID colon COMMA FIELD_N colon COMMA FORM colon COMMA TIPO colon COMMA INDEX COLON INTEGER COMMA TEXT colon COMMA ALING colon COMMA REQUIRED COLON boolean_v COMMA URL colon COMMA OPT COLON opt COMMA ROWS COLON value COMMA COLUMNS COLON value
+fm			::=	f_keys
+				| fm COMMA f_keys
+				;
+
+f_keys		::=	ID_FORM COLON str:p
+				{: dao.setParam("id_form", p); :}
+				| TITLE COLON str:p
+				{: dao.setParam("title", p); :}
+				| NAME COLON str:p
+				{: dao.setParam("name", p); :}
+				| THEME COLON str:p
+				{: dao.setParam("theme", p); :}
+				| USER_C COLON str:p
+				{: dao.setParam("user_c", p); :}
+				| DATE_FORM COLON str:p
+				{: dao.setParam("date_form", p); :}
+				| COMP COLON components /* componentes */
+				;
+
+/*Componentes*/
+components	::=	LBRACKET make_c RBRACKET
+				;
+
+make_c		::=	comps
+				|
+				;
+
+comps		::=	comp
+				| comps COMMA comp
+				;
+
+/* COMPONENTE */
+comp		::=	LBRACE cm RBRACE
+				{: dao.createComponents(); :}
+				;
+
+cm			::=	c_keys
+				| cm COMMA c_keys
+				;
+
+c_keys		::=	ID_COMP COLON str:p
+				{: dao.setParamC("id_comp", p); :}
+				| FIELD_N COLON str:p
+				{: dao.setParamC("field", p); :}
+				| FORM_ID COLON str:p
+				{: dao.setParamC("form_id", p); :}
+				| TIPO COLON str:p
+				{: dao.setParamC("kind", p); :}
+				| INDEX COLON INTEGER:p
+				{: dao.setParamC("index", String.valueOf(p)); :}
+				| TEXT COLON str:p
+				{: dao.setParamC("text", p); :}
+				| ALING COLON str:p
+				{: dao.setParamC("aling", p); :}
+				| REQUIRED COLON boolean_v:p
+				{: dao.setParamC("req", String.valueOf(p)); :}
+				| URL COLON str:p
+				{: dao.setParamC("url", p); :}
+				| OPT COLON opt /* Opciones */
+				| ROWS COLON value:p
+				{: dao.setParamC("rows", String.valueOf(p)); :}
+				| COLUMNS COLON value:p
+				{: dao.setParamC("cols", String.valueOf(p)); :}
 				;
 
 /* Options */
@@ -117,26 +189,27 @@ make_op		::= opts
 				;
 
 opts		::=	str:p
+				{: dao.setOption(p); :}
 				| opts COMMA str:p
-				;
-
-colon		::=	COLON str:p
-				{: RESULT = p; :}
+				{: dao.setOption(p); :}
 				;
 
 str			::=	STR:p {: RESULT = p; :}
 				| USER:p {: RESULT = p; :}
 				| PASS:p {: RESULT = p; :}
-				| C_DATE:p {: RESULT = p; :}
+				| DATE_USER:p {: RESULT = p; :}
 				| E_DATE:p {: RESULT = p; :}
 				| NULL:p {: RESULT = p; :}
-				| ID:p {: RESULT = p; :}
+				| ID_FORM:p {: RESULT = p; :}
 				| TITLE:p {: RESULT = p; :}
 				| NAME:p {: RESULT = p; :}
 				| THEME:p {: RESULT = p; :}
+				| USER_C:p {: RESULT = p; :}
+				| DATE_FORM:p {: RESULT = p; :}
 				| COMP:p {: RESULT = p; :}
+				| ID_COMP:p {: RESULT = p; :}
 				| FIELD_N:p {: RESULT = p; :}
-				| FORM:p {: RESULT = p; :}
+				| FORM_ID:p {: RESULT = p; :}
 				| TIPO:p {: RESULT = p; :}
 				| INDEX:p {: RESULT = p; :}
 				| TEXT:p {: RESULT = p; :}

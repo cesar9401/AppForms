@@ -62,7 +62,7 @@ public class ComponentContainer {
             setError(t, "ID", r);
             created = false;
         } else {
-            c.setId(getParam("ID"));
+            c.setId_component(getParam("ID"));
         }
 
         if (!isPresent("NOMBRE_CAMPO")) {
@@ -81,7 +81,7 @@ public class ComponentContainer {
             setError(t, "FORMULARIO", r);
             created = false;
         } else {
-            c.setForm(getParam("FORMULARIO"));
+            c.setForm_id(getParam("FORMULARIO"));
         }
 
         if (isPresent("INDICE")) {
@@ -154,14 +154,14 @@ public class ComponentContainer {
             setError(t, "ID", r);
             created = false;
         } else {
-            c.setId(getParam("ID"));
+            c.setId_component(getParam("ID"));
         }
 
         if (!isPresent("FORMULARIO")) {
             setError(t, "FORMULARIO", r);
             created = false;
         } else {
-            c.setForm(getParam("FORMULARIO"));
+            c.setForm_id(getParam("FORMULARIO"));
         }
 
         if (!container.getCurrentErrors().isEmpty()) {
@@ -204,14 +204,14 @@ public class ComponentContainer {
             setError(t, "ID", r);
             created = false;
         } else {
-            c.setId(getParam("ID"));
+            c.setId_component(getParam("ID"));
         }
 
         if (!isPresent("FORMULARIO")) {
             setError(t, "FORMULARIO", r);
             created = false;
         } else {
-            c.setForm(getParam("FORMULARIO"));
+            c.setForm_id(getParam("FORMULARIO"));
         }
 
         if (!container.getParams().isEmpty()) {
