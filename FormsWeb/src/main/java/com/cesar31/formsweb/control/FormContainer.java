@@ -171,32 +171,30 @@ public class FormContainer {
             f.setId_form(getParam("ID"));
         }
 
-        if (!isPresent("TITULO")) {
-            setError(t, "TITULO", r);
-            created = false;
-        } else {
-            f.setTitle(container.getParams().remove("TITULO"));
-            container.getTokens().remove("TITULO");
-        }
-
-        if (!isPresent("NOMBRE")) {
-            setError(t, "NOMBRE", r);
-            created = false;
-        } else {
-            if (!container.haveSpace("NOMBRE")) {
-                f.setName(getParam("NOMBRE"));
-            } else {
-                container.setErrorSpace(t, r, "NOMBRE");
-                created = false;
+        if (isPresent("TITULO") || isPresent("NOMBRE") || isPresent("TEMA")) {
+            if (isPresent("TITULO")) {
+                f.setTitle(container.getParams().remove("TITULO"));
+                container.getTokens().remove("TITULO");
             }
-        }
 
-        if (!isPresent("TEMA")) {
-            setError(t, "TEMA", r);
-            created = false;
+            if (isPresent("NOMBRE")) {
+                if (!container.haveSpace("NOMBRE")) {
+                    f.setName(getParam("NOMBRE"));
+                } else {
+                    container.setErrorSpace(t, r, "NOMBRE");
+                    created = false;
+                }
+            }
+
+            if (isPresent("TEMA")) {
+                f.setTheme(container.getParams().remove("TEMA"));
+                container.getTokens().remove("TEMA");
+            }
         } else {
-            f.setTheme(container.getParams().remove("TEMA"));
-            container.getTokens().remove("TEMA");
+            Error e = new Error("", "SINTACTICO", t.getX(), t.getY());
+            e.setDescription("En la peticion " + r + ", fila = " + t.getX() + ", columna = " + t.getY() + ", se debe incluir aparte del ID, TITULO, NOMBRE y/o TEMA.");
+            container.getErrors().add(e);
+            created = false;
         }
 
         if (!container.getCurrentErrors().isEmpty()) {
