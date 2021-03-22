@@ -24,6 +24,8 @@ public class TestParserMain {
         
         String data = db.readDate("request.indigo");
         handler.parserInput(data);
+        
+        //debug(data);
 
     }
 

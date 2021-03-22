@@ -336,10 +336,12 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 
 	{WhiteSpace}
 	{ /* Ignore */ }
+
 }
 
 [^]
 {
+	System.out.println("Error: < " + yytext() + " >");
 	return symbol(ERROR, yytext());
 	// throw new Error("Ilegal character: <" + yytext() + ">");
 }

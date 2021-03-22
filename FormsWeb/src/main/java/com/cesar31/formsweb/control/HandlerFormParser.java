@@ -105,6 +105,14 @@ public class HandlerFormParser {
                     case ADD:
                         addComp((Component) r);
                         break;
+
+                    case EDIT:
+                        System.out.println("Edit Component");
+                        break;
+                        
+                    case DEL:
+                        delComp((Component) r);
+                        break;
                 }
             }
         });
@@ -134,6 +142,7 @@ public class HandlerFormParser {
         for (User us : users) {
             if (us.getUser().equals(edit.getUser())) {
                 u = us;
+                break;
             }
         }
 
@@ -201,8 +210,6 @@ public class HandlerFormParser {
     private void editForm(Form f) {
         readDB();
 
-        System.out.println(f.toString());
-
         if (!idFormIsAvailable(f.getId_form())) {
             for (Form form : forms) {
                 if (form.getId_form().equals(f.getId_form())) {
@@ -254,27 +261,106 @@ public class HandlerFormParser {
         }
     }
 
+    /**
+     * Agregar un componente
+     *
+     * @param c
+     */
     private void addComp(Component c) {
         readDB();
         if (!idFormIsAvailable(c.getForm_id())) {
-            for(Form f : forms) {
-                if(f.getId_form().equals(c.getForm_id())) {
-                    if(idComponentIsAvailable(f.getComponents(), c.getId_component())) {
+            for (Form f : forms) {
+                if (f.getId_form().equals(c.getForm_id())) {
+                    if (idComponentIsAvailable(f.getComponents(), c.getId_component())) {
                         c.setIndex(f.getComponents().size() + 1);
                         f.getComponents().add(c);
-                        
+
                         // Actualizar
                         executeUpdate();
                     } else {
                         System.out.println("El id del componente que intenta agregar no esta disponible.");
                     }
-                    
+
                     break;
                 }
             }
         } else {
             System.out.println("El formulario al cual se intenta agregar el componente, no existe");
         }
+    }
+
+    /**
+     * Eliminar un componente
+     *
+     * @param c
+     */
+    private void delComp(Component c) {
+        readDB();
+        Form f = getForm(c.getForm_id());
+
+        if (f != null) {
+            Component del = getComponent(f, c.getId_component());
+            if (del != null) {
+                f.getComponents().remove(del);
+
+                // Actualizar indice de los demas componentes
+                updateIndex(f.getComponents());
+
+                // Actualizar
+                executeUpdate();
+            } else {
+                System.out.println("El componente que intenta eliminar, no existe");
+            }
+        } else {
+            System.out.println("El formulario al cual le intenta eliminar un componente, no existe");
+        }
+    }
+
+    /**
+     * Actualizar indice de componentes luego de eliminar uno
+     *
+     * @param comps
+     */
+    private void updateIndex(List<Component> comps) {
+        for (int i = 0; i < comps.size(); i++) {
+            comps.get(i).setIndex(i + 1);
+            System.out.println(comps.get(i).toString());
+        }
+    }
+
+    /**
+     * Obtener formulario por id
+     *
+     * @param id
+     * @return
+     */
+    private Form getForm(String id) {
+        Form f = null;
+        for (Form fm : forms) {
+            if (fm.getId_form().equals(id)) {
+                f = fm;
+                break;
+            }
+        }
+        return f;
+    }
+
+    /**
+     * Obtener componente por id
+     *
+     * @param f
+     * @param id
+     * @return
+     */
+    private Component getComponent(Form f, String id) {
+        Component c = null;
+        for (Component cm : f.getComponents()) {
+            if (cm.getId_component().equals(id)) {
+                c = cm;
+                break;
+            }
+        }
+        return c;
     }
 
     /**
@@ -290,7 +376,6 @@ public class HandlerFormParser {
             }
         }
         return true;
-        //return users.stream().noneMatch(us -> (us.getUser().equals(string)));
     }
 
     /**
@@ -307,10 +392,10 @@ public class HandlerFormParser {
         }
         return true;
     }
-    
+
     private boolean idComponentIsAvailable(List<Component> comp, String id) {
-        for(Component c : comp) {
-            if(c.getId_component().equals(id)) {
+        for (Component c : comp) {
+            if (c.getId_component().equals(id)) {
                 return false;
             }
         }
@@ -323,7 +408,7 @@ public class HandlerFormParser {
     private void executeUpdate() {
         String json = db.createJson(users, forms);
         System.out.println(json);
-        db.writeDate(json);
+            db.writeDate(json);
     }
 
     private void readDB() {

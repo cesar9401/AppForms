@@ -1613,7 +1613,8 @@ public class FormsLex implements java_cup.runtime.Scanner {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { return symbol(ERROR, yytext());
+            { System.out.println("Error: < " + yytext() + " >");
+	return symbol(ERROR, yytext());
 	// throw new Error("Ilegal character: <" + yytext() + ">");
             }
             // fall through
