@@ -1,6 +1,5 @@
 package com.cesar31.formsweb.parser.main;
 
-import com.cesar31.formsweb.control.Error;
 import com.cesar31.formsweb.control.HandlerDB;
 import com.cesar31.formsweb.control.HandlerFormParser;
 import com.cesar31.formsweb.model.Component;
@@ -22,11 +21,10 @@ public class TestParserMain {
         HandlerDB db = new HandlerDB();
         HandlerFormParser handler = new HandlerFormParser();
         
-        String data = db.readDate("request.indigo");
+        String data = db.readDate("request2.indigo");
         handler.parserInput(data);
-        
-        //debug(data);
 
+        //debug(data);
     }
 
     public static void operation(List<User> u, List<Form> f, List<Component> c) {

@@ -45,14 +45,15 @@ public class ComponentContainer {
                     break;
 
                 case "AREA_TEXTO":
-                    System.out.println("AREA_TEXTO");
                     created = isPresent("FILAS") && isPresent("COLUMNAS");
                     getRowsAndColumns(t, r, kind, c);
                     break;
 
                 case "IMAGEN":
-                    System.out.println("IMAGEN");
                     created = isPresent("URL");
+                    if (isPresent("URL")) {
+                        created = !container.haveSpace("URL");
+                    }
                     getUrl(t, r, kind, c);
                     break;
             }
@@ -314,7 +315,12 @@ public class ComponentContainer {
             e.setDescription("En la peticion " + r + ", de tipo: " + kind + ", fila = " + t.getX() + ", columna = " + t.getY() + ", se debe incluir el parametro URL.");
             container.getErrors().add(e);
         } else {
-            c.setUrl(getParam("URL"));
+            if (!container.haveSpace("URL")) {
+                c.setUrl(getParam("URL"));
+            } else {
+                container.setErrorSpace(t, r, "URL");
+            }
+
             if (!container.getCurrentErrors().isEmpty()) {
                 container.getCurrentErrors().forEach(e -> {
                     String s = e.getLexema();

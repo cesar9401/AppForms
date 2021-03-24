@@ -70,7 +70,7 @@ public class HandlerFormParser {
             if (r instanceof User) {
                 switch (r.getOp()) {
                     case LOGIN:
-                        System.out.println("Login " + ((User) r).getUser());
+                        login((User) r);
                         break;
                     case ADD:
                         addUser((User) r);
@@ -105,16 +105,33 @@ public class HandlerFormParser {
                     case ADD:
                         addComp((Component) r);
                         break;
-
                     case EDIT:
+                        editComp((Component) r);
                         break;
-
                     case DEL:
                         delComp((Component) r);
                         break;
                 }
             }
         });
+    }
+    
+    private User login(User u) {
+        readDB();
+        User login = null;
+        User user = getUser(u.getUser());
+        
+        if(user != null) {
+            if(user.getPassword().equals(u.getPassword())) {
+                login = user;
+            }
+        }
+        
+        if(login == null) {
+            System.out.println("Credenciales incorrectas");
+        }
+        
+        return login;
     }
 
     private void addUser(User u) {
@@ -169,12 +186,27 @@ public class HandlerFormParser {
         User user = getUser(u.getUser());
         if (user != null) {
             users.remove(user);
-
+            
+            // Eliminar formularios tambien :v
+            // delFormsUser(user);
+            
             // Actualizar
             executeUpdate();
 
         } else {
             System.out.println("El usuario que desea eliminar no existe.");
+        }
+    }
+    
+    /**
+     * Eliminar formularios del usuario
+     * @param u 
+     */
+    private void delFormsUser(User u) {
+        for(Form f : forms) {
+            if(f.getUser_creation().equals(u.getUser())) {
+                forms.remove(f);
+            }
         }
     }
 
@@ -269,6 +301,86 @@ public class HandlerFormParser {
     }
 
     /**
+     * Editar un componente
+     *
+     * @param c
+     */
+    private void editComp(Component c) {
+        readDB();
+        Form fm = getForm(c.getForm_id());
+
+        if (fm != null) {
+            Component cm = getComponent(fm, c.getId_component());
+            if (cm != null) {
+                boolean index = true;
+                boolean satisfies = true;
+
+                // INDICE
+                if (c.getIndex() != null) {
+                    cm.setIndex(c.getIndex());
+                    index = orderByIndex(fm.getComponents(), cm);
+                }
+
+                // NOMBRE_CAMPO
+                if (c.getFieldName() != null) {
+                    cm.setFieldName(c.getFieldName());
+                }
+                // TEXTO_VISIBLE
+                if (c.getText() != null) {
+                    cm.setText(c.getText());
+                }
+                // ALINEACION
+                if (c.getAling() != null) {
+                    cm.setAling(c.getAling());
+                }
+                // REQUERIDO
+                if (c.getRequired() != null) {
+                    cm.setRequired(c.getRequired());
+                }
+
+                // Opciones
+                if (!c.getOptions().isEmpty()) {
+                    cm.setOptions(c.getOptions());
+                }
+                // URL
+                if (c.getUrl() != null) {
+                    cm.setUrl(c.getUrl());
+                }
+
+                // COLUMNAS
+                if (c.getColumns() != null) {
+                    cm.setColumns(c.getColumns());
+                }
+
+                // FILAS
+                if (c.getRows() != null) {
+                    cm.setRows(c.getRows());
+                }
+
+                // CLASE
+                if (c.getKind() != null) {
+                    cm.setKind(c.getKind());
+                }
+
+                satisfies = checkComponent(cm);
+
+                if (satisfies && index) {
+                    // Actualizar
+                    executeUpdate();
+                } else {
+                    System.out.println("La solicitud de edicion no puede ser procesada.");
+                }
+
+            } else {
+                System.out.println("El componente que intenta editar, no existe.");
+            }
+
+        } else {
+            System.out.println("El formulario al cual le intenta editar un componente, no existe.");
+        }
+    }
+
+    /**
      * Eliminar un componente
      *
      * @param c
@@ -293,6 +405,83 @@ public class HandlerFormParser {
         } else {
             System.out.println("El formulario al cual le intenta eliminar un componente, no existe");
         }
+    }
+
+    /**
+     * Verificar si el componente cumple con los requisitos establecidos
+     *
+     * @param c
+     * @return
+     */
+    private boolean checkComponent(Component c) {
+        boolean satisfies = true;
+        String s = c.getKind();
+        switch (s) {
+            case "CHECKBOX":
+            case "RADIO":
+            case "COMBO":
+                if (c.getOptions().isEmpty()) {
+                    System.out.println("El componente de tipo " + s + ", debe tener opciones");
+                    satisfies = false;
+                }
+
+                if (c.getUrl() != null || c.getColumns() != null || c.getRows() != null) {
+                    System.out.println("El componente de tipo " + s + ", no debe tener url, filas y columnas");
+                    satisfies = false;
+                }
+                break;
+
+            case "IMAGEN":
+                if (c.getUrl() == null) {
+                    System.out.println("El componente de tipo " + s + ", debe de tener url");
+                    satisfies = false;
+                }
+
+                if (!c.getOptions().isEmpty() || c.getColumns() != null || c.getRows() != null) {
+                    System.out.println("El componente de tipo " + s + ", no debe tener opciones, filas y columnas");
+                    satisfies = false;
+                }
+                break;
+
+            case "AREA_TEXTO":
+                if (c.getRows() == null || c.getColumns() == null) {
+                    System.out.println("El componente de tipo " + s + ", debe tener filas y columnas");
+                    satisfies = false;
+                }
+
+                if (!c.getOptions().isEmpty() || c.getUrl() != null) {
+                    System.out.println("El componente de tipo " + s + ", no debe tener opciones o url");
+                    satisfies = false;
+                }
+
+                break;
+
+            default:
+                if(!c.getOptions().isEmpty() || c.getUrl() != null || c.getColumns() != null || c.getRows() != null) {
+                    System.out.println("El componente de tipo " + s + ", no debe tener opciones, url, filas o columnas");
+                    satisfies = false;
+                }
+        }
+
+        return satisfies;
+    }
+
+    /**
+     * Ordernar componentes por indices
+     *
+     * @param comps
+     * @param c
+     */
+    private boolean orderByIndex(List<Component> comps, Component c) {
+        if (c.getIndex() <= comps.size()) {
+            comps.remove(c);
+            comps.add(c.getIndex() - 1, c);
+            for (int i = 0; i < comps.size(); i++) {
+                comps.get(i).setIndex(i + 1);
+            }
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -367,6 +556,9 @@ public class HandlerFormParser {
         db.writeDate(json);
     }
 
+    /**
+     * Leer DB
+     */
     private void readDB() {
         this.db.readDataBase();
         this.users = this.db.getUsers();
