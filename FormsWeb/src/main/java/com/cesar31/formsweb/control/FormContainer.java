@@ -273,6 +273,6 @@ public class FormContainer {
      */
     private String getParam(String param) {
         container.getTokens().remove(param);
-        return container.getParams().remove(param).strip();
+        return container.getParams().remove(param).trim();
     }
 }

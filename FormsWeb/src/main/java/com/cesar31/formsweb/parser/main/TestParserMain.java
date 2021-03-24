@@ -21,7 +21,7 @@ public class TestParserMain {
         HandlerDB db = new HandlerDB();
         HandlerFormParser handler = new HandlerFormParser();
         
-        String data = db.readDate("request2.indigo");
+        String data = db.readDate("request1.indigo");
         handler.parserInput(data);
 
         //debug(data);

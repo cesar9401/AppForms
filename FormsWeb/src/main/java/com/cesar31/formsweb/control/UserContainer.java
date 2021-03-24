@@ -463,7 +463,7 @@ public class UserContainer {
 
     private String getParam(String param) {
         this.tokens.remove(param);
-        return this.params.remove(param).strip();
+        return this.params.remove(param).trim();
     }
 
     /**

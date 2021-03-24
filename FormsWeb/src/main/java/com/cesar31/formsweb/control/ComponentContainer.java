@@ -256,6 +256,7 @@ public class ComponentContainer {
             }
 
             if (isPresent("URL")) {
+                created = !container.haveSpace("URL");
                 getUrl(t, r, "", c);
             }
 
@@ -442,6 +443,6 @@ public class ComponentContainer {
      */
     private String getParam(String param) {
         container.getTokens().remove(param);
-        return container.getParams().remove(param).strip();
+        return container.getParams().remove(param).trim();
     }
 }

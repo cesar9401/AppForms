@@ -22,8 +22,8 @@ import java.util.List;
  */
 public class HandlerDB {
 
-    private final String DB_URL = "forms.db";
-    
+    private final String DB_URL = "/home/cesar31/Java/AppForms/FormsWeb/forms.db";
+
     private List<User> users;
     private List<Form> forms;
 
@@ -60,7 +60,7 @@ public class HandlerDB {
 
         return data;
     }
-    
+
     public void readDataBase() {
         String data = readDate(DB_URL);
         DataLex lex = new DataLex(new StringReader(data));
@@ -73,6 +73,45 @@ public class HandlerDB {
         } catch (Exception ex) {
             ex.printStackTrace(System.out);
         }
+    }
+
+    /**
+     * Obtener usuario para login
+     *
+     * @param u
+     * @param p
+     * @return
+     */
+    public User getUser(String u, String p) {
+        readDataBase();
+        User login = null;
+        for (User user : users) {
+            if (user.getUser().equals(u) && user.getPassword().equals(p)) {
+                login = user;
+                break;
+            }
+        }
+
+        return login;
+    }
+
+    /**
+     * Obtener formulario segun id
+     *
+     * @param id
+     * @return
+     */
+    public Form getForm(String id) {
+        readDataBase();
+        Form fm = null;
+        for (Form form : forms) {
+            if (form.getId_form().equals(id)) {
+                fm = form;
+                break;
+            }
+        }
+
+        return fm;
     }
 
     /**

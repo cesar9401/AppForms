@@ -39,6 +39,20 @@
 
     <dependencies>
         
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+            <version>8.0</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- https://mvnrepository.com/artifact/javax.servlet/jstl -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
+        
         <!-- jersey dependencies -->
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
@@ -69,7 +83,7 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.12.2</version>
         </dependency>
-
+        
     </dependencies>
     <properties>
         <jersey.version>2.33</jersey.version>
