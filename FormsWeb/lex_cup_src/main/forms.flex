@@ -42,11 +42,11 @@ Integer =  0|[1-9][0-9]*
 Date = \d{4,4}\-\d{2,2}\-\d{2,2}
 Input = [^\n\r\"\\\|]+
 InputClean = [^\n\r\"\\\t\s\f\|]+
-Id = \" [\_\-\$] ([\_\-\$] | \w )+ \"
+Id = \" [\_\-\$] ([\_\-\$] | {InputClean} )+ \"
 
-str = {WhiteSpace}* ([\\] | {InputClean})+ ( [\\] | {Input} )+ {WhiteSpace}*
+str = {WhiteSpace}* {InputClean}+ {Input}+ {WhiteSpace}*
 
-str_space = ({WhiteSpace} | [\\] | {Input})+
+str_space = ({WhiteSpace} | {Input})+
 
 // str_c = {WhiteSpace}* \w {str}*
 

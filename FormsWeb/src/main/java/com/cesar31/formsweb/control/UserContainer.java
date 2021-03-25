@@ -21,7 +21,7 @@ public class UserContainer {
     private List<Error> currentErrors;
     private HashMap<String, String> params;
     private HashMap<String, Token> tokens;
-    
+
     // Request
     private List<Request> requests;
 
@@ -39,7 +39,7 @@ public class UserContainer {
 
         this.form = new FormContainer(this);
         this.component = new ComponentContainer(this);
-        
+
         this.requests = new ArrayList<>();
     }
 
@@ -188,9 +188,9 @@ public class UserContainer {
         }
 
         if (created) {
-            //System.out.println("Agregado: " + u.toString());
             u.setOp(Operation.ADD);
             addRequest(u);
+            //System.out.println("Agregado: " + u.toString());
         }
 
         // Limpiar HashMap
@@ -304,9 +304,9 @@ public class UserContainer {
         }
 
         if (created) {
-            //System.out.println("Eliminado: " + u.toString());
             u.setOp(Operation.DEL);
             addRequest(u);
+            //System.out.println("Eliminado: " + u.toString());
         }
 
         // Limpiar HashMap
@@ -393,9 +393,9 @@ public class UserContainer {
         }
 
         if (created) {
-            //System.out.println("Editar: " + u.toString());
             u.setOp(Operation.EDIT);
             addRequest(u);
+            //System.out.println("Editar: " + u.toString());
         }
 
         // Limpiar HashMap
@@ -509,7 +509,7 @@ public class UserContainer {
         }
         return date;
     }
-    
+
     public void addRequest(Request r) {
         r.setNumber(requests.size() + 1);
         requests.add(r);

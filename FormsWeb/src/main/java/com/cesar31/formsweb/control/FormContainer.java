@@ -102,9 +102,9 @@ public class FormContainer {
         }
 
         if (created) {
-            //System.out.println("Nuevo formulario: " + f.toString());
             f.setOp(Operation.ADD);
             container.addRequest(f);
+            //System.out.println("Nuevo formulario: " + f.toString());
         }
 
         // Limpiar HashMaps
@@ -145,9 +145,9 @@ public class FormContainer {
         }
 
         if (created) {
-            //System.out.println("Eliminar formulario: " + f.toString());
             f.setOp(Operation.DEL);
             container.getRequests().add(f);
+            //System.out.println("Eliminar formulario: " + f.toString());
         }
 
         // Limpiar HashMaps
@@ -214,9 +214,9 @@ public class FormContainer {
         }
 
         if (created) {
-            //System.out.println("Editar formulario: " + f.toString());
             f.setOp(Operation.EDIT);
             container.addRequest(f);
+            //System.out.println("Editar formulario: " + f.toString());
         }
 
         // Limpiar HashMaps

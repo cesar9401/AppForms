@@ -133,9 +133,9 @@ public class ComponentContainer {
         }
 
         if (created) {
-            //System.out.println("Crear Componente -> " + c.toString());
             c.setOp(Operation.ADD);
             container.addRequest(c);
+            //System.out.println("Crear Componente -> " + c.toString());
         }
 
         clearHash();
@@ -182,9 +182,9 @@ public class ComponentContainer {
         }
 
         if (created) {
-            //System.out.println("Eliminar componente -> " + c.toString());
             c.setOp(Operation.DEL);
             container.addRequest(c);
+            //System.out.println("Eliminar componente -> " + c.toString());
         }
 
         //Limpiar HashMaps
@@ -293,9 +293,9 @@ public class ComponentContainer {
         }
 
         if (created) {
-            //System.out.println("Editar componente: " + c.toString());
             c.setOp(Operation.EDIT);
             container.addRequest(c);
+            //System.out.println("Editar componente: " + c.toString());
         }
 
         // Limpiar HashMaps
