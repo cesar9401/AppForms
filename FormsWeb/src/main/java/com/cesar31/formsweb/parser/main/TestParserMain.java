@@ -21,18 +21,18 @@ public class TestParserMain {
         HandlerDB db = new HandlerDB();
         HandlerFormParser handler = new HandlerFormParser();
 
-        //String data = db.readDate("request1.indigo");
-        //handler.parserInput(data);
+        String data = db.readDate("request3.indigo");
+        handler.parserInput(data);
 
 //        User u = db.getUser("/njjparedes", "#jjpassword");
 //        if (u != null) {
 //            System.out.println(u.toString());
 //        }
 
-        Form f = db.getForm("$formulario/1");
-        if(f != null) {
-            System.out.println(f.toString());
-        }
+//        Form f = db.getForm("$formulario/1");
+//        if(f != null) {
+//            System.out.println(f.toString());
+//        }
         //debug(data);
     }
 

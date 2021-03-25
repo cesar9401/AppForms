@@ -552,7 +552,7 @@ public class HandlerFormParser {
      */
     private void executeUpdate() {
         String json = db.createJson(users, forms);
-        System.out.println(json);
+        //System.out.println(json);
         db.writeDate(json);
     }
 

@@ -4,20 +4,15 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <%@include file="assets/css.html"%>
+        <%@include file="assets/css/css.html"%>
         <link href="assets/img/forms.png" rel="icon" type="image/png">
         <title>Forms Web</title>
     </head>
     <body>
 
-        <nav class="navbar navbar-light bg-light">
-            <div class="container">
-                <a class="navbar-brand" href="#">
-                    <img src="assets/img/forms.png" alt="Forms Web" width="30" height="30" class="d-inline-block align-text-top">
-                    Forms Web
-                </a>
-            </div>
-        </nav>
+        
+        <!-- NavBar-->
+        <jsp:include page="WEB-INF/nav.jsp"></jsp:include>
 
         <section>
             <div class="container">
@@ -63,18 +58,6 @@
 
 
 
-        <%@include file="assets/js.html" %>
+        <%@include file="assets/js/js.html" %>
     </body>
 </html>
-
-
-<!--
-<html>
-<body>
-    <h2>Jersey RESTful Web Application!</h2>
-    <p><a href="webapi/myresource">Jersey resource</a>
-    <p>Visit <a href="http://jersey.java.net">Project Jersey website</a>
-    for more information on Jersey!
-</body>
-</html>
--->

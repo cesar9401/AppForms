@@ -5,7 +5,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <%@include file="assets/css.html"%>
+        <%@include file="assets/css/css.html"%>
         <link href="assets/img/forms.png" rel="icon" type="image/png">
         <title>${user.user}</title>
     </head>
@@ -14,6 +14,6 @@
         <h1>${user.user}</h1>
         <h1>${user.creationDate}</h1>
 
-        <%@include file="assets/js.html" %>
+        <%@include file="assets/js/js.html" %>
     </body>
 </html>
