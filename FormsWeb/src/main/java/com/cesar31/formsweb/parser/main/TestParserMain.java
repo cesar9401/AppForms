@@ -23,7 +23,7 @@ public class TestParserMain {
 
         String data = db.readDate("request3.indigo");
         handler.parserInput(data);
-
+        
 //        User u = db.getUser("/njjparedes", "#jjpassword");
 //        if (u != null) {
 //            System.out.println(u.toString());

@@ -553,14 +553,14 @@ public class HandlerFormParser {
     private void executeUpdate() {
         String json = db.createJson(users, forms);
         //System.out.println(json);
-        db.writeDate(json);
+        db.writeData(db.DB_URL, json);
     }
 
     /**
      * Leer DB
      */
     private void readDB() {
-        this.db.readDataBase();
+        this.db.readDataBase(db.DB_URL);
         this.users = this.db.getUsers();
         this.forms = this.db.getForms();
     }

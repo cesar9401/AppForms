@@ -1,6 +1,7 @@
 package com.cesar31.formsweb.control;
 
 import com.cesar31.formsweb.model.Form;
+import com.cesar31.formsweb.model.FormData;
 import com.cesar31.formsweb.model.User;
 import com.cesar31.formsweb.parser.db.DataLex;
 import com.cesar31.formsweb.parser.db.DataParser;
@@ -22,7 +23,8 @@ import java.util.List;
  */
 public class HandlerDB {
 
-    private final String DB_URL = "/home/cesar31/Java/AppForms/FormsWeb/forms.db";
+    public final String DB_URL = "/home/cesar31/Java/AppForms/FormsWeb/DB/forms.db";
+    public final String DB_DATA_URL = "/home/cesar31/Java/AppForms/FormsWeb/DB/forms_data.db";
 
     private List<User> users;
     private List<Form> forms;
@@ -61,7 +63,7 @@ public class HandlerDB {
         return data;
     }
 
-    public void readDataBase() {
+    public void readDataBase(String url) {
         String data = readDate(DB_URL);
         DataLex lex = new DataLex(new StringReader(data));
         DataParser parser = new DataParser(lex);
@@ -83,7 +85,7 @@ public class HandlerDB {
      * @return
      */
     public User getUser(String u, String p) {
-        readDataBase();
+        readDataBase(DB_URL);
         User login = null;
         for (User user : users) {
             if (user.getUser().equals(u) && user.getPassword().equals(p)) {
@@ -102,7 +104,7 @@ public class HandlerDB {
      * @return
      */
     public Form getForm(String id) {
-        readDataBase();
+        readDataBase(DB_URL);
         Form fm = null;
         for (Form form : forms) {
             if (form.getId_form().equals(id)) {
@@ -145,10 +147,11 @@ public class HandlerDB {
      * Escribir en la base de datos, recibe string con la informacion en formato
      * json
      *
+     * @param path
      * @param json
      */
-    public void writeDate(String json) {
-        File file = new File(DB_URL);
+    public void writeData(String path, String json) {
+        File file = new File(path);
         try {
             try (PrintWriter writer = new PrintWriter(file)) {
                 writer.write(json);
@@ -156,6 +159,23 @@ public class HandlerDB {
         } catch (FileNotFoundException ex) {
             ex.printStackTrace(System.out);
         }
+    }
+
+    public void writeFormData(FormData fd) {
+        List<FormData> list = new ArrayList<>();
+        list.add(fd);
+        ObjectMapper mapper = new ObjectMapper();
+        String json = "DATOS_RECOPILADOS\n";
+        try {
+            json += mapper.writerWithDefaultPrettyPrinter().writeValueAsString(list);
+            json += "\n";
+        } catch (JsonProcessingException ex) {
+            ex.printStackTrace(System.out);
+        }
+        System.out.println("\n");
+        System.out.println(json);
+        
+        writeData(DB_DATA_URL, json);
     }
 
     public List<User> getUsers() {

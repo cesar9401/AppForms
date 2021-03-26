@@ -33,68 +33,73 @@
             <div class="container">
                 <div class="row">
                     <div class="col">
-                        <form action="Form" method="post">
+                        <form action="Form" method="post" enctype="multipart/form-data">
                             <c:forEach items="${form.components}" var="cm">
-                                <div class="mb-3">
-                                    <label for="${cm.fieldName}" class="form-label">${cm.text}</label>
-                                    <c:choose>
-                                        <c:when test="${cm.kind == 'CAMPO_TEXTO'}">
-                                            <input type="text" class="form-control" id="${cm.id_component}" name="${cm.id_component}">
-                                        </c:when>
+                                <div class="row">
+                                    <div class="col-12 col-lg-10 offset-lg-1">
+                                        <div class="mb-3">
+                                            <label for="${cm.fieldName}" class="form-label">${cm.text}</label>
+                                            <c:choose>
+                                                <c:when test="${cm.kind == 'CAMPO_TEXTO'}">
+                                                    <input type="text" class="form-control inpt" id="${cm.id_component}" name="${cm.id_component}" required="${cm.required}">
+                                                </c:when>
 
-                                        <c:when test="${cm.kind == 'AREA_TEXTO'}">
-                                            <textarea class="form-control" id="${cm.id_component}" name="${cm.id_component}" rows="${cm.rows}" cols="${cm.columns}"></textarea>
-                                        </c:when>
+                                                <c:when test="${cm.kind == 'AREA_TEXTO'}">
+                                                    <br>
+                                                    <textarea class="inpt" id="${cm.id_component}" name="${cm.id_component}" rows="${cm.rows}" cols="${cm.columns}" required="${cm.required}"></textarea>
+                                                </c:when>
 
-                                        <c:when test="${cm.kind == 'CHECKBOX'}">
-                                            <c:forEach items="${cm.options}" var="s">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" value="${s}" id="${s}" name="${cm.id_component}">
-                                                    <label class="form-check-label" for="defaultCheck1">
-                                                        ${s}
-                                                    </label>
-                                                </div>
-                                            </c:forEach>
-                                        </c:when>
+                                                <c:when test="${cm.kind == 'CHECKBOX'}">
+                                                    <c:forEach items="${cm.options}" var="s">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input inpt" type="checkbox" value="${s}" id="${s}" name="${cm.id_component}">
+                                                            <label class="form-check-label" for="defaultCheck1">
+                                                                ${s}
+                                                            </label>
+                                                        </div>
+                                                    </c:forEach>
+                                                </c:when>
 
-                                        <c:when test="${cm.kind == 'RADIO'}">
-                                            <c:forEach items="${cm.options}" var="s">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" id="${cm.id_component}" name="${cm.id_component}" value="${s}">
-                                                    <label class="form-check-label" for="${cm.id_component}">
-                                                        ${s}
-                                                    </label>
-                                                </div>                                                
-                                            </c:forEach>
-                                        </c:when>
+                                                <c:when test="${cm.kind == 'RADIO'}">
+                                                    <c:forEach items="${cm.options}" var="s">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input inpt" type="radio" id="${cm.id_component}" name="${cm.id_component}" value="${s}" required="${cm.required}">
+                                                            <label class="form-check-label" for="${cm.id_component}">
+                                                                ${s}
+                                                            </label>
+                                                        </div>                                                
+                                                    </c:forEach>
+                                                </c:when>
 
-                                        <c:when test="${cm.kind == 'FICHERO'}">
-                                            <input class="form-control" type="file" name="${cm.id_component}" id="${cm.id_component}">
-                                        </c:when>
+                                                <c:when test="${cm.kind == 'FICHERO'}">
+                                                    <input class="form-control inpt" type="file" name="${cm.id_component}" id="${cm.id_component}" required="${cm.required}">
+                                                </c:when>
 
-                                        <c:when test="${cm.kind == 'IMAGEN'}">
-                                            <div class="form-check">
-                                                <figure class="figure">
-                                                    <img src="${cm.url}" class="figure-img img-fluid rounded" alt="${cm.text}">
-                                                    <figcaption class="figure-caption">${cm.text}</figcaption>
-                                                </figure>
-                                            </div>    
-                                        </c:when>
+                                                <c:when test="${cm.kind == 'IMAGEN'}">
+                                                    <div class="form-check">
+                                                        <figure class="figure">
+                                                            <img src="${cm.url}" class="figure-img img-fluid rounded" alt="${cm.text}">
+                                                            <figcaption class="figure-caption">${cm.text}</figcaption>
+                                                        </figure>
+                                                    </div>    
+                                                </c:when>
 
-                                        <c:when test="${cm.kind == 'COMBO'}">
-                                            <select class="form-select" aria-label="Default select example">
-                                                <option selected>Open this select menu</option>
-                                                <c:forEach items="${cm.options}" var="s">
-                                                    <option value="${s}">${s}</option>
-                                                </c:forEach>
-                                            </select>
-                                        </c:when>
+                                                <c:when test="${cm.kind == 'COMBO'}">
+                                                    <select class="form-select inpt" aria-label="Default select example" required="${cm.required}">
+                                                        <option value="" selected>Open this select menu</option>
+                                                        <c:forEach items="${cm.options}" var="s">
+                                                            <option value="${s}">${s}</option>
+                                                        </c:forEach>
+                                                    </select>
+                                                </c:when>
 
-                                        <c:when test="${cm.kind == 'BOTON'}">
-                                            <br>
-                                            <button type="button" class="btn btn-outline-primary btn-lg">${cm.text}</button>
-                                        </c:when>
-                                    </c:choose>
+                                                <c:when test="${cm.kind == 'BOTON'}">
+                                                    <br>
+                                                    <button type="button" class="btn btn-outline-primary btn-lg">${cm.text}</button>
+                                                </c:when>
+                                            </c:choose>
+                                        </div>
+                                    </div>
                                 </div>
                             </c:forEach>
                             <div class="text-center">
@@ -117,19 +122,26 @@
         </section>
 
         <%@include file="assets/js/js.html" %>
-        <!--
-        <script>
-            let body = document.body;
-            let nav = document.getElementById("nav");
-            nav.classList.remove("navbar-light");
-            nav.classList.remove("bg-light");
-            
-            nav.classList.add("navbar-dark");
-            nav.classList.add("bg-dark");
-            
-            body.classList.add("bg-dark");
-            body.classList.add("text-white");
-        </script>
-        -->
+        <c:if test="${form.theme == 'DARK'}">
+            <script>
+                let body = document.body;
+                let nav = document.getElementById("nav");
+                let list = document.querySelectorAll(".inpt");
+
+                for (let i = 0; i < list.length; i++) {
+                    list[i].classList.add("bg-secondary");
+                    list[i].classList.add("text-white");
+                }
+
+                nav.classList.remove("navbar-light");
+                nav.classList.remove("bg-light");
+
+                nav.classList.add("navbar-dark");
+                nav.classList.add("bg-dark");
+
+                body.classList.add("bg-dark");
+                body.classList.add("text-white");
+            </script>
+        </c:if>
     </body>
 </html>
