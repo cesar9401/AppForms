@@ -1,0 +1,35 @@
+package com.cesar31.formsweb.parser.answer;
+
+import java_cup.runtime.Symbol;
+
+import java.util.ArrayList;
+import java.util.List;
+
+class AnswerParser;
+
+parser code {:
+
+	public AnswerParser(AnswerLex lex) {
+		super(lex);
+	}
+
+	public void syntax_error(Symbol cur_token) {
+        System.out.printf("syntax_error: Linea: %d, columna: %d, sym: %s, nombre: %s, value: \"%s\", parse_state: %d\n", cur_token.left, cur_token.right, cur_token.sym, symbl_name_from_id(cur_token.sym), cur_token.value, cur_token.parse_state);
+        List<Integer> tokens = expected_token_ids();
+        System.out.print("Se esperaba ->");
+        for(Integer i : tokens) {
+			System.out.printf("%s, ", symbl_name_from_id(i));
+        }
+        System.out.println("");
+	}
+
+:}
+
+terminal COLLECTED, LBRACKET, RBRACKET, LBRACE, RBRACE, COLON, COMMA;
+terminal ERROR;
+terminal String ID, NAME, DATA, STR;
+
+non terminal json;
+
+json 		::=	COLLECTED
+				;
