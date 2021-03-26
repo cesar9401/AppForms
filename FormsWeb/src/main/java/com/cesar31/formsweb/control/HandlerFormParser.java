@@ -560,7 +560,7 @@ public class HandlerFormParser {
      * Leer DB
      */
     private void readDB() {
-        this.db.readDataBase(db.DB_URL);
+        this.db.readDataBase();
         this.users = this.db.getUsers();
         this.forms = this.db.getForms();
     }

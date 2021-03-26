@@ -29,7 +29,56 @@ terminal COLLECTED, LBRACKET, RBRACKET, LBRACE, RBRACE, COLON, COMMA;
 terminal ERROR;
 terminal String ID, NAME, DATA, STR;
 
-non terminal json;
+non terminal json_data, make_d, data_m_form, data_form, form, fd_keys, data, make_data, data_fms, data_f, data_body, data_keys;
+non terminal String str;
 
-json 		::=	COLLECTED
+json_data 	::=	COLLECTED LBRACKET make_d RBRACKET
+				{: System.out.println("parsed"); :}
+				;
+
+make_d		::= data_m_form
+				|
+				;
+
+data_m_form	::=	data_form
+				| data_m_form COMMA data_form
+				;
+
+data_form	::=	LBRACE form RBRACE
+				;
+
+form		::=	fd_keys
+				| form COMMA fd_keys
+				;
+
+fd_keys		::=	ID COLON str
+				| NAME COLON str
+				| DATA COLON data
+				;
+
+data		::=	LBRACKET make_data RBRACKET
+				;
+
+make_data	::=	data_fms
+				|
+				;
+
+data_fms	::=	data_f
+				| data_fms COMMA data_f
+				;
+
+data_f		::=	LBRACE data_body RBRACE
+				;
+
+data_body	::=	data_keys
+				| data_body COMMA data_keys
+				;
+
+data_keys	::=	str COLON str
+				;
+
+str			::=	STR:p {: RESULT = p; :}
+				| ID:p {: RESULT = p; :}
+				| NAME:p {: RESULT = p; :}
+				| DATA:p {: RESULT = p; :}
 				;

@@ -40,7 +40,7 @@ public class HandlerDB {
      * @param path
      * @return
      */
-    public String readDate(String path) {
+    public String readData(String path) {
         String data = "";
         File file = new File(path);
         try {
@@ -63,8 +63,8 @@ public class HandlerDB {
         return data;
     }
 
-    public void readDataBase(String url) {
-        String data = readDate(DB_URL);
+    public void readDataBase() {
+        String data = readData(DB_URL);
         DataLex lex = new DataLex(new StringReader(data));
         DataParser parser = new DataParser(lex);
         try {
@@ -85,7 +85,7 @@ public class HandlerDB {
      * @return
      */
     public User getUser(String u, String p) {
-        readDataBase(DB_URL);
+        readDataBase();
         User login = null;
         for (User user : users) {
             if (user.getUser().equals(u) && user.getPassword().equals(p)) {
@@ -104,7 +104,7 @@ public class HandlerDB {
      * @return
      */
     public Form getForm(String id) {
-        readDataBase(DB_URL);
+        readDataBase();
         Form fm = null;
         for (Form form : forms) {
             if (form.getId_form().equals(id)) {

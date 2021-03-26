@@ -21,7 +21,7 @@ public class TestParserMain {
         HandlerDB db = new HandlerDB();
         HandlerFormParser handler = new HandlerFormParser();
 
-        String data = db.readDate("request3.indigo");
+        String data = db.readData("request3.indigo");
         handler.parserInput(data);
         
 //        User u = db.getUser("/njjparedes", "#jjpassword");
