@@ -103,7 +103,7 @@ public class FormContainer {
 
         if (created) {
             f.setOp(Operation.ADD);
-            container.addRequest(f);
+            container.addRequest(t, f);
             //System.out.println("Nuevo formulario: " + f.toString());
         }
 
@@ -146,7 +146,7 @@ public class FormContainer {
 
         if (created) {
             f.setOp(Operation.DEL);
-            container.getRequests().add(f);
+            container.addRequest(t, f);
             //System.out.println("Eliminar formulario: " + f.toString());
         }
 
@@ -215,7 +215,7 @@ public class FormContainer {
 
         if (created) {
             f.setOp(Operation.EDIT);
-            container.addRequest(f);
+            container.addRequest(t, f);
             //System.out.println("Editar formulario: " + f.toString());
         }
 

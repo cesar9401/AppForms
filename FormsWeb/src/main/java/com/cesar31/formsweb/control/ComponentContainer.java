@@ -134,7 +134,7 @@ public class ComponentContainer {
 
         if (created) {
             c.setOp(Operation.ADD);
-            container.addRequest(c);
+            container.addRequest(t, c);
             //System.out.println("Crear Componente -> " + c.toString());
         }
 
@@ -183,7 +183,7 @@ public class ComponentContainer {
 
         if (created) {
             c.setOp(Operation.DEL);
-            container.addRequest(c);
+            container.addRequest(t, c);
             //System.out.println("Eliminar componente -> " + c.toString());
         }
 
@@ -294,7 +294,7 @@ public class ComponentContainer {
 
         if (created) {
             c.setOp(Operation.EDIT);
-            container.addRequest(c);
+            container.addRequest(t, c);
             //System.out.println("Editar componente: " + c.toString());
         }
 
@@ -389,7 +389,6 @@ public class ComponentContainer {
                     }
                 });
             }
-
         }
     }
 

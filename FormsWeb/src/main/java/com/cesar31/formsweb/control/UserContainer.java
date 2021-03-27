@@ -189,8 +189,8 @@ public class UserContainer {
 
         if (created) {
             u.setOp(Operation.ADD);
-            addRequest(u);
-            //System.out.println("Agregado: " + u.toString());
+            addRequest(t, u);
+            //System.out.println(u.toString());
         }
 
         // Limpiar HashMap
@@ -254,7 +254,7 @@ public class UserContainer {
         if (created) {
             //System.out.println("login: " + u.toString());
             u.setOp(Operation.LOGIN);
-            addRequest(u);
+            addRequest(t, u);
         }
 
         // Limpiar HashMap
@@ -305,7 +305,7 @@ public class UserContainer {
 
         if (created) {
             u.setOp(Operation.DEL);
-            addRequest(u);
+            addRequest(t, u);
             //System.out.println("Eliminado: " + u.toString());
         }
 
@@ -394,7 +394,7 @@ public class UserContainer {
 
         if (created) {
             u.setOp(Operation.EDIT);
-            addRequest(u);
+            addRequest(t, u);
             //System.out.println("Editar: " + u.toString());
         }
 
@@ -510,8 +510,10 @@ public class UserContainer {
         return date;
     }
 
-    public void addRequest(Request r) {
+    public void addRequest(Token t, Request r) {
         r.setNumber(requests.size() + 1);
+        r.setLine(t.getX());
+        r.setColumn(t.getY());
         requests.add(r);
     }
 

@@ -13,9 +13,15 @@ public class Request {
 
     @JsonView(NoView.class)
     private int number;
-    
+
     @JsonView(NoView.class)
     private Operation op;
+
+    @JsonView(NoView.class)
+    private int line;
+
+    @JsonView(NoView.class)
+    private int column;
 
     public Request() {
     }
@@ -41,6 +47,22 @@ public class Request {
         this.op = op;
     }
 
+    public int getLine() {
+        return line;
+    }
+
+    public void setLine(int line) {
+        this.line = line;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
+    }
+    
     @Override
     public String toString() {
         return "Request{" + "number=" + number + '}';

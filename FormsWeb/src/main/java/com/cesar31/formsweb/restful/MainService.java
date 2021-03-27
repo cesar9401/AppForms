@@ -1,15 +1,13 @@
 package com.cesar31.formsweb.restful;
 
-import com.cesar31.formsweb.control.HandlerDB;
 import com.cesar31.formsweb.control.HandlerFormParser;
-import com.cesar31.formsweb.model.User;
-import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 /**
  *
@@ -23,31 +21,14 @@ public class MainService {
     @Produces(MediaType.TEXT_PLAIN)
     public Response getRequest(String input) {
         //Write your code here
-        HandlerFormParser formInput = new HandlerFormParser();
-        //List<User> users = formInput.readInput(input).getAddUsers();
-
-        HandlerDB db = new HandlerDB();
-        //db.addUser(users);
-
-        return null;
-    }
-
-    public static void main(String[] args) {
-//        String input = "<!INI_solicitud : \"\n\tCREAR_USUARIO\t\n\"> \n "
-//                + "{ \"    CREDENCIALES_USUARIO\" : [{ \n "
-//                + "\"USUARIO\" : \"mario_ballotelli\" , \n"
-//                + "\"PASSWORD\" : \"__ballotelli_12\"\n  ,"
-//                + "\"FECHA_CREACION\"  : \"\t2020-03-12\"    \n"
-//                + " }\n "
-//                + "  ] \n"
-//                + "} \n "
-//                + "<fiN_solicitud!>"
-//                + "\n";
-//        
-//        HandlerFormParser clientInput = new HandlerFormParser();
-//        List<User> users = clientInput.readInput(input).getAddUsers();
-//
-//        HandlerDB db = new HandlerDB();
-//        db.addUser(users);
+        try {
+            System.out.println(input);
+            HandlerFormParser formInput = new HandlerFormParser();
+            formInput.parserInput(input);
+            return Response.ok().entity(input).build();
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

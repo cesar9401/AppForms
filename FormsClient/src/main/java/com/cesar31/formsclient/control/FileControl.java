@@ -43,7 +43,6 @@ public class FileControl {
         } catch (IOException ex) {
             ex.printStackTrace(System.out);
         }
-        System.out.println(string);
         return string;
     }
 

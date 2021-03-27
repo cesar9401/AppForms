@@ -1,6 +1,7 @@
 package com.cesar31.formsclient.ui;
 
 import com.cesar31.formsclient.control.FileControl;
+import com.cesar31.formsclient.control.Request;
 import java.awt.Event;
 import javax.swing.Action;
 import javax.swing.JFileChooser;
@@ -18,12 +19,15 @@ public class MainView extends javax.swing.JFrame {
     // Para control de lineas
     private LineNumber num;
     private LineNumber numResponse;
+    private Request request;
 
     public MainView() {
         initComponents();
         initLineNumber();
         textMainSetActions();
         control = new FileControl();
+        
+        request = new Request();
     }
 
     /**
@@ -302,6 +306,8 @@ public class MainView extends javax.swing.JFrame {
 
     private void btnRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRequestActionPerformed
         // TODO add your handling code here:
+        String input = textMain.getText();
+        request.sendRequest(input);
     }//GEN-LAST:event_btnRequestActionPerformed
 
     /**
