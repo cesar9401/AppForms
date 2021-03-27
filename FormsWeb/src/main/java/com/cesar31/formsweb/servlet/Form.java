@@ -3,8 +3,6 @@ package com.cesar31.formsweb.servlet;
 import com.cesar31.formsweb.control.HandlerDB;
 import com.cesar31.formsweb.model.Component;
 import com.cesar31.formsweb.model.FormData;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,9 +71,10 @@ public class Form extends HttpServlet {
         com.cesar31.formsweb.model.Form form = db.getForm(action);
         if (form != null) {
             obtenerRespuest(form, request, response);
-        } else {
-            System.out.println("Formulario Null");
-        }
+        } 
+        
+        request.setAttribute("answer", true);
+        request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
     private void obtenerRespuest(com.cesar31.formsweb.model.Form form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -86,16 +85,16 @@ public class Form extends HttpServlet {
                 case "CAMPO_TEXTO":
                     String r1 = request.getParameter(c.getId_component());
                     if (r1 != null) {
+                        r1 = new String(r1.getBytes("ISO-8859-1"), "UTF-8");
                         data.put(c.getFieldName(), r1);
-                        //System.out.println("CAMPO_TEXTO: " + r1);
                     }
                     break;
 
                 case "AREA_TEXTO":
                     String r2 = request.getParameter(c.getId_component());
                     if (r2 != null) {
+                        r2 = new String(r2.getBytes("ISO-8859-1"), "UTF-8");
                         data.put(c.getFieldName(), r2);
-                        //System.out.println("AREA_TEXTO: " + r2);
                     }
                     break;
 
@@ -103,7 +102,6 @@ public class Form extends HttpServlet {
                     String r3 = request.getParameter(c.getId_component());
                     if (r3 != null) {
                         data.put(c.getFieldName(), r3);
-                        //System.out.println("RADIO: " + r3);
                     }
                     break;
 
@@ -111,9 +109,6 @@ public class Form extends HttpServlet {
                     String[] values = request.getParameterValues(c.getId_component());
                     if (values != null) {
                         data.put(c.getFieldName(), Arrays.toString(values));
-                        for (int i = 0; i < values.length; i++) {
-                            //System.out.println(i + " -> " + values[i]);
-                        }
                     }
                     break;
 
@@ -121,7 +116,6 @@ public class Form extends HttpServlet {
                     String r4 = request.getParameter(c.getId_component());
                     if (r4 != null) {
                         data.put(c.getFieldName(), r4);
-                        //System.out.println("COMBO: " + r4);
                     }
                     break;
 
@@ -130,7 +124,6 @@ public class Form extends HttpServlet {
                     if (filePart != null) {
                         String url = saveFile(filePart);
                         data.put(c.getFieldName(), url);
-                        //System.out.println("FILE: " + filePart.getSubmittedFileName());
                     }
                     break;
             }
@@ -138,12 +131,17 @@ public class Form extends HttpServlet {
 
         FormData fd = new FormData(form.getId_form(), form.getName());
         fd.getData().add(data);
-        
-        // Enviar informacion a db
-        db.writeFormData(fd);
 
+        // Enviar informacion a db
+        db.addData(fd);
     }
 
+    /**
+     * Guardar filePart en carpeta en servidor
+     *
+     * @param filePart
+     * @return
+     */
     private String saveFile(Part filePart) {
         String path = "/home/cesar31/Java/AppForms/FormsWeb/DB/Files/" + filePart.getSubmittedFileName();
         File file = new File(path);

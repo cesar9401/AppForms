@@ -6,6 +6,8 @@
 package com.cesar31.formsweb.parser.answer;
 
 import java_cup.runtime.Symbol;
+import com.cesar31.formsweb.control.*;
+import com.cesar31.formsweb.model.*;
 import java.util.ArrayList;
 import java.util.List;
 import java_cup.runtime.XMLElement;
@@ -141,8 +143,11 @@ public class AnswerParser extends java_cup.runtime.lr_parser {
 
 
 
+	private DaoDB dao;
+
 	public AnswerParser(AnswerLex lex) {
 		super(lex);
+		dao = new DaoDB();
 	}
 
 	public void syntax_error(Symbol cur_token) {
@@ -153,6 +158,10 @@ public class AnswerParser extends java_cup.runtime.lr_parser {
 			System.out.printf("%s, ", symbl_name_from_id(i));
         }
         System.out.println("");
+	}
+
+	public DaoDB getDaoDB() {
+		return dao;
 	}
 
 
@@ -185,7 +194,7 @@ class CUP$AnswerParser$actions {
           case 0: // json_data ::= COLLECTED LBRACKET make_d RBRACKET 
             {
               Object RESULT =null;
-		 System.out.println("parsed"); 
+
               CUP$AnswerParser$result = parser.getSymbolFactory().newSymbol("json_data",0, ((java_cup.runtime.Symbol)CUP$AnswerParser$stack.elementAt(CUP$AnswerParser$top-3)), ((java_cup.runtime.Symbol)CUP$AnswerParser$stack.peek()), RESULT);
             }
           return CUP$AnswerParser$result;
@@ -244,7 +253,7 @@ class CUP$AnswerParser$actions {
           case 6: // data_form ::= LBRACE form RBRACE 
             {
               Object RESULT =null;
-
+		 dao.createFormWithData(); 
               CUP$AnswerParser$result = parser.getSymbolFactory().newSymbol("data_form",3, ((java_cup.runtime.Symbol)CUP$AnswerParser$stack.elementAt(CUP$AnswerParser$top-2)), ((java_cup.runtime.Symbol)CUP$AnswerParser$stack.peek()), RESULT);
             }
           return CUP$AnswerParser$result;
@@ -271,7 +280,10 @@ class CUP$AnswerParser$actions {
           case 9: // fd_keys ::= ID COLON str 
             {
               Object RESULT =null;
-
+		int qleft = ((java_cup.runtime.Symbol)CUP$AnswerParser$stack.peek()).left;
+		int qright = ((java_cup.runtime.Symbol)CUP$AnswerParser$stack.peek()).right;
+		String q = (String)((java_cup.runtime.Symbol) CUP$AnswerParser$stack.peek()).value;
+		 dao.setDataFm("ID", q); 
               CUP$AnswerParser$result = parser.getSymbolFactory().newSymbol("fd_keys",5, ((java_cup.runtime.Symbol)CUP$AnswerParser$stack.elementAt(CUP$AnswerParser$top-2)), ((java_cup.runtime.Symbol)CUP$AnswerParser$stack.peek()), RESULT);
             }
           return CUP$AnswerParser$result;
@@ -280,7 +292,10 @@ class CUP$AnswerParser$actions {
           case 10: // fd_keys ::= NAME COLON str 
             {
               Object RESULT =null;
-
+		int qleft = ((java_cup.runtime.Symbol)CUP$AnswerParser$stack.peek()).left;
+		int qright = ((java_cup.runtime.Symbol)CUP$AnswerParser$stack.peek()).right;
+		String q = (String)((java_cup.runtime.Symbol) CUP$AnswerParser$stack.peek()).value;
+		 dao.setDataFm("NAME", q); 
               CUP$AnswerParser$result = parser.getSymbolFactory().newSymbol("fd_keys",5, ((java_cup.runtime.Symbol)CUP$AnswerParser$stack.elementAt(CUP$AnswerParser$top-2)), ((java_cup.runtime.Symbol)CUP$AnswerParser$stack.peek()), RESULT);
             }
           return CUP$AnswerParser$result;
@@ -343,7 +358,7 @@ class CUP$AnswerParser$actions {
           case 17: // data_f ::= LBRACE data_body RBRACE 
             {
               Object RESULT =null;
-
+		 dao.createDataForm(); 
               CUP$AnswerParser$result = parser.getSymbolFactory().newSymbol("data_f",9, ((java_cup.runtime.Symbol)CUP$AnswerParser$stack.elementAt(CUP$AnswerParser$top-2)), ((java_cup.runtime.Symbol)CUP$AnswerParser$stack.peek()), RESULT);
             }
           return CUP$AnswerParser$result;
@@ -370,7 +385,13 @@ class CUP$AnswerParser$actions {
           case 20: // data_keys ::= str COLON str 
             {
               Object RESULT =null;
-
+		int pleft = ((java_cup.runtime.Symbol)CUP$AnswerParser$stack.elementAt(CUP$AnswerParser$top-2)).left;
+		int pright = ((java_cup.runtime.Symbol)CUP$AnswerParser$stack.elementAt(CUP$AnswerParser$top-2)).right;
+		String p = (String)((java_cup.runtime.Symbol) CUP$AnswerParser$stack.elementAt(CUP$AnswerParser$top-2)).value;
+		int qleft = ((java_cup.runtime.Symbol)CUP$AnswerParser$stack.peek()).left;
+		int qright = ((java_cup.runtime.Symbol)CUP$AnswerParser$stack.peek()).right;
+		String q = (String)((java_cup.runtime.Symbol) CUP$AnswerParser$stack.peek()).value;
+		 dao.setDataParam(p, q); 
               CUP$AnswerParser$result = parser.getSymbolFactory().newSymbol("data_keys",11, ((java_cup.runtime.Symbol)CUP$AnswerParser$stack.elementAt(CUP$AnswerParser$top-2)), ((java_cup.runtime.Symbol)CUP$AnswerParser$stack.peek()), RESULT);
             }
           return CUP$AnswerParser$result;

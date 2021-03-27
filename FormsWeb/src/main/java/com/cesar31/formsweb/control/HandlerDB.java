@@ -3,6 +3,8 @@ package com.cesar31.formsweb.control;
 import com.cesar31.formsweb.model.Form;
 import com.cesar31.formsweb.model.FormData;
 import com.cesar31.formsweb.model.User;
+import com.cesar31.formsweb.parser.answer.AnswerLex;
+import com.cesar31.formsweb.parser.answer.AnswerParser;
 import com.cesar31.formsweb.parser.db.DataLex;
 import com.cesar31.formsweb.parser.db.DataParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -29,9 +31,14 @@ public class HandlerDB {
     private List<User> users;
     private List<Form> forms;
 
+    //Datos Recopilados
+    private List<FormData> fmData;
+
     public HandlerDB() {
         this.users = new ArrayList<>();
         this.forms = new ArrayList<>();
+
+        this.fmData = new ArrayList<>();
     }
 
     /**
@@ -63,15 +70,17 @@ public class HandlerDB {
         return data;
     }
 
+    /**
+     * Leer base de datos de formularios y usuarios
+     */
     public void readDataBase() {
         String data = readData(DB_URL);
         DataLex lex = new DataLex(new StringReader(data));
         DataParser parser = new DataParser(lex);
         try {
             parser.parse();
-            parser.getDaoDB();
-            users = parser.getDaoDB().getUsers();
-            forms = parser.getDaoDB().getForms();
+            this.users = parser.getDaoDB().getUsers();
+            this.forms = parser.getDaoDB().getForms();
         } catch (Exception ex) {
             ex.printStackTrace(System.out);
         }
@@ -144,8 +153,8 @@ public class HandlerDB {
     }
 
     /**
-     * Escribir en la base de datos, recibe string con la informacion en formato
-     * json
+     * Escribir en la base de datos, recibe path y string con la informacion en
+     * formato json
      *
      * @param path
      * @param json
@@ -161,20 +170,66 @@ public class HandlerDB {
         }
     }
 
-    public void writeFormData(FormData fd) {
-        List<FormData> list = new ArrayList<>();
-        list.add(fd);
+    /**
+     * Leer base de datos recopilados con formularios
+     */
+    public void readDataForms() {
+        String data = readData(DB_DATA_URL);
+        AnswerLex lex = new AnswerLex(new StringReader(data));
+        AnswerParser parser = new AnswerParser(lex);
+        try {
+            parser.parse();
+            this.fmData = parser.getDaoDB().getFmData();
+        } catch (Exception ex) {
+            ex.printStackTrace(System.out);
+        }
+    }
+
+    public void addData(FormData formData) {
+        if (!formData.getData().isEmpty()) {
+            //Agregar a db
+            readDataForms();
+            FormData fd = getFormData(formData.getIdForm());
+
+            if (fd != null) {
+                fd.getData().add(formData.getData().get(0));
+            } else {
+                this.fmData.add(formData);
+            }
+
+            //Actualizar
+            writeFormData(this.fmData);
+        }
+    }
+
+    /**
+     * Obtener FormData segun id
+     *
+     * @param id
+     * @return
+     */
+    private FormData getFormData(String id) {
+        FormData fd = null;
+        for (FormData form : fmData) {
+            if (form.getIdForm().equals(id)) {
+                fd = form;
+                break;
+            }
+        }
+        return fd;
+    }
+
+    public void writeFormData(List<FormData> fd) {
         ObjectMapper mapper = new ObjectMapper();
         String json = "DATOS_RECOPILADOS\n";
         try {
-            json += mapper.writerWithDefaultPrettyPrinter().writeValueAsString(list);
+            json += mapper.writerWithDefaultPrettyPrinter().writeValueAsString(fd);
             json += "\n";
         } catch (JsonProcessingException ex) {
             ex.printStackTrace(System.out);
         }
-        System.out.println("\n");
-        System.out.println(json);
-        
+        //System.out.println(json);
+
         writeData(DB_DATA_URL, json);
     }
 
@@ -184,5 +239,9 @@ public class HandlerDB {
 
     public List<Form> getForms() {
         return forms;
+    }
+
+    public List<FormData> getFmData() {
+        return fmData;
     }
 }

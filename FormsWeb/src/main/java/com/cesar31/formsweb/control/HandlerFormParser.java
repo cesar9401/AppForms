@@ -2,6 +2,7 @@ package com.cesar31.formsweb.control;
 
 import com.cesar31.formsweb.model.Component;
 import com.cesar31.formsweb.model.Form;
+import com.cesar31.formsweb.model.FormData;
 import com.cesar31.formsweb.model.Request;
 import com.cesar31.formsweb.model.User;
 import com.cesar31.formsweb.parser.main.FormsLex;
@@ -26,6 +27,9 @@ public class HandlerFormParser {
     private List<User> users;
     private List<Form> forms;
 
+    // Datos recopilados con formularios
+    private List<FormData> formData;
+
     public HandlerFormParser() {
         this.db = new HandlerDB();
         this.reqs = new ArrayList<>();
@@ -33,6 +37,8 @@ public class HandlerFormParser {
 
         this.users = new ArrayList<>();
         this.forms = new ArrayList<>();
+
+        this.formData = new ArrayList<>();
     }
 
     /**
@@ -115,22 +121,22 @@ public class HandlerFormParser {
             }
         });
     }
-    
+
     private User login(User u) {
         readDB();
         User login = null;
         User user = getUser(u.getUser());
-        
-        if(user != null) {
-            if(user.getPassword().equals(u.getPassword())) {
+
+        if (user != null) {
+            if (user.getPassword().equals(u.getPassword())) {
                 login = user;
             }
         }
-        
-        if(login == null) {
+
+        if (login == null) {
             System.out.println("Credenciales incorrectas");
         }
-        
+
         return login;
     }
 
@@ -186,10 +192,10 @@ public class HandlerFormParser {
         User user = getUser(u.getUser());
         if (user != null) {
             users.remove(user);
-            
+
             // Eliminar formularios tambien :v
-            // delFormsUser(user);
-            
+            delFormsUser(user);
+
             // Actualizar
             executeUpdate();
 
@@ -197,17 +203,36 @@ public class HandlerFormParser {
             System.out.println("El usuario que desea eliminar no existe.");
         }
     }
-    
+
     /**
      * Eliminar formularios del usuario
-     * @param u 
+     *
+     * @param u
      */
     private void delFormsUser(User u) {
-        for(Form f : forms) {
-            if(f.getUser_creation().equals(u.getUser())) {
+        for (Form f : forms) {
+            if (f.getUser_creation().equals(u.getUser())) {
                 forms.remove(f);
+                // Eliminar datos recopilados
+                //delDataFormsUser(f.getId_form());
             }
         }
+    }
+
+    /**
+     * Eliminar datos recopilados segun id de formulario
+     *
+     * @param id
+     */
+    private void delDataFormsUser(String id) {
+        readFormsData();
+        FormData fd = getFormData(id);
+        if (fd != null) {
+            this.formData.remove(fd);
+        }
+
+        // Actualizar datos recopilados
+        db.writeFormData(this.formData);
     }
 
     /**
@@ -253,9 +278,24 @@ public class HandlerFormParser {
 
             // Actualizar
             executeUpdate();
+
+            // Actualizar nombre de formulario en datos recopilados
+            if (f.getName() != null) {
+                updateNameFormData(f.getId_form(), fm.getName());
+            }
         } else {
             System.out.println("El formulario que desea editar no existe.");
         }
+    }
+
+    private void updateNameFormData(String id, String name) {
+        readFormsData();
+        FormData fd = getFormData(id);
+        if (fd != null) {
+            fd.setNameForm(name);
+        }
+        // Actualidar DB
+        db.writeFormData(this.formData);
     }
 
     /**
@@ -457,7 +497,7 @@ public class HandlerFormParser {
                 break;
 
             default:
-                if(!c.getOptions().isEmpty() || c.getUrl() != null || c.getColumns() != null || c.getRows() != null) {
+                if (!c.getOptions().isEmpty() || c.getUrl() != null || c.getColumns() != null || c.getRows() != null) {
                     System.out.println("El componente de tipo " + s + ", no debe tener opciones, url, filas o columnas");
                     satisfies = false;
                 }
@@ -563,5 +603,29 @@ public class HandlerFormParser {
         this.db.readDataBase();
         this.users = this.db.getUsers();
         this.forms = this.db.getForms();
+    }
+
+    /**
+     * Leer datos recopilados formularios
+     */
+    private void readFormsData() {
+        db.readDataForms();
+        this.formData = db.getFmData();
+    }
+
+    /**
+     * Obtener FormData por id
+     *
+     * @param id
+     * @return
+     */
+    private FormData getFormData(String id) {
+        FormData fd = null;
+        for (FormData fm : this.formData) {
+            if (fm.getIdForm().equals(id)) {
+                fd = fm;
+            }
+        }
+        return fd;
     }
 }

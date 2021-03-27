@@ -1,7 +1,8 @@
 package com.cesar31.formsweb.parser.answer;
 
 import java_cup.runtime.Symbol;
-
+import com.cesar31.formsweb.control.*;
+import com.cesar31.formsweb.model.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +10,11 @@ class AnswerParser;
 
 parser code {:
 
+	private DaoDB dao;
+
 	public AnswerParser(AnswerLex lex) {
 		super(lex);
+		dao = new DaoDB();
 	}
 
 	public void syntax_error(Symbol cur_token) {
@@ -23,6 +27,10 @@ parser code {:
         System.out.println("");
 	}
 
+	public DaoDB getDaoDB() {
+		return dao;
+	}
+
 :}
 
 terminal COLLECTED, LBRACKET, RBRACKET, LBRACE, RBRACE, COLON, COMMA;
@@ -33,7 +41,6 @@ non terminal json_data, make_d, data_m_form, data_form, form, fd_keys, data, mak
 non terminal String str;
 
 json_data 	::=	COLLECTED LBRACKET make_d RBRACKET
-				{: System.out.println("parsed"); :}
 				;
 
 make_d		::= data_m_form
@@ -45,14 +52,17 @@ data_m_form	::=	data_form
 				;
 
 data_form	::=	LBRACE form RBRACE
+				{: dao.createFormWithData(); :}
 				;
 
 form		::=	fd_keys
 				| form COMMA fd_keys
 				;
 
-fd_keys		::=	ID COLON str
-				| NAME COLON str
+fd_keys		::=	ID COLON str:q
+				{: dao.setDataFm("ID", q); :}
+				| NAME COLON str:q
+				{: dao.setDataFm("NAME", q); :}
 				| DATA COLON data
 				;
 
@@ -68,13 +78,15 @@ data_fms	::=	data_f
 				;
 
 data_f		::=	LBRACE data_body RBRACE
+				{: dao.createDataForm(); :}
 				;
 
 data_body	::=	data_keys
 				| data_body COMMA data_keys
 				;
 
-data_keys	::=	str COLON str
+data_keys	::=	str:p COLON str:q
+				{: dao.setDataParam(p, q); :}
 				;
 
 str			::=	STR:p {: RESULT = p; :}

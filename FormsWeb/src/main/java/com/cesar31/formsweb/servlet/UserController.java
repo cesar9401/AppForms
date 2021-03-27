@@ -61,10 +61,10 @@ public class UserController extends HttpServlet {
             request.getSession().setAttribute("id", u.getUser());
             request.setAttribute("user", u);
             request.getRequestDispatcher("user.jsp").forward(request, response);
-            System.out.println(u.toString());
             
         } else {
-            System.out.println("Credenciales incorrectas");
+            request.setAttribute("error", true);
+            request.getRequestDispatcher("index.jsp").forward(request, response);
         }
     }
 }
