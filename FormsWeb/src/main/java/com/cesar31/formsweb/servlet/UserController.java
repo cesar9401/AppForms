@@ -1,6 +1,6 @@
 package com.cesar31.formsweb.servlet;
 
-import com.cesar31.formsweb.control.HandlerDB;
+import com.cesar31.formsweb.control.HandleDB;
 import com.cesar31.formsweb.model.User;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "UserController", urlPatterns = {"/UserController"})
 public class UserController extends HttpServlet {
 
-    private HandlerDB db = new HandlerDB();
+    private HandleDB db = new HandleDB();
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

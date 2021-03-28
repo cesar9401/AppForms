@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author cesar31
  */
-public class HandlerDB {
+public class HandleDB {
 
     public final String DB_URL = "/home/cesar31/Java/AppForms/FormsWeb/DB/forms.db";
     public final String DB_DATA_URL = "/home/cesar31/Java/AppForms/FormsWeb/DB/forms_data.db";
@@ -34,7 +34,7 @@ public class HandlerDB {
     //Datos Recopilados
     private List<FormData> fmData;
 
-    public HandlerDB() {
+    public HandleDB() {
         this.users = new ArrayList<>();
         this.forms = new ArrayList<>();
 
@@ -54,11 +54,8 @@ public class HandlerDB {
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                 String line = br.readLine();
                 while (line != null) {
-                    data += line;
+                    data += line + "\n";
                     line = br.readLine();
-                    if (line != null) {
-                        line += "\n";
-                    }
                 }
             }
         } catch (FileNotFoundException ex) {

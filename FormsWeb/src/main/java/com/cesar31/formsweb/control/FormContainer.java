@@ -48,7 +48,7 @@ public class FormContainer {
             if (!container.haveSpace("NOMBRE")) {
                 f.setName(getParam("NOMBRE"));
             } else {
-                container.setErrorSpace(t, r, "NOMBRE");
+                container.setErrorSpace(r, "NOMBRE");
                 created = false;
             }
         }
@@ -67,7 +67,7 @@ public class FormContainer {
             if (!container.haveSpace("USUARIO_CREACION")) {
                 f.setUser_creation(getParam("USUARIO_CREACION"));
             } else {
-                container.setErrorSpace(t, r, "USUARIO_CREACION");
+                container.setErrorSpace(r, "USUARIO_CREACION");
             }
         }
 
@@ -75,11 +75,11 @@ public class FormContainer {
             f.setCreationDate(LocalDate.now());
             f.setcDate_form(LocalDate.now().toString());
         } else {
-            String string = container.getParams().get("FECHA_CREACION");
-            LocalDate date = container.getDate(container.getTokens().get("FECHA_CREACION"), "FECHA_CREACION", r);
+            //String string = container.getParams().get("FECHA_CREACION");
+            LocalDate date = container.getDate("FECHA_CREACION", r);
             if (date != null) {
                 f.setCreationDate(date);
-                f.setcDate_form(string);
+                f.setcDate_form(f.getCreationDate().toString());
             } else {
                 created = false;
             }
@@ -103,7 +103,7 @@ public class FormContainer {
 
         if (created) {
             f.setOp(Operation.ADD);
-            container.addRequest(t, f);
+            container.addRequest(t, r, f);
             //System.out.println("Nuevo formulario: " + f.toString());
         }
 
@@ -146,7 +146,7 @@ public class FormContainer {
 
         if (created) {
             f.setOp(Operation.DEL);
-            container.addRequest(t, f);
+            container.addRequest(t, r, f);
             //System.out.println("Eliminar formulario: " + f.toString());
         }
 
@@ -173,22 +173,25 @@ public class FormContainer {
 
         if (isPresent("TITULO") || isPresent("NOMBRE") || isPresent("TEMA")) {
             if (isPresent("TITULO")) {
-                f.setTitle(container.getParams().remove("TITULO"));
-                container.getTokens().remove("TITULO");
+                f.setTitle(getParam("TITULO"));
+                
+                //f.setTitle(container.getParams().remove("TITULO"));
+                //container.getTokens().remove("TITULO");
             }
 
             if (isPresent("NOMBRE")) {
                 if (!container.haveSpace("NOMBRE")) {
                     f.setName(getParam("NOMBRE"));
                 } else {
-                    container.setErrorSpace(t, r, "NOMBRE");
+                    container.setErrorSpace(r, "NOMBRE");
                     created = false;
                 }
             }
 
             if (isPresent("TEMA")) {
-                f.setTheme(container.getParams().remove("TEMA"));
-                container.getTokens().remove("TEMA");
+                f.setTheme(getParam("TEMA"));
+                //f.setTheme(container.getParams().remove("TEMA"));
+                //container.getTokens().remove("TEMA");
             }
         } else {
             Error e = new Error("", "SINTACTICO", t.getX(), t.getY());
@@ -215,7 +218,7 @@ public class FormContainer {
 
         if (created) {
             f.setOp(Operation.EDIT);
-            container.addRequest(t, f);
+            container.addRequest(t, r, f);
             //System.out.println("Editar formulario: " + f.toString());
         }
 
@@ -272,7 +275,8 @@ public class FormContainer {
      * @return
      */
     private String getParam(String param) {
-        container.getTokens().remove(param);
-        return container.getParams().remove(param).trim();
+        //container.getTokens().remove(param);
+        //return container.getParams().remove(param).trim();
+        return container.getParam(param);
     }
 }

@@ -17,7 +17,8 @@ import java.util.List;
  */
 public class HandlerFormParser {
 
-    private HandlerDB db;
+    private HandleDB db;
+    private HandleResponse hres;
 
     // Elementos para el parseo
     private List<Request> reqs;
@@ -31,7 +32,9 @@ public class HandlerFormParser {
     private List<FormData> formData;
 
     public HandlerFormParser() {
-        this.db = new HandlerDB();
+        this.db = new HandleDB();
+        this.hres = new HandleResponse();
+
         this.reqs = new ArrayList<>();
         this.errors = new ArrayList<>();
 
@@ -45,10 +48,12 @@ public class HandlerFormParser {
      * Parsear la entrada y convertirla a requests
      *
      * @param input
+     * @return 
      */
-    public void parserInput(String input) {
+    public String parserInput(String input) {
         reqs.clear();
         errors.clear();
+        String response = "";
 
         FormsLex lex = new FormsLex(new StringReader(input));
         FormsParser parser = new FormsParser(lex);
@@ -57,15 +62,15 @@ public class HandlerFormParser {
             if (parser.isParsed()) {
                 reqs = parser.getContainer().getRequests();
                 executeRequests();
+                response = hres.createResponseStr();
             } else {
-                errors = parser.getContainer().getErrors();
-                errors.forEach(e -> {
-                    System.out.println(e.toString());
-                });
+                response = hres.createErrorResponseStr(parser.getContainer().getErrors());
             }
         } catch (Exception ex) {
             ex.printStackTrace(System.out);
         }
+        
+        return response;
     }
 
     /**
@@ -73,6 +78,7 @@ public class HandlerFormParser {
      */
     private void executeRequests() {
         reqs.forEach(r -> {
+            //System.out.println(r.toString());
             if (r instanceof User) {
                 switch (r.getOp()) {
                     case LOGIN:
@@ -149,8 +155,12 @@ public class HandlerFormParser {
 
             // Actualizar
             executeUpdate();
+
+            // Respuesta cliente
+            hres.createSuccessResponse(u);
         } else {
-            System.out.println("El username que desea utilizar no esta disponible");
+            String message = "El usuario que desea utilizar(" + u.getUser() + "), no esta disponible.";
+            hres.createResponse(u, message);
         }
     }
 
@@ -174,11 +184,16 @@ public class HandlerFormParser {
 
                 // Actualizar
                 executeUpdate();
+
+                // Respuesta cliente
+                hres.createSuccessResponse(edit);
             } else {
-                System.out.println("El userename que desea agregar no esta disponible, intente con otro");
+                String message = "El username que desea utilizar(" + edit.getNewUser() + "), no esta disponible, intente con otro.";
+                hres.createResponse(edit, message);
             }
         } else {
-            System.out.println("El usuario que desea editar no existe en la DB.");
+            String message = "El usuario que desea editar(" + edit.getUser() + "), no existe.";
+            hres.createResponse(edit, message);
         }
     }
 
@@ -199,8 +214,11 @@ public class HandlerFormParser {
             // Actualizar
             executeUpdate();
 
+            // Respuesta cliente
+            hres.createSuccessResponse(u);
         } else {
-            System.out.println("El usuario que desea eliminar no existe.");
+            String message = "El usuario que desea eliminar(" + u.getUser() + "), no existe.";
+            hres.createResponse(u, message);
         }
     }
 
@@ -249,8 +267,12 @@ public class HandlerFormParser {
 
             // Actualizar
             executeUpdate();
+
+            // Respuesta cliente
+            hres.createSuccessResponse(f);
         } else {
-            System.out.println("El id que desea utilizar para el formulario no esta disponible");
+            String message = "El id que desea utilizar para el formulario(" + f.getId_form() + ") no esta disponible, intente con otro.";
+            hres.createResponse(f, message);
         }
     }
 
@@ -279,15 +301,25 @@ public class HandlerFormParser {
             // Actualizar
             executeUpdate();
 
+            // Respuesta cliente
+            hres.createSuccessResponse(f);
+
             // Actualizar nombre de formulario en datos recopilados
             if (f.getName() != null) {
                 updateNameFormData(f.getId_form(), fm.getName());
             }
         } else {
-            System.out.println("El formulario que desea editar no existe.");
+            String message = "El formulario que desea editar(" + f.getId_form() + "), no existe.";
+            hres.createResponse(f, message);
         }
     }
 
+    /**
+     * Actualzar nombre en DB de datos recopilados con formularios
+     *
+     * @param id
+     * @param name
+     */
     private void updateNameFormData(String id, String name) {
         readFormsData();
         FormData fd = getFormData(id);
@@ -311,8 +343,12 @@ public class HandlerFormParser {
 
             // Actualizar
             executeUpdate();
+
+            // Respuesta cliente
+            hres.createSuccessResponse(f);
         } else {
-            System.out.println("El formulario que desea eliminar no existe");
+            String message = "El formulario que desea eliminar(" + f.getId_form() + "), no existe.";
+            hres.createResponse(f, message);
         }
     }
 
@@ -332,11 +368,16 @@ public class HandlerFormParser {
 
                 // Actualizar
                 executeUpdate();
+
+                // Respuesta cliente
+                hres.createSuccessResponse(c);
             } else {
-                System.out.println("El id del componente que intenta agregar no esta disponible.");
+                String message = "El id del componente que desea agregar(" + c.getId_component() + ") no esta disponible, intente con otro.";
+                hres.createResponse(c, message);
             }
         } else {
-            System.out.println("El formulario al cual se intenta agregar el componente, no existe");
+            String message = "El formulario(" + c.getForm_id() + ") al cual se intenta agregar el componente(" + c.getId_component() + "), no existe.";
+            hres.createResponse(c, message);
         }
     }
 
@@ -359,6 +400,11 @@ public class HandlerFormParser {
                 if (c.getIndex() != null) {
                     cm.setIndex(c.getIndex());
                     index = orderByIndex(fm.getComponents(), cm);
+
+                    if (!index) {
+                        String message = "El indice indicado para el componente(" + c.getId_component() + "), no es valido.";
+                        hres.createResponse(c, message);
+                    }
                 }
 
                 // NOMBRE_CAMPO
@@ -402,21 +448,30 @@ public class HandlerFormParser {
                     cm.setKind(c.getKind());
                 }
 
+                // Agregar elemenos de request para mensaje de respuesta
+                cm.setOp(c.getOp());
+                cm.setNameRequest(c.getNameRequest());
+                cm.setNumber(c.getNumber());
+                cm.setLine(c.getLine());
+                cm.setColumn(c.getColumn());
+
                 satisfies = checkComponent(cm);
 
                 if (satisfies && index) {
                     // Actualizar
                     executeUpdate();
-                } else {
-                    System.out.println("La solicitud de edicion no puede ser procesada.");
+
+                    // Respuesta cliente
+                    hres.createSuccessResponse(c);
                 }
 
             } else {
-                System.out.println("El componente que intenta editar, no existe.");
+                String message = "El componente(" + c.getId_component() + ") que desea editar, no existe.";
+                hres.createResponse(c, message);
             }
-
         } else {
-            System.out.println("El formulario al cual le intenta editar un componente, no existe.");
+            String message = "El formulario(" + c.getForm_id() + ") indicado para editar el componente(" + c.getId_component() + "), no existe.";
+            hres.createResponse(c, message);
         }
     }
 
@@ -439,11 +494,16 @@ public class HandlerFormParser {
 
                 // Actualizar
                 executeUpdate();
+
+                // Respuesta cliente
+                hres.createSuccessResponse(c);
             } else {
-                System.out.println("El componente que intenta eliminar, no existe");
+                String message = "El componente(" + c.getId_component() + ") que intenta eliminar, no existe.";
+                hres.createResponse(c, message);
             }
         } else {
-            System.out.println("El formulario al cual le intenta eliminar un componente, no existe");
+            String message = "El formulario(" + c.getForm_id() + ") indicado para eliminar el componente(" + c.getId_component() + "), no existe.";
+            hres.createResponse(c, message);
         }
     }
 
@@ -456,41 +516,48 @@ public class HandlerFormParser {
     private boolean checkComponent(Component c) {
         boolean satisfies = true;
         String s = c.getKind();
+        String message = "El componente(" + c.getId_component() + ") de tipo " + s + ", ";
         switch (s) {
             case "CHECKBOX":
             case "RADIO":
             case "COMBO":
                 if (c.getOptions().isEmpty()) {
-                    System.out.println("El componente de tipo " + s + ", debe tener opciones");
+                    String m = message + "debe tener el parametro OPCIONES.";
+                    hres.createResponse(c, m);
                     satisfies = false;
                 }
 
                 if (c.getUrl() != null || c.getColumns() != null || c.getRows() != null) {
-                    System.out.println("El componente de tipo " + s + ", no debe tener url, filas y columnas");
+                    String m = message + "no debe tener los parametros URL, FILAS Y COLUMNAS.";
+                    hres.createResponse(c, m);
                     satisfies = false;
                 }
                 break;
 
             case "IMAGEN":
                 if (c.getUrl() == null) {
-                    System.out.println("El componente de tipo " + s + ", debe de tener url");
+                    String m = message + "debe tener el parametro URL.";
+                    hres.createResponse(c, m);
                     satisfies = false;
                 }
 
                 if (!c.getOptions().isEmpty() || c.getColumns() != null || c.getRows() != null) {
-                    System.out.println("El componente de tipo " + s + ", no debe tener opciones, filas y columnas");
+                    String m = message + "no debe tener los parametros OPCIONES, FILAS Y COLUMNAS.";
+                    hres.createResponse(c, m);
                     satisfies = false;
                 }
                 break;
 
             case "AREA_TEXTO":
                 if (c.getRows() == null || c.getColumns() == null) {
-                    System.out.println("El componente de tipo " + s + ", debe tener filas y columnas");
+                    String m = message + "debe tener los parametros FILAS y COLUMNAS.";
+                    hres.createResponse(c, m);
                     satisfies = false;
                 }
 
                 if (!c.getOptions().isEmpty() || c.getUrl() != null) {
-                    System.out.println("El componente de tipo " + s + ", no debe tener opciones o url");
+                    String m = "no debe tener los parametros OPCIONES y URL.";
+                    hres.createResponse(c, m);
                     satisfies = false;
                 }
 
@@ -498,7 +565,8 @@ public class HandlerFormParser {
 
             default:
                 if (!c.getOptions().isEmpty() || c.getUrl() != null || c.getColumns() != null || c.getRows() != null) {
-                    System.out.println("El componente de tipo " + s + ", no debe tener opciones, url, filas o columnas");
+                    String m = message + "no debe tener los parametros OPCIONES, URL, FILAS y COLUMNAS.";
+                    hres.createResponse(c, m);
                     satisfies = false;
                 }
         }
@@ -627,5 +695,14 @@ public class HandlerFormParser {
             }
         }
         return fd;
+    }
+
+    /**
+     * Mensajes de respuesta para cliente
+     *
+     * @return
+     */
+    public HandleResponse getHres() {
+        return hres;
     }
 }

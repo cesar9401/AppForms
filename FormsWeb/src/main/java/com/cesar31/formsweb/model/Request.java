@@ -23,6 +23,9 @@ public class Request {
     @JsonView(NoView.class)
     private int column;
 
+    @JsonView(NoView.class)
+    private String nameRequest;
+
     public Request() {
     }
 
@@ -62,9 +65,17 @@ public class Request {
     public void setColumn(int column) {
         this.column = column;
     }
-    
+
+    public String getNameRequest() {
+        return nameRequest;
+    }
+
+    public void setNameRequest(String nameRequest) {
+        this.nameRequest = nameRequest;
+    }
+
     @Override
     public String toString() {
-        return "Request{" + "number=" + number + '}';
+        return "Request{" + "number=" + number + ", line=" + line + ", column=" + column + '}';
     }
 }

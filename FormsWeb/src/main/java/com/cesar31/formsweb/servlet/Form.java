@@ -1,6 +1,6 @@
 package com.cesar31.formsweb.servlet;
 
-import com.cesar31.formsweb.control.HandlerDB;
+import com.cesar31.formsweb.control.HandleDB;
 import com.cesar31.formsweb.model.Component;
 import com.cesar31.formsweb.model.FormData;
 import java.io.File;
@@ -27,7 +27,7 @@ import javax.servlet.http.Part;
 @MultipartConfig(maxFileSize = 16177215)
 public class Form extends HttpServlet {
 
-    private HandlerDB db = new HandlerDB();
+    private HandleDB db = new HandleDB();
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

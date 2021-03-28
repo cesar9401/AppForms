@@ -23,8 +23,8 @@ public class MainService {
         //Write your code here
         try {
             System.out.println(input);
-            HandlerFormParser formInput = new HandlerFormParser();
-            formInput.parserInput(input);
+            HandlerFormParser handle = new HandlerFormParser();
+            handle.parserInput(input);
             return Response.ok().entity(input).build();
         } catch (Exception e) {
             e.printStackTrace(System.out);

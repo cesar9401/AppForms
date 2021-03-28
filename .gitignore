@@ -20,4 +20,7 @@ DB/
 # archivos con solicitudes
 *.indigo
 
-
+# archivos para parseo en cliente
+FormsClient/lex_cup_src/*.sh
+FormsClient/lex_cup_src/*.java
+FormsClient/lex_cup_src/*.java~

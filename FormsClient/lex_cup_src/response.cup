@@ -1,0 +1,84 @@
+package com.cesar31.formsclient.parser;
+import java_cup.runtime.Symbol;
+
+import java.util.ArrayList;
+import java.util.List;
+
+class ResponseParser;
+
+parser code {:
+
+	public ResponseParser(ResponseLex lex) {
+		super(lex);
+	}
+
+	public void syntax_error(Symbol cur_token) {
+        System.out.printf("syntax_error: Linea: %d, columna: %d, sym: %s, nombre: %s, value: \"%s\", parse_state: %d\n", cur_token.left, cur_token.right, cur_token.sym, symbl_name_from_id(cur_token.sym), cur_token.value, cur_token.parse_state);
+        List<Integer> tokens = expected_token_ids();
+        System.out.print("Se esperaba ->");
+        for(Integer i : tokens) {
+			System.out.printf("%s, ", symbl_name_from_id(i));
+        }
+        System.out.println("");
+	}
+
+:}
+
+terminal INI_R, FIN_R, INI_RS, FIN_RS, SMALLER, EXCL, GREATER, LBRACKET, RBRACKET, LBRACE, RBRACE, COLON, COMMA;
+terminal ERROR;
+terminal Integer INTEGER;
+terminal String STR, REQ, LINE, COLUMN, TYPE, MESSAGE, LEXEMA, DESC;
+
+non terminal response, m_res, make_res, res, body_res, res_keys, header, footer, header_m, footer_m;
+non terminal String str_param;
+
+response	::=	m_res
+				{: System.out.println("mas de una respuesta"); :}
+				| res
+				{: System.out.println("una respuesta"); :}
+				;
+
+m_res		::=	header_m make_res footer_m
+				;
+
+make_res	::=	res
+				| make_res res
+				;
+
+res			::=	header LBRACE body_res RBRACE footer
+				;
+
+body_res	::= res_keys
+				| body_res COMMA res_keys
+				;
+
+res_keys	::=	REQ COLON INTEGER
+				| LINE COLON INTEGER
+				| COLUMN COLON INTEGER
+				| TYPE COLON str_param
+				| MESSAGE COLON str_param
+				| LEXEMA COLON str_param
+				| DESC COLON str_param
+				;
+
+str_param	::=	STR:p {: RESULT = p; :}
+				| REQ:p {: RESULT = p; :}
+				| LINE:p {: RESULT = p; :}
+				| COLUMN:p {: RESULT = p; :}
+				| TYPE:p {: RESULT = p; :}
+				| MESSAGE:p {: RESULT = p; :}
+				| LEXEMA:p {: RESULT = p; :}
+				| DESC:p {: RESULT = p; :}
+				;
+
+header		::= SMALLER EXCL INI_R COLON STR GREATER
+				;
+
+header_m	::= SMALLER EXCL INI_RS GREATER
+				;
+
+footer		::=	SMALLER EXCL FIN_R GREATER
+				;
+
+footer_m	::=	SMALLER EXCL FIN_RS GREATER
+				;

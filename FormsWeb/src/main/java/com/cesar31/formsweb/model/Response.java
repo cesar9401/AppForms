@@ -7,17 +7,17 @@ package com.cesar31.formsweb.model;
 public class Response {
 
     private int request;
-    private int file;
+    private int line;
     private int column;
     private String type;
-    private int message;
+    private String message;
 
     public Response() {
     }
 
-    public Response(int request, int file, int column) {
+    public Response(int request, int line, int column) {
         this.request = request;
-        this.file = file;
+        this.line = line;
         this.column = column;
     }
 
@@ -29,12 +29,12 @@ public class Response {
         this.request = request;
     }
 
-    public int getFile() {
-        return file;
+    public int getLine() {
+        return line;
     }
 
-    public void setFile(int file) {
-        this.file = file;
+    public void setLine(int line) {
+        this.line = line;
     }
 
     public int getColumn() {
@@ -53,16 +53,16 @@ public class Response {
         this.type = type;
     }
 
-    public int getMessage() {
+    public String getMessage() {
         return message;
     }
 
-    public void setMessage(int message) {
+    public void setMessage(String message) {
         this.message = message;
     }
 
     @Override
     public String toString() {
-        return "Response{" + "request=" + request + ", file=" + file + ", column=" + column + ", type=" + type + ", message=" + message + '}';
+        return "Response{" + "request=" + request + ", line=" + line + ", column=" + column + ", type=" + type + ", message=" + message + '}';
     }
 }

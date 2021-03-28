@@ -95,7 +95,7 @@ non terminal forms, id, title, name, theme, user_c;
 /* componentes */
 non terminal field_n, form, kind, index, text, opt, url, kind_a, req, rows, columns, comp;
 
-non terminal String str_param, class_o, align, required, kind_t;
+non terminal Token str_param, class_o, align, required, kind_t;
 
 
 solicitude	::=	ini_sol
@@ -235,7 +235,7 @@ pass		::=	PASS:a COLON str_param:p
 
 date		::=	DATE_ADD:a COLON DATE:p
 				{:
-					u.setNewParam(a, p.getValue(), "FECHA_CREACION");
+					u.setNewParam(a, p, "FECHA_CREACION");
 					// System.out.println("FECHA_CREACION");
 				:}
 				// | error COLON DATE
@@ -285,7 +285,7 @@ body		::=	LBRACE add RBRACE RBRACKET RBRACE fin_sol
 
 /* ----------------------------------------------------------- producciones para formularios */
 id			::=	ID:a COLON ID_:p
-				{: u.setNewParam(a, p.getValue(), "ID"); :}
+				{: u.setNewParam(a, p, "ID"); :}
 				| ID error ID_
 				| ID COLON error
 				;
@@ -323,7 +323,7 @@ field_n		::=	FIELD_N:a COLON str_param:p
 				;
 
 form		::=	FORM:a COLON ID_:p
-				{: u.setNewParam(a, p.getValue(), "FORMULARIO"); :}
+				{: u.setNewParam(a, p, "FORMULARIO"); :}
 				| FORM error ID
 				| FORM COLON error
 				;
@@ -335,7 +335,7 @@ kind		::=	CLASS:a COLON class_o:p
 				;
 
 index		::=	INDEX:a COLON STR_NUMBER:p
-				{: u.setNewParam(a, p.getValue(), "INDICE"); :}
+				{: u.setNewParam(a, p, "INDICE"); :}
 				| INDEX error STR_NUMBER
 				| INDEX COLON error
 				;
@@ -359,19 +359,19 @@ req			::=	REQUIRED:a COLON required:p
 				;
 
 opt			::=	OPTION:a COLON OPTION_V:p
-				{: u.setNewParam(a, p.getValue(), "OPCIONES"); :}
+				{: u.setNewParam(a, p, "OPCIONES"); :}
 				| OPTION error OPTION_V
 				| OPTION COLON error
 				;
 
 rows		::=	ROWS:a COLON STR_NUMBER:p
-				{: u.setNewParam(a, p.getValue(), "FILAS"); :}
+				{: u.setNewParam(a, p, "FILAS"); :}
 				| ROWS error STR_NUMBER
 				| ROWS COLON error
 				;
 
 columns		::=	COLUMNS:a COLON STR_NUMBER:p
-				{: u.setNewParam(a, p.getValue(), "COLUMNAS"); :}
+				{: u.setNewParam(a, p, "COLUMNAS"); :}
 				| COLUMNS error STR_NUMBER
 				| COLUMNS COLON error
 				;
@@ -416,7 +416,7 @@ new_p	::=		NEW_PASS:a COLON str_param:p
 
 e_date	::=		DATE_MOD:a COLON DATE:p
 				{:
-					u.setNewParam(a, p.getValue(), "FECHA_MODIFICACION");
+					u.setNewParam(a, p, "FECHA_MODIFICACION");
 					// System.out.println("FECHA_MODIFICACION");
 				:}
 				// | error COLON DATE
@@ -433,83 +433,73 @@ fin_sol		::= SMALLER FIN_SOL EXCL GREATER
 				| SMALLER FIN_SOL EXCL error
 				;
 
-str_param	::=	STR:p {: RESULT = p.getValue(); :}
-				| DATE:p {: RESULT = p.getValue(); :}
-				| ADD_USER:p {: RESULT = p.getValue(); :}
-				| CRED:p {: RESULT = p.getValue(); :}
-				| USER:p {: RESULT = p.getValue(); :}
-				| PASS:p {: RESULT = p.getValue(); :}
-				| DATE_ADD:p {: RESULT = p.getValue(); :}
-				| EDIT_USER:p {: RESULT = p.getValue(); :}
-				| DEL_USER:p {: RESULT = p.getValue(); :}
-				| LOGIN:p {: RESULT = p.getValue(); :}
-				| OLD_USER:p {: RESULT = p.getValue(); :}
-				| NEW_USER:p {: RESULT = p.getValue(); :}
-				| NEW_PASS:p {: RESULT = p.getValue(); :}
-				| DATE_MOD:p {: RESULT = p.getValue(); :}
-				| NEW_FORM:p {: RESULT = p.getValue(); :}
-				| PARAM_F:p {: RESULT = p.getValue(); :}
-				| ID:p {: RESULT = p.getValue(); :}
-				| TITLE:p {: RESULT = p.getValue(); :}
-				| NAME:p {: RESULT = p.getValue(); :}
-				| THEME:p {: RESULT = p.getValue(); :}
-				| DEL_FORM:p {: RESULT = p.getValue(); :}
-				| EDIT_FORM:p {: RESULT = p.getValue(); :}
-				| ADD_COMP:p {: RESULT = p.getValue(); :}
-				| PARAM_C:p {: RESULT = p.getValue(); :}
-				| FIELD_N:p {: RESULT = p.getValue(); :}
-				| FORM:p {: RESULT = p.getValue(); :}
-				| CLASS:p {: RESULT = p.getValue(); :}
-				| TEXT_FIELD:p {: RESULT = p.getValue(); :}
-				| TEXT_AREA:p {: RESULT = p.getValue(); :}
-				| CHECKBOX:p {: RESULT = p.getValue(); :}
-				| RADIO:p {: RESULT = p.getValue(); :}
-				| FILE:p {: RESULT = p.getValue(); :}
-				| IMG:p {: RESULT = p.getValue(); :}
-				| COMBO:p {: RESULT = p.getValue(); :}
-				| BTN:p {: RESULT = p.getValue(); :}
-				| INDEX:p {: RESULT = p.getValue(); :}
-				| TEXT:p {: RESULT = p.getValue(); :}
-				| ALIGN:p {: RESULT = p.getValue(); :}
-				| REQUIRED:p {: RESULT = p.getValue(); :}
-				| OPTION:p {: RESULT = p.getValue(); :}
-				| ROWS:p {: RESULT = p.getValue(); :}
-				| COLUMNS:p {: RESULT = p.getValue(); :}
-				| URL:p {: RESULT = p.getValue(); :}
-				| DEL_COMP:p {: RESULT = p.getValue(); :}
-				| EDIT_COMP:p {: RESULT = p.getValue(); :}
-				| CENTER:p {: RESULT = p.getValue(); :}
-				| LEFT:p {: RESULT = p.getValue(); :}
-				| RIGHT:p {: RESULT = p.getValue(); :}
-				| JUSTIFY:p {: RESULT = p.getValue(); :}
-				| YES:p {: RESULT = p.getValue(); :}
-				| NO:p {: RESULT = p.getValue(); :}
-				| OPTION_V:p {: RESULT = p.getValue(); :}
-				| STR_NUMBER:p {: RESULT = p.getValue(); :}
-				| DARK:p {: RESULT = p.getValue(); :}
-				| LIGHT:p {: RESULT = p.getValue(); :}
+str_param	::=	STR:p {: RESULT = p; :}
+				| DATE:p {: RESULT = p; :}
+				| ADD_USER:p {: RESULT = p; :}
+				| CRED:p {: RESULT = p; :}
+				| USER:p {: RESULT = p; :}
+				| PASS:p {: RESULT = p; :}
+				| DATE_ADD:p {: RESULT = p; :}
+				| EDIT_USER:p {: RESULT = p; :}
+				| DEL_USER:p {: RESULT = p; :}
+				| LOGIN:p {: RESULT = p; :}
+				| OLD_USER:p {: RESULT = p; :}
+				| NEW_USER:p {: RESULT = p; :}
+				| NEW_PASS:p {: RESULT = p; :}
+				| DATE_MOD:p {: RESULT = p; :}
+				| NEW_FORM:p {: RESULT = p; :}
+				| PARAM_F:p {: RESULT = p; :}
+				| ID:p {: RESULT = p; :}
+				// | ID_:p {: RESULT = p; :}
+				| TITLE:p {: RESULT = p; :}
+				| NAME:p {: RESULT = p; :}
+				| THEME:p {: RESULT = p; :}
+				| USER_C:p {: RESULT = p; :}
+				| DEL_FORM:p {: RESULT = p; :}
+				| EDIT_FORM:p {: RESULT = p; :}
+				| ADD_COMP:p {: RESULT = p; :}
+				| PARAM_C:p {: RESULT = p; :}
+				| FIELD_N:p {: RESULT = p; :}
+				| FORM:p {: RESULT = p; :}
+				| CLASS:p {: RESULT = p; :}
+				| INDEX:p {: RESULT = p; :}
+				| TEXT:p {: RESULT = p; :}
+				| ALIGN:p {: RESULT = p; :}
+				| REQUIRED:p {: RESULT = p; :}
+				| OPTION:p {: RESULT = p; :}
+				| ROWS:p {: RESULT = p; :}
+				| COLUMNS:p {: RESULT = p; :}
+				| URL:p {: RESULT = p; :}
+				| DEL_COMP:p {: RESULT = p; :}
+				| EDIT_COMP:p {: RESULT = p; :}
+				| OPTION_V:p {: RESULT = p; :}
+				| STR_NUMBER:p {: RESULT = p; :}
+				| class_o:p {:RESULT = p; :}
+				| align:p {: RESULT = p; :}
+				| required:p {: RESULT = p; :}
+				| kind_t:p {: RESULT = p; :}
 				;
 
-class_o		::=	TEXT_FIELD:p {: RESULT = p.getValue(); :}
-				| TEXT_AREA:p {: RESULT = p.getValue(); :}
-				| CHECKBOX:p {: RESULT = p.getValue(); :}
-				| RADIO:p {: RESULT = p.getValue(); :}
-				| FILE:p {: RESULT = p.getValue(); :}
-				| IMG:p {: RESULT = p.getValue(); :}
-				| COMBO:p {: RESULT = p.getValue(); :}
-				| BTN:p {: RESULT = p.getValue(); :}
+class_o		::=	TEXT_FIELD:p {: RESULT = p; :}
+				| TEXT_AREA:p {: RESULT = p; :}
+				| CHECKBOX:p {: RESULT = p; :}
+				| RADIO:p {: RESULT = p; :}
+				| FILE:p {: RESULT = p; :}
+				| IMG:p {: RESULT = p; :}
+				| COMBO:p {: RESULT = p; :}
+				| BTN:p {: RESULT = p; :}
 				;
 
-align		::= CENTER:p {: RESULT = p.getValue(); :}
-				| LEFT:p {: RESULT = p.getValue(); :}
-				| RIGHT:p {: RESULT = p.getValue(); :}
-				| JUSTIFY:p {: RESULT = p.getValue(); :}
+align		::= CENTER:p {: RESULT = p; :}
+				| LEFT:p {: RESULT = p; :}
+				| RIGHT:p {: RESULT = p; :}
+				| JUSTIFY:p {: RESULT = p; :}
 				;
 
-required	::=	YES:p {: RESULT = p.getValue(); :}
-				| NO:p {: RESULT = p.getValue(); :}
+required	::=	YES:p {: RESULT = p; :}
+				| NO:p {: RESULT = p; :}
 				;
 
-kind_t		::=	DARK:p {: RESULT = p.getValue(); :}
-				| LIGHT:p {: RESULT = p.getValue(); :}
+kind_t		::=	DARK:p {: RESULT = p; :}
+				| LIGHT:p {: RESULT = p; :}
 				;

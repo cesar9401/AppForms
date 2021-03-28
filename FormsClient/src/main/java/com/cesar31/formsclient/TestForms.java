@@ -1,12 +1,9 @@
 package com.cesar31.formsclient;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import com.cesar31.formsclient.control.FileControl;
+import com.cesar31.formsclient.parser.ResponseLex;
+import com.cesar31.formsclient.parser.ResponseParser;
+import java.io.StringReader;
 
 /**
  *
@@ -14,20 +11,19 @@ import javax.ws.rs.core.Response;
  */
 public class TestForms {
 
-    private static final String URL_BASE = "http://localhost:8080/FormsWeb/webapi";
-    private static Client client;
-    private static WebTarget webTarget;
-    private static Invocation.Builder invocationBuilder;
-    private static Response response;
-    
-//    public static void main(String[] args) {
-//        // Write your code here
-//        client = ClientBuilder.newClient();
-//        
-//        // Leer (metodo get)
-//        webTarget = client.target(URL_BASE).path("/myresource");
-//        
-//        String resultado = webTarget.request(MediaType.TEXT_PLAIN).get(Response.class).readEntity(new GenericType<String>(){});
-//        System.out.println("El resutlado es: " + resultado);
-//    }
+    public static void main(String[] args) {
+        // Write your code here
+        FileControl control = new FileControl();
+        String input = control.readData("response.indigo");
+        
+        System.out.println(input);
+        
+        ResponseLex lex = new ResponseLex(new StringReader(input));
+        ResponseParser parser = new ResponseParser(lex);
+        try {
+            parser.parse();
+        } catch (Exception ex) {
+            ex.printStackTrace(System.out);
+        }
+    }
 }

@@ -19,7 +19,7 @@ public class UserContainer {
 
     private List<Error> errors;
     private List<Error> currentErrors;
-    private HashMap<String, String> params;
+    private HashMap<String, Token> params;
     private HashMap<String, Token> tokens;
 
     // Request
@@ -51,8 +51,9 @@ public class UserContainer {
      */
     public void setResult(Token t, String result) {
         if (result != null && t != null) {
+            //System.out.println(t.toString());
             switch (result) {
-                case "CREAR":
+                case "CREAR": 
                     addUser(t);
                     break;
 
@@ -104,9 +105,10 @@ public class UserContainer {
      * @param u
      * @param param
      */
-    public void setNewParam(Token t, String u, String param) {
+    public void setNewParam(Token t, Token u, String param) {
         if (!params.containsKey(param)) {
-            params.put(param, fS(u));
+            //params.put(param, fS(u));
+            params.put(param, u);
             tokens.put(param, t);
             //System.out.println(param + ": " + edit.get(param));
         } else {
@@ -137,7 +139,7 @@ public class UserContainer {
             if (!haveSpace("USUARIO")) {
                 u.setUser(getParam("USUARIO"));
             } else {
-                setErrorSpace(t, r, "USUARIO");
+                setErrorSpace(r, "USUARIO");
                 created = false;
             }
         }
@@ -149,7 +151,7 @@ public class UserContainer {
             if (!haveSpace("PASSWORD")) {
                 u.setPassword(getParam("PASSWORD"));
             } else {
-                setErrorSpace(t, r, "PASSWORD");
+                setErrorSpace(r, "PASSWORD");
                 created = false;
             }
         }
@@ -158,11 +160,11 @@ public class UserContainer {
             u.setCreationDate(LocalDate.now());
             u.setcDate_user(LocalDate.now().toString());
         } else {
-            String string = params.get("FECHA_CREACION");
-            LocalDate date = getDate(tokens.get("FECHA_CREACION"), "FECHA_CREACION", r);
+            //String string = params.get("FECHA_CREACION");
+            LocalDate date = getDate("FECHA_CREACION", r);
             if (date != null) {
                 u.setCreationDate(date);
-                u.setcDate_user(string);
+                u.setcDate_user(u.getCreationDate().toString());
             } else {
                 created = false;
             }
@@ -189,7 +191,7 @@ public class UserContainer {
 
         if (created) {
             u.setOp(Operation.ADD);
-            addRequest(t, u);
+            addRequest(t, r, u);
             //System.out.println(u.toString());
         }
 
@@ -215,7 +217,7 @@ public class UserContainer {
             if (!haveSpace("USUARIO")) {
                 u.setUser(getParam("USUARIO"));
             } else {
-                setErrorSpace(t, r, "USUARIO");
+                setErrorSpace(r, "USUARIO");
                 created = false;
             }
         }
@@ -227,7 +229,7 @@ public class UserContainer {
             if (!haveSpace("PASSWORD")) {
                 u.setPassword(getParam("PASSWORD"));
             } else {
-                setErrorSpace(t, r, "PASSWORD");
+                setErrorSpace(r, "PASSWORD");
                 created = false;
             }
         }
@@ -254,7 +256,7 @@ public class UserContainer {
         if (created) {
             //System.out.println("login: " + u.toString());
             u.setOp(Operation.LOGIN);
-            addRequest(t, u);
+            addRequest(t, r, u);
         }
 
         // Limpiar HashMap
@@ -279,7 +281,7 @@ public class UserContainer {
             if (!haveSpace("USUARIO")) {
                 u.setUser(getParam("USUARIO"));
             } else {
-                setErrorSpace(t, r, "USUARIO");
+                setErrorSpace(r, "USUARIO");
                 created = false;
             }
         }
@@ -305,7 +307,7 @@ public class UserContainer {
 
         if (created) {
             u.setOp(Operation.DEL);
-            addRequest(t, u);
+            addRequest(t, r, u);
             //System.out.println("Eliminado: " + u.toString());
         }
 
@@ -331,7 +333,7 @@ public class UserContainer {
             if (!haveSpace("USUARIO_ANTIGUO")) {
                 u.setUser(getParam("USUARIO_ANTIGUO"));
             } else {
-                setErrorSpace(t, r, "USUARIO_ANTIGUO");
+                setErrorSpace(r, "USUARIO_ANTIGUO");
                 created = false;
             }
         }
@@ -343,7 +345,7 @@ public class UserContainer {
             if (!haveSpace("USUARIO_NUEVO")) {
                 u.setNewUser(getParam("USUARIO_NUEVO"));
             } else {
-                setErrorSpace(t, r, "USUARIO_NUEVO");
+                setErrorSpace(r, "USUARIO_NUEVO");
                 created = false;
             }
         }
@@ -355,7 +357,7 @@ public class UserContainer {
             if (!haveSpace("NUEVO_PASSWORD")) {
                 u.setPassword(getParam("NUEVO_PASSWORD"));
             } else {
-                setErrorSpace(t, r, "NUEVO_PASSWORD");
+                setErrorSpace(r, "NUEVO_PASSWORD");
                 created = false;
             }
         }
@@ -364,11 +366,11 @@ public class UserContainer {
             u.setEditDate(LocalDate.now());
             u.seteDate(LocalDate.now().toString());
         } else {
-            String string = params.get("FECHA_MODIFICACION");
-            LocalDate date = getDate(tokens.get("FECHA_MODIFICACION"), "FECHA_MODIFICACION", r);
+            //String string = params.get("FECHA_MODIFICACION");
+            LocalDate date = getDate("FECHA_MODIFICACION", r);
             if (date != null) {
                 u.setEditDate(date);
-                u.seteDate(string);
+                u.seteDate(u.getEditDate().toString());
             } else {
                 created = false;
             }
@@ -394,7 +396,7 @@ public class UserContainer {
 
         if (created) {
             u.setOp(Operation.EDIT);
-            addRequest(t, u);
+            addRequest(t, r, u);
             //System.out.println("Editar: " + u.toString());
         }
 
@@ -461,9 +463,11 @@ public class UserContainer {
         errors.add(e);
     }
 
-    private String getParam(String param) {
+    public String getParam(String param) {
         this.tokens.remove(param);
-        return this.params.remove(param).trim();
+        //return this.params.remove(param).trim();
+        return fS(this.params.remove(param).getValue()).trim();
+
     }
 
     /**
@@ -474,7 +478,9 @@ public class UserContainer {
      */
     public boolean haveSpace(String param) {
         //return params.get(param).contains(" "); //Solo espacios
-        return params.get(param).contains(" ") || params.get(param).contains("\t") || params.get(param).contains("\n");
+        //return params.get(param).contains(" ") || params.get(param).contains("\t") || params.get(param).contains("\n");
+        String s = fS(params.get(param).getValue());
+        return s.contains(" ") || s.contains("\t") || s.contains("\n");
     }
 
     /**
@@ -484,8 +490,9 @@ public class UserContainer {
      * @param r
      * @param param
      */
-    public void setErrorSpace(Token t, String r, String param) {
-        Error e = new Error(param, "SINTACTICO", t.getX(), t.getY());
+    public void setErrorSpace(String r, String param) {
+        Token u = params.get(param);
+        Error e = new Error(u.getValue(), "SINTACTICO", u.getX(), u.getY());
         String description = "En la peticion " + r + ", el valor para el parametro " + param + ", no debe de incluir espacios, tabulaciones o saltos de linea.";
         e.setDescription(description);
         errors.add(e);
@@ -496,13 +503,22 @@ public class UserContainer {
         getParam(param);
     }
 
-    public LocalDate getDate(Token t, String param, String r) {
+    /**
+     * Convertir param a LocalDate o lanzar exception
+     *
+     * @param t
+     * @param param
+     * @param r
+     * @return
+     */
+    public LocalDate getDate(String param, String r) {
+        Token u = params.get(param);
         LocalDate date = null;
         String string = getParam(param);
         try {
             date = LocalDate.parse(string);
         } catch (DateTimeParseException ex) {
-            Error e = new Error(r, "SEMANTICO", t.getX(), t.getY());
+            Error e = new Error(u.getValue(), "SEMANTICO", u.getX(), u.getY());
             String description = "En la peticion " + r + ", el valor para el parametro " + param + "(" + string + "), no es valido";
             e.setDescription(description);
             errors.add(e);
@@ -510,13 +526,20 @@ public class UserContainer {
         return date;
     }
 
-    public void addRequest(Token t, Request r) {
+    public void addRequest(Token t, String name, Request r) {
+        r.setNameRequest(name);
         r.setNumber(requests.size() + 1);
         r.setLine(t.getX());
         r.setColumn(t.getY());
         requests.add(r);
     }
 
+    /**
+     * Remover comillas
+     *
+     * @param string
+     * @return
+     */
     public String fS(String string) {
         return string.replace("\"", "");
     }
@@ -537,7 +560,7 @@ public class UserContainer {
         return currentErrors;
     }
 
-    public HashMap<String, String> getParams() {
+    public HashMap<String, Token> getParams() {
         return params;
     }
 

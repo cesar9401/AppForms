@@ -30,11 +30,8 @@ public class FileControl {
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                 String line = br.readLine();
                 while (line != null) {
-                    string += line;
+                    string += line + "\n";
                     line = br.readLine();
-                    if (line != null) {
-                        string += "\n";
-                    }
                 }
             }
 

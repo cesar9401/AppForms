@@ -34,8 +34,8 @@ public class ComponentContainer {
 
             c = new Component();
         } else {
-            String kind = container.fS_(container.getParams().get("CLASE"));
             c.setKind(getParam("CLASE"));
+            String kind = c.getKind();
             switch (kind) {
                 case "CHECKBOX":
                 case "RADIO":
@@ -73,7 +73,7 @@ public class ComponentContainer {
             if (!container.haveSpace("NOMBRE_CAMPO")) {
                 c.setFieldName(getParam("NOMBRE_CAMPO"));
             } else {
-                container.setErrorSpace(t, r, "NOMBRE_CAMPO");
+                container.setErrorSpace(r, "NOMBRE_CAMPO");
                 created = false;
             }
         }
@@ -134,7 +134,7 @@ public class ComponentContainer {
 
         if (created) {
             c.setOp(Operation.ADD);
-            container.addRequest(t, c);
+            container.addRequest(t, r, c);
             //System.out.println("Crear Componente -> " + c.toString());
         }
 
@@ -183,7 +183,7 @@ public class ComponentContainer {
 
         if (created) {
             c.setOp(Operation.DEL);
-            container.addRequest(t, c);
+            container.addRequest(t, r, c);
             //System.out.println("Eliminar componente -> " + c.toString());
         }
 
@@ -220,7 +220,7 @@ public class ComponentContainer {
                 if (!container.haveSpace("NOMBRE_CAMPO")) {
                     c.setFieldName(getParam("NOMBRE_CAMPO"));
                 } else {
-                    container.setErrorSpace(t, r, "NOMBRE_CAMPO");
+                    container.setErrorSpace(r, "NOMBRE_CAMPO");
                     created = false;
                 }
             }
@@ -294,7 +294,7 @@ public class ComponentContainer {
 
         if (created) {
             c.setOp(Operation.EDIT);
-            container.addRequest(t, c);
+            container.addRequest(t, r, c);
             //System.out.println("Editar componente: " + c.toString());
         }
 
@@ -319,7 +319,7 @@ public class ComponentContainer {
             if (!container.haveSpace("URL")) {
                 c.setUrl(getParam("URL"));
             } else {
-                container.setErrorSpace(t, r, "URL");
+                container.setErrorSpace(r, "URL");
             }
 
             if (!container.getCurrentErrors().isEmpty()) {
@@ -441,7 +441,8 @@ public class ComponentContainer {
      * @return
      */
     private String getParam(String param) {
-        container.getTokens().remove(param);
-        return container.getParams().remove(param).trim();
+        //container.getTokens().remove(param);
+        //return container.getParams().remove(param).trim();
+        return container.getParam(param);
     }
 }

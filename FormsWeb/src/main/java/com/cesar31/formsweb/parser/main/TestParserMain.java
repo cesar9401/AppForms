@@ -1,9 +1,10 @@
 package com.cesar31.formsweb.parser.main;
 
-import com.cesar31.formsweb.control.HandlerDB;
+import com.cesar31.formsweb.control.HandleDB;
 import com.cesar31.formsweb.control.HandlerFormParser;
 import com.cesar31.formsweb.model.Component;
 import com.cesar31.formsweb.model.Form;
+import com.cesar31.formsweb.model.Response;
 import com.cesar31.formsweb.model.User;
 import java.io.IOException;
 import java.io.StringReader;
@@ -18,21 +19,15 @@ public class TestParserMain {
 
     public static void main(String[] args) {
 
-        HandlerDB db = new HandlerDB();
+        HandleDB db = new HandleDB();
         HandlerFormParser handler = new HandlerFormParser();
 
-        String data = db.readData("request3.indigo");
-        handler.parserInput(data);
-        
-//        User u = db.getUser("/njjparedes", "#jjpassword");
-//        if (u != null) {
-//            System.out.println(u.toString());
-//        }
+        String data = db.readData("request1.indigo");
+        //System.out.println(data);
+        String response = handler.parserInput(data);
 
-//        Form f = db.getForm("$formulario/1");
-//        if(f != null) {
-//            System.out.println(f.toString());
-//        }
+        System.out.println(response);
+        
         //debug(data);
     }
 
