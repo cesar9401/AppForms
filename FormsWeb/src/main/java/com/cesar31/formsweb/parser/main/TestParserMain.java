@@ -4,7 +4,6 @@ import com.cesar31.formsweb.control.HandleDB;
 import com.cesar31.formsweb.control.HandlerFormParser;
 import com.cesar31.formsweb.model.Component;
 import com.cesar31.formsweb.model.Form;
-import com.cesar31.formsweb.model.Response;
 import com.cesar31.formsweb.model.User;
 import java.io.IOException;
 import java.io.StringReader;

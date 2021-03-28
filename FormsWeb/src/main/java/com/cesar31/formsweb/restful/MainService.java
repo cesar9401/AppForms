@@ -22,10 +22,11 @@ public class MainService {
     public Response getRequest(String input) {
         //Write your code here
         try {
-            System.out.println(input);
+            //System.out.println(input);
             HandlerFormParser handle = new HandlerFormParser();
-            handle.parserInput(input);
-            return Response.ok().entity(input).build();
+            String response = handle.parserInput(input);
+            //System.out.println(response);
+            return Response.ok().entity(response).build();
         } catch (Exception e) {
             e.printStackTrace(System.out);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();

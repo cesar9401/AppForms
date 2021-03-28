@@ -4,12 +4,17 @@ import java_cup.runtime.Symbol;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cesar31.formsclient.control.HandleResponse;
+
 class ResponseParser;
 
 parser code {:
 
+	private HandleResponse handle;
+
 	public ResponseParser(ResponseLex lex) {
 		super(lex);
+		handle = new HandleResponse();
 	}
 
 	public void syntax_error(Symbol cur_token) {
@@ -22,6 +27,10 @@ parser code {:
         System.out.println("");
 	}
 
+	public HandleResponse getHandle() {
+		return handle;
+	}
+
 :}
 
 terminal INI_R, FIN_R, INI_RS, FIN_RS, SMALLER, EXCL, GREATER, LBRACKET, RBRACKET, LBRACE, RBRACE, COLON, COMMA;
@@ -29,13 +38,11 @@ terminal ERROR;
 terminal Integer INTEGER;
 terminal String STR, REQ, LINE, COLUMN, TYPE, MESSAGE, LEXEMA, DESC;
 
-non terminal response, m_res, make_res, res, body_res, res_keys, header, footer, header_m, footer_m;
-non terminal String str_param;
+non terminal response, m_res, make_res, res, body_res, res_keys, footer, header_m, footer_m;
+non terminal String str_param, header;
 
 response	::=	m_res
-				{: System.out.println("mas de una respuesta"); :}
 				| res
-				{: System.out.println("una respuesta"); :}
 				;
 
 m_res		::=	header_m make_res footer_m
@@ -45,20 +52,28 @@ make_res	::=	res
 				| make_res res
 				;
 
-res			::=	header LBRACE body_res RBRACE footer
+res			::=	header:p LBRACE body_res RBRACE footer
+				{: handle.createResponse(p); :}
 				;
 
 body_res	::= res_keys
 				| body_res COMMA res_keys
 				;
 
-res_keys	::=	REQ COLON INTEGER
-				| LINE COLON INTEGER
-				| COLUMN COLON INTEGER
-				| TYPE COLON str_param
-				| MESSAGE COLON str_param
-				| LEXEMA COLON str_param
-				| DESC COLON str_param
+res_keys	::=	REQ COLON INTEGER:p
+				{: handle.setParam("request", String.valueOf(p)); :}
+				| LINE COLON INTEGER:p
+				{: handle.setParam("line", String.valueOf(p)); :}
+				| COLUMN COLON INTEGER:p
+				{: handle.setParam("column", String.valueOf(p)); :}
+				| TYPE COLON str_param:p
+				{: handle.setParam("type", p); :}
+				| MESSAGE COLON str_param:p
+				{: handle.setParam("message", p); :}
+				| LEXEMA COLON str_param:p
+				{: handle.setParam("lexema", p); :}
+				| DESC COLON str_param:p
+				{: handle.setParam("description", p); :}
 				;
 
 str_param	::=	STR:p {: RESULT = p; :}
@@ -71,7 +86,8 @@ str_param	::=	STR:p {: RESULT = p; :}
 				| DESC:p {: RESULT = p; :}
 				;
 
-header		::= SMALLER EXCL INI_R COLON STR GREATER
+header		::= SMALLER EXCL INI_R COLON STR:p GREATER
+				{: RESULT = p; :}
 				;
 
 header_m	::= SMALLER EXCL INI_RS GREATER

@@ -22,6 +22,8 @@ public class UserContainer {
     private HashMap<String, Token> params;
     private HashMap<String, Token> tokens;
 
+    private HandleError handle;
+
     // Request
     private List<Request> requests;
 
@@ -37,10 +39,11 @@ public class UserContainer {
         this.tokens = new HashMap<>();
         this.currentErrors = new ArrayList<>();
 
+        this.handle = new HandleError();
+        
+        this.requests = new ArrayList<>();
         this.form = new FormContainer(this);
         this.component = new ComponentContainer(this);
-
-        this.requests = new ArrayList<>();
     }
 
     /**
@@ -53,7 +56,7 @@ public class UserContainer {
         if (result != null && t != null) {
             //System.out.println(t.toString());
             switch (result) {
-                case "CREAR": 
+                case "CREAR":
                     addUser(t);
                     break;
 
@@ -415,7 +418,7 @@ public class UserContainer {
      */
     public Error getRequestError(Token t, String param, String request) {
         Error e = new Error("", "SINTACTICO", t.getX(), t.getY());
-        e.setDescription("En la peticion " + request + ", fila = " + t.getX() + ", columna = " + t.getY() + ", se debe incluir " + param + ".");
+        e.setDescription("En la peticion " + request + ", fila = " + t.getX() + ", columna = " + t.getY()+ ", se debe incluir " + param + ".");
         return e;
     }
 
@@ -446,11 +449,11 @@ public class UserContainer {
         Error e = new Error(t.getValue(), typeError, t.getX(), t.getY());
 
         String description = (typeError.equals("LEXICO")) ? "La cadena no se reconoce en el lenguaje. " : "";
-        description += "Se encontro: " + type + ". ";
+        description += "Se encontro: " + t.getValue() + ". ";
         description += "Se esperaba: ";
         for (int i = 0; i < expectedTokens.size(); i++) {
             if (!expectedTokens.get(i).equals("error")) {
-                description = description.concat("'" + expectedTokens.get(i) + "'");
+                description = description.concat("'" + handle.getValue(expectedTokens.get(i)) + "'");
                 if (i == expectedTokens.size() - 1) {
                     description = description.concat(".");
                 } else {

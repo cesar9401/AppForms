@@ -1,5 +1,8 @@
 package com.cesar31.formsclient.control;
 
+import com.cesar31.formsclient.parser.ResponseLex;
+import com.cesar31.formsclient.parser.ResponseParser;
+import java.io.StringReader;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -24,13 +27,34 @@ public class Request {
         client = ClientBuilder.newClient();
         webTarget = client.target(URL_BASE).path("/application");
     }
-    
+
+    /**
+     * Enviar peticion
+     *
+     * @param input
+     */
     public void sendRequest(String input) {
         invocationBuilder = webTarget.request(MediaType.TEXT_PLAIN);
         response = invocationBuilder.post(Entity.entity(input, MediaType.TEXT_PLAIN));
-        System.out.println("");
-        System.out.println(response.getStatus());
-        String inputRecovery = response.readEntity(String.class);
-        System.out.println("inputRecovery = " + inputRecovery);
+        //System.out.println(response.getStatus());
+        String res = response.readEntity(String.class);
+        System.out.println(res);
+
+        parseResponse(res);
+    }
+
+    /**
+     * Parsear respuesta
+     *
+     * @param response
+     */
+    private void parseResponse(String response) {
+        ResponseLex lex = new ResponseLex(new StringReader(response));
+        ResponseParser parser = new ResponseParser(lex);
+        try {
+            parser.parse();
+        } catch (Exception ex) {
+            ex.printStackTrace(System.out);
+        }
     }
 }

@@ -16,8 +16,8 @@ public class TestForms {
         FileControl control = new FileControl();
         String input = control.readData("response.indigo");
         
-        System.out.println(input);
-        
+        //System.out.println(input);
+            
         ResponseLex lex = new ResponseLex(new StringReader(input));
         ResponseParser parser = new ResponseParser(lex);
         try {

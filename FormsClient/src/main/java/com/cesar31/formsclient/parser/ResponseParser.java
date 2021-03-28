@@ -8,6 +8,7 @@ package com.cesar31.formsclient.parser;
 import java_cup.runtime.Symbol;
 import java.util.ArrayList;
 import java.util.List;
+import com.cesar31.formsclient.control.HandleResponse;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
@@ -38,10 +39,10 @@ public class ResponseParser extends java_cup.runtime.lr_parser {
     "\000\002\005\007\000\002\006\003\000\002\006\005\000" +
     "\002\007\005\000\002\007\005\000\002\007\005\000\002" +
     "\007\005\000\002\007\005\000\002\007\005\000\002\007" +
-    "\005\000\002\014\003\000\002\014\003\000\002\014\003" +
-    "\000\002\014\003\000\002\014\003\000\002\014\003\000" +
-    "\002\014\003\000\002\014\003\000\002\010\010\000\002" +
-    "\012\006\000\002\011\006\000\002\013\006" });
+    "\005\000\002\013\003\000\002\013\003\000\002\013\003" +
+    "\000\002\013\003\000\002\013\003\000\002\013\003\000" +
+    "\002\013\003\000\002\013\003\000\002\014\010\000\002" +
+    "\011\006\000\002\010\006\000\002\012\006" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -96,26 +97,26 @@ public class ResponseParser extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\101\000\014\002\003\003\007\005\004\010\010\012" +
-    "\005\001\001\000\002\001\001\000\002\001\001\000\010" +
-    "\004\070\005\071\010\010\001\001\000\002\001\001\000" +
+    "\000\101\000\014\002\003\003\007\005\004\011\005\014" +
+    "\010\001\001\000\002\001\001\000\002\001\001\000\010" +
+    "\004\070\005\071\014\010\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\006\006\016\007\012" +
     "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001\000\004\014\030\001\001\000\002\001\001\000" +
+    "\001\001\000\004\013\030\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
     "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
-    "\001\000\002\001\001\000\004\014\042\001\001\000\002" +
-    "\001\001\000\004\007\052\001\001\000\004\011\046\001" +
+    "\001\000\002\001\001\000\004\013\042\001\001\000\002" +
+    "\001\001\000\004\007\052\001\001\000\004\010\046\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
-    "\004\014\054\001\001\000\002\001\001\000\004\014\056" +
+    "\004\013\054\001\001\000\002\001\001\000\004\013\056" +
     "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
-    "\002\001\001\000\010\005\074\010\010\013\076\001\001" +
+    "\002\001\001\000\010\005\074\012\076\014\010\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
     "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
@@ -159,8 +160,11 @@ public class ResponseParser extends java_cup.runtime.lr_parser {
 
 
 
+	private HandleResponse handle;
+
 	public ResponseParser(ResponseLex lex) {
 		super(lex);
+		handle = new HandleResponse();
 	}
 
 	public void syntax_error(Symbol cur_token) {
@@ -171,6 +175,10 @@ public class ResponseParser extends java_cup.runtime.lr_parser {
 			System.out.printf("%s, ", symbl_name_from_id(i));
         }
         System.out.println("");
+	}
+
+	public HandleResponse getHandle() {
+		return handle;
 	}
 
 
@@ -203,7 +211,7 @@ class CUP$ResponseParser$actions {
           case 0: // response ::= m_res 
             {
               Object RESULT =null;
-		 System.out.println("mas de una respuesta"); 
+
               CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("response",0, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
             }
           return CUP$ResponseParser$result;
@@ -226,7 +234,7 @@ class CUP$ResponseParser$actions {
           case 2: // response ::= res 
             {
               Object RESULT =null;
-		 System.out.println("una respuesta"); 
+
               CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("response",0, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
             }
           return CUP$ResponseParser$result;
@@ -262,7 +270,10 @@ class CUP$ResponseParser$actions {
           case 6: // res ::= header LBRACE body_res RBRACE footer 
             {
               Object RESULT =null;
-
+		int pleft = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.elementAt(CUP$ResponseParser$top-4)).left;
+		int pright = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.elementAt(CUP$ResponseParser$top-4)).right;
+		String p = (String)((java_cup.runtime.Symbol) CUP$ResponseParser$stack.elementAt(CUP$ResponseParser$top-4)).value;
+		 handle.createResponse(p); 
               CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("res",3, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.elementAt(CUP$ResponseParser$top-4)), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
             }
           return CUP$ResponseParser$result;
@@ -289,7 +300,10 @@ class CUP$ResponseParser$actions {
           case 9: // res_keys ::= REQ COLON INTEGER 
             {
               Object RESULT =null;
-
+		int pleft = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()).left;
+		int pright = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()).right;
+		Integer p = (Integer)((java_cup.runtime.Symbol) CUP$ResponseParser$stack.peek()).value;
+		 handle.setParam("request", String.valueOf(p)); 
               CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("res_keys",5, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.elementAt(CUP$ResponseParser$top-2)), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
             }
           return CUP$ResponseParser$result;
@@ -298,7 +312,10 @@ class CUP$ResponseParser$actions {
           case 10: // res_keys ::= LINE COLON INTEGER 
             {
               Object RESULT =null;
-
+		int pleft = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()).left;
+		int pright = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()).right;
+		Integer p = (Integer)((java_cup.runtime.Symbol) CUP$ResponseParser$stack.peek()).value;
+		 handle.setParam("line", String.valueOf(p)); 
               CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("res_keys",5, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.elementAt(CUP$ResponseParser$top-2)), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
             }
           return CUP$ResponseParser$result;
@@ -307,7 +324,10 @@ class CUP$ResponseParser$actions {
           case 11: // res_keys ::= COLUMN COLON INTEGER 
             {
               Object RESULT =null;
-
+		int pleft = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()).left;
+		int pright = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()).right;
+		Integer p = (Integer)((java_cup.runtime.Symbol) CUP$ResponseParser$stack.peek()).value;
+		 handle.setParam("column", String.valueOf(p)); 
               CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("res_keys",5, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.elementAt(CUP$ResponseParser$top-2)), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
             }
           return CUP$ResponseParser$result;
@@ -316,7 +336,10 @@ class CUP$ResponseParser$actions {
           case 12: // res_keys ::= TYPE COLON str_param 
             {
               Object RESULT =null;
-
+		int pleft = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()).left;
+		int pright = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()).right;
+		String p = (String)((java_cup.runtime.Symbol) CUP$ResponseParser$stack.peek()).value;
+		 handle.setParam("type", p); 
               CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("res_keys",5, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.elementAt(CUP$ResponseParser$top-2)), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
             }
           return CUP$ResponseParser$result;
@@ -325,7 +348,10 @@ class CUP$ResponseParser$actions {
           case 13: // res_keys ::= MESSAGE COLON str_param 
             {
               Object RESULT =null;
-
+		int pleft = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()).left;
+		int pright = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()).right;
+		String p = (String)((java_cup.runtime.Symbol) CUP$ResponseParser$stack.peek()).value;
+		 handle.setParam("message", p); 
               CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("res_keys",5, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.elementAt(CUP$ResponseParser$top-2)), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
             }
           return CUP$ResponseParser$result;
@@ -334,7 +360,10 @@ class CUP$ResponseParser$actions {
           case 14: // res_keys ::= LEXEMA COLON str_param 
             {
               Object RESULT =null;
-
+		int pleft = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()).left;
+		int pright = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()).right;
+		String p = (String)((java_cup.runtime.Symbol) CUP$ResponseParser$stack.peek()).value;
+		 handle.setParam("lexema", p); 
               CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("res_keys",5, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.elementAt(CUP$ResponseParser$top-2)), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
             }
           return CUP$ResponseParser$result;
@@ -343,7 +372,10 @@ class CUP$ResponseParser$actions {
           case 15: // res_keys ::= DESC COLON str_param 
             {
               Object RESULT =null;
-
+		int pleft = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()).left;
+		int pright = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()).right;
+		String p = (String)((java_cup.runtime.Symbol) CUP$ResponseParser$stack.peek()).value;
+		 handle.setParam("description", p); 
               CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("res_keys",5, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.elementAt(CUP$ResponseParser$top-2)), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
             }
           return CUP$ResponseParser$result;
@@ -356,7 +388,7 @@ class CUP$ResponseParser$actions {
 		int pright = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()).right;
 		String p = (String)((java_cup.runtime.Symbol) CUP$ResponseParser$stack.peek()).value;
 		 RESULT = p; 
-              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("str_param",10, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
+              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("str_param",9, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
             }
           return CUP$ResponseParser$result;
 
@@ -368,7 +400,7 @@ class CUP$ResponseParser$actions {
 		int pright = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()).right;
 		String p = (String)((java_cup.runtime.Symbol) CUP$ResponseParser$stack.peek()).value;
 		 RESULT = p; 
-              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("str_param",10, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
+              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("str_param",9, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
             }
           return CUP$ResponseParser$result;
 
@@ -380,7 +412,7 @@ class CUP$ResponseParser$actions {
 		int pright = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()).right;
 		String p = (String)((java_cup.runtime.Symbol) CUP$ResponseParser$stack.peek()).value;
 		 RESULT = p; 
-              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("str_param",10, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
+              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("str_param",9, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
             }
           return CUP$ResponseParser$result;
 
@@ -392,7 +424,7 @@ class CUP$ResponseParser$actions {
 		int pright = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()).right;
 		String p = (String)((java_cup.runtime.Symbol) CUP$ResponseParser$stack.peek()).value;
 		 RESULT = p; 
-              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("str_param",10, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
+              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("str_param",9, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
             }
           return CUP$ResponseParser$result;
 
@@ -404,7 +436,7 @@ class CUP$ResponseParser$actions {
 		int pright = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()).right;
 		String p = (String)((java_cup.runtime.Symbol) CUP$ResponseParser$stack.peek()).value;
 		 RESULT = p; 
-              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("str_param",10, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
+              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("str_param",9, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
             }
           return CUP$ResponseParser$result;
 
@@ -416,7 +448,7 @@ class CUP$ResponseParser$actions {
 		int pright = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()).right;
 		String p = (String)((java_cup.runtime.Symbol) CUP$ResponseParser$stack.peek()).value;
 		 RESULT = p; 
-              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("str_param",10, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
+              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("str_param",9, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
             }
           return CUP$ResponseParser$result;
 
@@ -428,7 +460,7 @@ class CUP$ResponseParser$actions {
 		int pright = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()).right;
 		String p = (String)((java_cup.runtime.Symbol) CUP$ResponseParser$stack.peek()).value;
 		 RESULT = p; 
-              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("str_param",10, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
+              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("str_param",9, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
             }
           return CUP$ResponseParser$result;
 
@@ -440,16 +472,19 @@ class CUP$ResponseParser$actions {
 		int pright = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()).right;
 		String p = (String)((java_cup.runtime.Symbol) CUP$ResponseParser$stack.peek()).value;
 		 RESULT = p; 
-              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("str_param",10, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
+              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("str_param",9, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
             }
           return CUP$ResponseParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 24: // header ::= SMALLER EXCL INI_R COLON STR GREATER 
             {
-              Object RESULT =null;
-
-              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("header",6, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.elementAt(CUP$ResponseParser$top-5)), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
+              String RESULT =null;
+		int pleft = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.elementAt(CUP$ResponseParser$top-1)).left;
+		int pright = ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.elementAt(CUP$ResponseParser$top-1)).right;
+		String p = (String)((java_cup.runtime.Symbol) CUP$ResponseParser$stack.elementAt(CUP$ResponseParser$top-1)).value;
+		 RESULT = p; 
+              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("header",10, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.elementAt(CUP$ResponseParser$top-5)), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
             }
           return CUP$ResponseParser$result;
 
@@ -458,7 +493,7 @@ class CUP$ResponseParser$actions {
             {
               Object RESULT =null;
 
-              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("header_m",8, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.elementAt(CUP$ResponseParser$top-3)), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
+              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("header_m",7, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.elementAt(CUP$ResponseParser$top-3)), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
             }
           return CUP$ResponseParser$result;
 
@@ -467,7 +502,7 @@ class CUP$ResponseParser$actions {
             {
               Object RESULT =null;
 
-              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("footer",7, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.elementAt(CUP$ResponseParser$top-3)), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
+              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("footer",6, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.elementAt(CUP$ResponseParser$top-3)), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
             }
           return CUP$ResponseParser$result;
 
@@ -476,7 +511,7 @@ class CUP$ResponseParser$actions {
             {
               Object RESULT =null;
 
-              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("footer_m",9, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.elementAt(CUP$ResponseParser$top-3)), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
+              CUP$ResponseParser$result = parser.getSymbolFactory().newSymbol("footer_m",8, ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.elementAt(CUP$ResponseParser$top-3)), ((java_cup.runtime.Symbol)CUP$ResponseParser$stack.peek()), RESULT);
             }
           return CUP$ResponseParser$result;
 
