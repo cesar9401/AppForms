@@ -62,7 +62,9 @@ public class FormContainer {
 
         if (!isPresent("USUARIO_CREACION")) {
             // Write your code here to add user
-
+            if(container.getUser() != null) {
+                f.setUser_creation(container.getUser());
+            }
         } else {
             if (!container.haveSpace("USUARIO_CREACION")) {
                 f.setUser_creation(getParam("USUARIO_CREACION"));

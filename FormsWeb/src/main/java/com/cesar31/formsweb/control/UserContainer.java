@@ -17,6 +17,8 @@ import java_cup.runtime.Symbol;
  */
 public class UserContainer {
 
+    private String user;
+    
     private List<Error> errors;
     private List<Error> currentErrors;
     private HashMap<String, Token> params;
@@ -575,5 +577,13 @@ public class UserContainer {
 
     public List<Request> getRequests() {
         return requests;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getUser() {
+        return user;
     }
 }

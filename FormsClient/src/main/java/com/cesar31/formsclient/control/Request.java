@@ -1,5 +1,6 @@
 package com.cesar31.formsclient.control;
 
+import com.cesar31.formsclient.model.Message;
 import com.cesar31.formsclient.parser.ResponseLex;
 import com.cesar31.formsclient.parser.ResponseParser;
 import java.io.StringReader;
@@ -27,6 +28,8 @@ public class Request {
     private List list;
     private boolean errors;
     private String serverResponse;
+    
+    private String user;
 
     public Request() {
         client = ClientBuilder.newClient();
@@ -41,13 +44,28 @@ public class Request {
      */
     public void sendRequest(String input) {
         System.out.println(input);
-        invocationBuilder = webTarget.request(MediaType.TEXT_PLAIN);
-        response = invocationBuilder.post(Entity.entity(input, MediaType.TEXT_PLAIN));
+        
+        Message message = new Message();
+        message.setMesssage(input);
+        if(this.user != null) {
+            message.setUser(user);
+        }
+        
+        invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+        response = invocationBuilder.post(Entity.entity(message, MediaType.APPLICATION_JSON));
         //System.out.println(response.getStatus());
-        String res = response.readEntity(String.class);
-        System.out.println(res);
+        
+        // Obtener respuesta
+        Message res = response.readEntity(Message.class);
+        
+        if(res.getUser() != null) {
+            this.user = res.getUser();
+        }
+        
+        System.out.println(res.getMesssage());
 
-        parseResponse(res);
+        // Parsear respuesta
+        parseResponse(res.getMesssage());
     }
 
     /**

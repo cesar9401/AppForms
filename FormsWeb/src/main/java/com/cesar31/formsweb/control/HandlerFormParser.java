@@ -3,6 +3,7 @@ package com.cesar31.formsweb.control;
 import com.cesar31.formsweb.model.Component;
 import com.cesar31.formsweb.model.Form;
 import com.cesar31.formsweb.model.FormData;
+import com.cesar31.formsweb.model.Message;
 import com.cesar31.formsweb.model.Request;
 import com.cesar31.formsweb.model.User;
 import com.cesar31.formsweb.parser.main.FormsLex;
@@ -31,6 +32,9 @@ public class HandlerFormParser {
     // Datos recopilados con formularios
     private List<FormData> formData;
 
+    // Para almacenar usuario en case de login
+    private String user;
+
     public HandlerFormParser() {
         this.db = new HandleDB();
         this.hres = new HandleResponse();
@@ -47,16 +51,24 @@ public class HandlerFormParser {
     /**
      * Parsear la entrada y convertirla a requests
      *
-     * @param input
-     * @return 
+     * @param m
+     * @return
      */
-    public String parserInput(String input) {
+    public Message parserInput(Message m) {
         reqs.clear();
         errors.clear();
+        Message res = new Message();
         String response = "";
 
-        FormsLex lex = new FormsLex(new StringReader(input));
+        FormsLex lex = new FormsLex(new StringReader(m.getMesssage()));
         FormsParser parser = new FormsParser(lex);
+
+        // Setear usuario
+        if (m.getUser() != null) {
+            parser.setUser(m.getUser());
+            this.user = m.getUser();
+        }
+
         try {
             parser.parse();
             if (parser.isParsed()) {
@@ -69,8 +81,19 @@ public class HandlerFormParser {
         } catch (Exception ex) {
             ex.printStackTrace(System.out);
         }
-        
-        return response;
+
+        res.setMesssage(response);
+        // Setear usuario
+        if (m.getUser() != null) {
+            res.setUser(m.getUser());
+        }
+
+        if (this.user != null) {
+            res.setUser(this.user);
+        }
+
+        //return response;
+        return res;
     }
 
     /**
@@ -85,7 +108,12 @@ public class HandlerFormParser {
                         login((User) r);
                         break;
                     case ADD:
-                        addUser((User) r);
+                        if (hasSession()) {
+                            addUser((User) r);
+                        } else {
+                            String message = "No puede realizar esta operacion, antes debe de iniciar sesion.";
+                            hres.createResponse(r, message);
+                        }
                         break;
                     case EDIT:
                         editUser((User) r);
@@ -128,7 +156,7 @@ public class HandlerFormParser {
         });
     }
 
-    private User login(User u) {
+    private void login(User u) {
         readDB();
         User login = null;
         User user = getUser(u.getUser());
@@ -136,14 +164,16 @@ public class HandlerFormParser {
         if (user != null) {
             if (user.getPassword().equals(u.getPassword())) {
                 login = user;
+                this.user = user.getUser();
+                hres.createSuccessResponse(u);
             }
         }
 
         if (login == null) {
-            System.out.println("Credenciales incorrectas");
+            String message = "Las credenciales para el inicio de sesión son incorrectas.";
+            hres.createResponse(u, message);
         }
-
-        return login;
+        //return login;
     }
 
     private void addUser(User u) {
@@ -704,5 +734,9 @@ public class HandlerFormParser {
      */
     public HandleResponse getHres() {
         return hres;
+    }
+
+    private boolean hasSession() {
+        return this.user != null;
     }
 }

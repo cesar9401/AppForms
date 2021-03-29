@@ -1,6 +1,7 @@
 package com.cesar31.formsweb.restful;
 
 import com.cesar31.formsweb.control.HandlerFormParser;
+import com.cesar31.formsweb.model.Message;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -17,15 +18,17 @@ import javax.ws.rs.core.Response.Status;
 public class MainService {
 
     @POST
-    @Consumes(MediaType.TEXT_PLAIN)
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response getRequest(String input) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getRequest(Message message) {
         //Write your code here
         try {
-            System.out.println(input);
+            System.out.println(message.getMesssage());
             HandlerFormParser handle = new HandlerFormParser();
-            String response = handle.parserInput(input);
-            System.out.println(response);
+            Message response = handle.parserInput(message);
+
+            System.out.println(response.getMesssage());
+
             return Response.ok().entity(response).build();
         } catch (Exception e) {
             e.printStackTrace(System.out);

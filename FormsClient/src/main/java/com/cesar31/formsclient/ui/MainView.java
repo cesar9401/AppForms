@@ -4,14 +4,10 @@ import com.cesar31.formsclient.control.FileControl;
 import com.cesar31.formsclient.control.Request;
 import com.cesar31.formsclient.model.ErrorResponse;
 import com.cesar31.formsclient.model.Response;
-import com.cesar31.formsclient.parser.ResponseLex;
-import com.cesar31.formsclient.parser.ResponseParser;
 import java.awt.Event;
-import java.io.StringReader;
 import java.util.List;
 import javax.swing.Action;
 import javax.swing.JFileChooser;
-import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.text.DefaultEditorKit;
 

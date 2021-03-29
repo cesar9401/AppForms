@@ -4,6 +4,7 @@ import com.cesar31.formsweb.control.HandleDB;
 import com.cesar31.formsweb.control.HandlerFormParser;
 import com.cesar31.formsweb.model.Component;
 import com.cesar31.formsweb.model.Form;
+import com.cesar31.formsweb.model.Message;
 import com.cesar31.formsweb.model.User;
 import java.io.IOException;
 import java.io.StringReader;
@@ -23,9 +24,9 @@ public class TestParserMain {
 
         String data = db.readData("request1.indigo");
         //System.out.println(data);
-        String response = handler.parserInput(data);
+        Message m = handler.parserInput(new Message(null, data));
 
-        System.out.println(response);
+        System.out.println(m.getMesssage());
         
         //debug(data);
     }
