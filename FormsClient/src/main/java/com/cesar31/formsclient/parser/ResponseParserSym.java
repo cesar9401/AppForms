@@ -33,6 +33,7 @@ public class ResponseParserSym {
   public static final int FIN_R = 3;
   public static final int LEXEMA = 23;
   public static final int INTEGER = 16;
+  public static final int NULL = 25;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -58,7 +59,8 @@ public class ResponseParserSym {
   "TYPE",
   "MESSAGE",
   "LEXEMA",
-  "DESC"
+  "DESC",
+  "NULL"
   };
 }
 

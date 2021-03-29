@@ -2,9 +2,16 @@ package com.cesar31.formsclient.ui;
 
 import com.cesar31.formsclient.control.FileControl;
 import com.cesar31.formsclient.control.Request;
+import com.cesar31.formsclient.model.ErrorResponse;
+import com.cesar31.formsclient.model.Response;
+import com.cesar31.formsclient.parser.ResponseLex;
+import com.cesar31.formsclient.parser.ResponseParser;
 import java.awt.Event;
+import java.io.StringReader;
+import java.util.List;
 import javax.swing.Action;
 import javax.swing.JFileChooser;
+import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.text.DefaultEditorKit;
 
@@ -26,7 +33,7 @@ public class MainView extends javax.swing.JFrame {
         initLineNumber();
         textMainSetActions();
         control = new FileControl();
-        
+
         request = new Request();
     }
 
@@ -41,6 +48,9 @@ public class MainView extends javax.swing.JFrame {
         // JTextArea para respuestas del servidor
         numResponse = new LineNumber(textResponse);
         scrollResponse.setRowHeaderView(numResponse);
+
+        // No Editable
+        textResponse.setEditable(false);
     }
 
     /**
@@ -74,15 +84,22 @@ public class MainView extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        myTabbedPane = new javax.swing.JTabbedPane();
         mainPanel = new javax.swing.JPanel();
-        labelSol = new javax.swing.JLabel();
         scrollText = new javax.swing.JScrollPane();
         textMain = new javax.swing.JTextArea();
         btnRequest = new javax.swing.JButton();
-        scrollResponse = new javax.swing.JScrollPane();
-        textResponse = new javax.swing.JTextArea();
         labelSol1 = new javax.swing.JLabel();
         labelInfo = new javax.swing.JLabel();
+        paneResponse = new javax.swing.JPanel();
+        scrollResponse = new javax.swing.JScrollPane();
+        textResponse = new javax.swing.JTextArea();
+        labelResponse = new javax.swing.JLabel();
+        panelResponseMain = new javax.swing.JPanel();
+        labelResponseMain = new javax.swing.JLabel();
+        scrollMain = new javax.swing.JScrollPane();
+        scroll = new javax.swing.JScrollPane();
+        responseTable = new javax.swing.JTable();
         menuBar = new javax.swing.JMenuBar();
         menu1 = new javax.swing.JMenu();
         itemOpen = new javax.swing.JMenuItem();
@@ -99,19 +116,14 @@ public class MainView extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(1024, 720));
         setResizable(false);
 
+        myTabbedPane.setBackground(new java.awt.Color(23, 21, 32));
+        myTabbedPane.setForeground(new java.awt.Color(0, 0, 0));
+        myTabbedPane.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+
         mainPanel.setBackground(new java.awt.Color(23, 21, 32));
         mainPanel.setForeground(new java.awt.Color(255, 255, 255));
         mainPanel.setMinimumSize(new java.awt.Dimension(1024, 688));
         mainPanel.setName(""); // NOI18N
-
-        labelSol.setBackground(new java.awt.Color(23, 21, 32));
-        labelSol.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
-        labelSol.setForeground(new java.awt.Color(255, 255, 255));
-        labelSol.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        labelSol.setText("Respuesta del Servidor");
-        labelSol.setMaximumSize(new java.awt.Dimension(250, 30));
-        labelSol.setMinimumSize(new java.awt.Dimension(250, 30));
-        labelSol.setPreferredSize(new java.awt.Dimension(250, 30));
 
         textMain.setBackground(new java.awt.Color(42, 33, 57));
         textMain.setColumns(20);
@@ -137,17 +149,6 @@ public class MainView extends javax.swing.JFrame {
                 btnRequestActionPerformed(evt);
             }
         });
-
-        textResponse.setEditable(false);
-        textResponse.setBackground(new java.awt.Color(42, 33, 57));
-        textResponse.setColumns(20);
-        textResponse.setFont(new java.awt.Font("Hack", 0, 16)); // NOI18N
-        textResponse.setForeground(new java.awt.Color(255, 255, 255));
-        textResponse.setRows(5);
-        textResponse.setTabSize(4);
-        textResponse.setCaretColor(new java.awt.Color(255, 255, 255));
-        textResponse.setMargin(new java.awt.Insets(10, 10, 10, 10));
-        scrollResponse.setViewportView(textResponse);
 
         labelSol1.setBackground(new java.awt.Color(23, 21, 32));
         labelSol1.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
@@ -177,36 +178,148 @@ public class MainView extends javax.swing.JFrame {
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(scrollText, javax.swing.GroupLayout.PREFERRED_SIZE, 975, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(mainPanelLayout.createSequentialGroup()
                                 .addComponent(btnRequest, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(labelInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(scrollResponse, javax.swing.GroupLayout.DEFAULT_SIZE, 975, Short.MAX_VALUE)
-                            .addComponent(scrollText)))
+                                .addComponent(labelInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGap(412, 412, 412)
-                        .addComponent(labelSol, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGap(403, 403, 403)
+                        .addGap(404, 404, 404)
                         .addComponent(labelSol1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(28, Short.MAX_VALUE))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
+                .addGap(12, 12, 12)
                 .addComponent(labelSol1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scrollText, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scrollText, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRequest)
                     .addComponent(labelInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(labelSol, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scrollResponse, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(63, 63, 63))
+                .addContainerGap(79, Short.MAX_VALUE))
         );
+
+        myTabbedPane.addTab("Peticiones", mainPanel);
+
+        paneResponse.setBackground(new java.awt.Color(23, 21, 32));
+        paneResponse.setForeground(new java.awt.Color(255, 255, 255));
+        paneResponse.setMinimumSize(new java.awt.Dimension(1024, 688));
+        paneResponse.setName(""); // NOI18N
+
+        textResponse.setBackground(new java.awt.Color(42, 33, 57));
+        textResponse.setColumns(20);
+        textResponse.setFont(new java.awt.Font("Hack", 0, 16)); // NOI18N
+        textResponse.setForeground(new java.awt.Color(255, 255, 255));
+        textResponse.setRows(5);
+        textResponse.setTabSize(4);
+        textResponse.setCaretColor(new java.awt.Color(255, 255, 255));
+        textResponse.setMargin(new java.awt.Insets(10, 10, 10, 10));
+        textResponse.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                textResponseCaretUpdate(evt);
+            }
+        });
+        scrollResponse.setViewportView(textResponse);
+
+        labelResponse.setBackground(new java.awt.Color(23, 21, 32));
+        labelResponse.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
+        labelResponse.setForeground(new java.awt.Color(255, 255, 255));
+        labelResponse.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelResponse.setText("Respuesta del Servidor(Indigo)");
+        labelResponse.setMaximumSize(new java.awt.Dimension(250, 30));
+        labelResponse.setMinimumSize(new java.awt.Dimension(250, 30));
+        labelResponse.setPreferredSize(new java.awt.Dimension(250, 30));
+
+        javax.swing.GroupLayout paneResponseLayout = new javax.swing.GroupLayout(paneResponse);
+        paneResponse.setLayout(paneResponseLayout);
+        paneResponseLayout.setHorizontalGroup(
+            paneResponseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(paneResponseLayout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(scrollResponse, javax.swing.GroupLayout.PREFERRED_SIZE, 975, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(28, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneResponseLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(labelResponse, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(356, 356, 356))
+        );
+        paneResponseLayout.setVerticalGroup(
+            paneResponseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(paneResponseLayout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(labelResponse, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scrollResponse, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(91, Short.MAX_VALUE))
+        );
+
+        myTabbedPane.addTab("Respuesta", paneResponse);
+
+        panelResponseMain.setBackground(new java.awt.Color(23, 21, 32));
+        panelResponseMain.setForeground(new java.awt.Color(255, 255, 255));
+        panelResponseMain.setMinimumSize(new java.awt.Dimension(1024, 688));
+        panelResponseMain.setName(""); // NOI18N
+
+        labelResponseMain.setBackground(new java.awt.Color(23, 21, 32));
+        labelResponseMain.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
+        labelResponseMain.setForeground(new java.awt.Color(255, 255, 255));
+        labelResponseMain.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelResponseMain.setText("Respuestas del Servidor");
+        labelResponseMain.setMaximumSize(new java.awt.Dimension(250, 30));
+        labelResponseMain.setMinimumSize(new java.awt.Dimension(250, 30));
+        labelResponseMain.setPreferredSize(new java.awt.Dimension(250, 30));
+
+        scrollMain.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+
+        scroll.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        scroll.setPreferredSize(new java.awt.Dimension(2600, 540));
+
+        responseTable.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        responseTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        responseTable.setMinimumSize(new java.awt.Dimension(2600, 540));
+        responseTable.setPreferredSize(new java.awt.Dimension(2600, 540));
+        responseTable.setRowHeight(40);
+        scroll.setViewportView(responseTable);
+
+        scrollMain.setViewportView(scroll);
+
+        javax.swing.GroupLayout panelResponseMainLayout = new javax.swing.GroupLayout(panelResponseMain);
+        panelResponseMain.setLayout(panelResponseMainLayout);
+        panelResponseMainLayout.setHorizontalGroup(
+            panelResponseMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResponseMainLayout.createSequentialGroup()
+                .addContainerGap(367, Short.MAX_VALUE)
+                .addComponent(labelResponseMain, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(356, 356, 356))
+            .addGroup(panelResponseMainLayout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addComponent(scrollMain, javax.swing.GroupLayout.PREFERRED_SIZE, 948, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        panelResponseMainLayout.setVerticalGroup(
+            panelResponseMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelResponseMainLayout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(labelResponseMain, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scrollMain, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(101, Short.MAX_VALUE))
+        );
+
+        myTabbedPane.addTab("Respuesta", panelResponseMain);
 
         menuBar.setBackground(new java.awt.Color(36, 27, 47));
         menuBar.setForeground(new java.awt.Color(255, 255, 255));
@@ -283,11 +396,11 @@ public class MainView extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(myTabbedPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(myTabbedPane)
         );
 
         pack();
@@ -308,7 +421,96 @@ public class MainView extends javax.swing.JFrame {
         // TODO add your handling code here:
         String input = textMain.getText();
         request.sendRequest(input);
+
+        String response = request.getServerResponse();
+        textResponse.setText(response);
+
+        if (request.isErrors()) {
+            List<ErrorResponse> errors = request.getList();
+            setTableErrors(errors);
+        } else {
+            List<Response> responses = request.getList();
+            setTableResponses(responses);
+        }
+
+        myTabbedPane.setSelectedIndex(2);
+
+//        String input = control.readData("response.indigo");
+//
+//        ResponseLex lex = new ResponseLex(new StringReader(input));
+//        ResponseParser parser = new ResponseParser(lex);
+//        try {
+//            parser.parse();
+//            List<ErrorResponse> e = parser.getHandle().getList();
+//            setTableErrors(e);
+//        } catch (Exception ex) {
+//            ex.printStackTrace(System.out);
+//        }
+
     }//GEN-LAST:event_btnRequestActionPerformed
+
+    private void setTableErrors(List<ErrorResponse> errors) {
+        String[][] list = new String[errors.size()][5];
+        for (int i = 0; i < errors.size(); i++) {
+            list[i][0] = errors.get(i).getLexema();
+            list[i][1] = errors.get(i).getType();
+            list[i][2] = String.valueOf(errors.get(i).getLine());
+            list[i][3] = String.valueOf(errors.get(i).getColumn());
+            list[i][4] = errors.get(i).getDescription();
+        }
+        responseTable.setPreferredSize(new java.awt.Dimension(2600, 40 * errors.size()));
+        responseTable.setModel(new javax.swing.table.DefaultTableModel(
+                list,
+                new String[]{
+                    "Lexema", "Tipo", "Linea", "Columna", "Descripcion"
+                }
+        ));
+        setSizeTable();
+
+    }
+
+    /**
+     * Tabla para Response
+     *
+     * @param res
+     */
+    private void setTableResponses(List<Response> res) {
+        String[][] list = new String[res.size()][5];
+        for (int i = 0; i < res.size(); i++) {
+            list[i][0] = String.valueOf(res.get(i).getNumberRequest());
+            list[i][1] = String.valueOf(res.get(i).getLine());
+            list[i][2] = String.valueOf(res.get(i).getColumn());
+            list[i][3] = res.get(i).getTypeRequest();
+            list[i][4] = res.get(i).getMessage();
+        }
+        responseTable.setPreferredSize(new java.awt.Dimension(2600, 40 * res.size()));
+        responseTable.setModel(new javax.swing.table.DefaultTableModel(
+                list,
+                new String[]{
+                    "Número", "Linea", "Columna", "Tipo", "Mensaje"
+                }
+        ));
+        setSizeTable();
+
+    }
+
+    private void setSizeTable() {
+        responseTable.getColumnModel().getColumn(0).setMinWidth(100);
+        responseTable.getColumnModel().getColumn(0).setPreferredWidth(100);
+        responseTable.getColumnModel().getColumn(0).setMaxWidth(100);
+        responseTable.getColumnModel().getColumn(1).setMinWidth(100);
+        responseTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+        responseTable.getColumnModel().getColumn(1).setMaxWidth(100);
+        responseTable.getColumnModel().getColumn(2).setMinWidth(100);
+        responseTable.getColumnModel().getColumn(2).setPreferredWidth(100);
+        responseTable.getColumnModel().getColumn(2).setMaxWidth(100);
+        responseTable.getColumnModel().getColumn(3).setMinWidth(175);
+        responseTable.getColumnModel().getColumn(3).setPreferredWidth(175);
+        responseTable.getColumnModel().getColumn(3).setMaxWidth(175);
+        responseTable.getColumnModel().getColumn(4).setMinWidth(2225);
+        responseTable.getColumnModel().getColumn(4).setPreferredWidth(2225);
+        responseTable.getColumnModel().getColumn(4).setMaxWidth(2225);
+    }
 
     /**
      * Obtener informacion de linea y columna
@@ -329,7 +531,13 @@ public class MainView extends javax.swing.JFrame {
             String text = control.readData(fileChooser.getSelectedFile().getAbsolutePath());
             textMain.setText(text);
         }
+
+        myTabbedPane.setSelectedIndex(0);
     }//GEN-LAST:event_itemOpenActionPerformed
+
+    private void textResponseCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_textResponseCaretUpdate
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textResponseCaretUpdate
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem ItemCopy;
@@ -340,12 +548,19 @@ public class MainView extends javax.swing.JFrame {
     private javax.swing.JMenuItem itemGuardar;
     private javax.swing.JMenuItem itemOpen;
     private javax.swing.JLabel labelInfo;
-    private javax.swing.JLabel labelSol;
+    private javax.swing.JLabel labelResponse;
+    private javax.swing.JLabel labelResponseMain;
     private javax.swing.JLabel labelSol1;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenu menu1;
     private javax.swing.JMenu menu2;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JTabbedPane myTabbedPane;
+    private javax.swing.JPanel paneResponse;
+    private javax.swing.JPanel panelResponseMain;
+    private javax.swing.JTable responseTable;
+    private javax.swing.JScrollPane scroll;
+    private javax.swing.JScrollPane scrollMain;
     private javax.swing.JScrollPane scrollResponse;
     private javax.swing.JScrollPane scrollText;
     private javax.swing.JTextArea textMain;

@@ -27,7 +27,8 @@ import java_cup.runtime.*;
 %}
 
 %eofval{
-	return new java_cup.runtime.Symbol(FormsParserSym.EOF);
+	//return new java_cup.runtime.Symbol(FormsParserSym.EOF);
+	return symbol(EOF);
 %eofval}
 %eofclose
 

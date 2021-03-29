@@ -36,7 +36,7 @@ parser code {:
 terminal INI_R, FIN_R, INI_RS, FIN_RS, SMALLER, EXCL, GREATER, LBRACKET, RBRACKET, LBRACE, RBRACE, COLON, COMMA;
 terminal ERROR;
 terminal Integer INTEGER;
-terminal String STR, REQ, LINE, COLUMN, TYPE, MESSAGE, LEXEMA, DESC;
+terminal String STR, REQ, LINE, COLUMN, TYPE, MESSAGE, LEXEMA, DESC, NULL;
 
 non terminal response, m_res, make_res, res, body_res, res_keys, footer, header_m, footer_m;
 non terminal String str_param, header;
@@ -84,6 +84,7 @@ str_param	::=	STR:p {: RESULT = p; :}
 				| MESSAGE:p {: RESULT = p; :}
 				| LEXEMA:p {: RESULT = p; :}
 				| DESC:p {: RESULT = p; :}
+				| NULL:p {: RESULT = p; :}
 				;
 
 header		::= SMALLER EXCL INI_R COLON STR:p GREATER

@@ -40,7 +40,7 @@ public class UserContainer {
         this.currentErrors = new ArrayList<>();
 
         this.handle = new HandleError();
-        
+
         this.requests = new ArrayList<>();
         this.form = new FormContainer(this);
         this.component = new ComponentContainer(this);
@@ -418,7 +418,7 @@ public class UserContainer {
      */
     public Error getRequestError(Token t, String param, String request) {
         Error e = new Error("", "SINTACTICO", t.getX(), t.getY());
-        e.setDescription("En la peticion " + request + ", fila = " + t.getX() + ", columna = " + t.getY()+ ", se debe incluir " + param + ".");
+        e.setDescription("En la peticion " + request + ", fila = " + t.getX() + ", columna = " + t.getY() + ", se debe incluir " + param + ".");
         return e;
     }
 
@@ -446,10 +446,12 @@ public class UserContainer {
         Token t = (Token) symbol.value;
         String typeError = (type.equals("SYMB") || type.equals("ERROR")) ? "LEXICO" : "SINTACTICO";
 
-        Error e = new Error(t.getValue(), typeError, t.getX(), t.getY());
+        String value = (type.equals("EOF")) ? "Fin de entrada" : t.getValue();
+        
+        Error e = new Error(value, typeError, t.getX(), t.getY());
 
         String description = (typeError.equals("LEXICO")) ? "La cadena no se reconoce en el lenguaje. " : "";
-        description += "Se encontro: " + t.getValue() + ". ";
+        description += "Se encontro: " + value + ". ";
         description += "Se esperaba: ";
         for (int i = 0; i < expectedTokens.size(); i++) {
             if (!expectedTokens.get(i).equals("error")) {

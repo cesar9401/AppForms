@@ -1741,7 +1741,8 @@ public class FormsLex implements java_cup.runtime.Scanner {
       if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
         zzAtEOF = true;
             zzDoEOF();
-          { 	return new java_cup.runtime.Symbol(FormsParserSym.EOF);
+          { 	//return new java_cup.runtime.Symbol(FormsParserSym.EOF);
+	return symbol(EOF);
  }
       }
       else {

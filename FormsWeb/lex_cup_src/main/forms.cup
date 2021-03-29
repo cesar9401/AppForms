@@ -14,7 +14,6 @@ parser code {:
 
 	private Symbol cur_token;
 	private UserContainer u;
-	private User usuario;
 
 	public FormsParser(FormsLex lex) {
 		super(lex);
@@ -431,6 +430,7 @@ fin_sol		::= SMALLER FIN_SOL EXCL GREATER
 				| SMALLER error EXCL GREATER
 				| SMALLER FIN_SOL error GREATER
 				| SMALLER FIN_SOL EXCL error
+				| error
 				;
 
 str_param	::=	STR:p {: RESULT = p; :}

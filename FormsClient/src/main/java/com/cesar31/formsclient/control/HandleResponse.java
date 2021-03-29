@@ -64,4 +64,12 @@ public class HandleResponse {
     public void setParam(String key, String value) {
         this.params.put(key, value);
     }
+
+    public boolean hasErrors() {
+        return !errors.isEmpty();
+    }
+
+    public List getList() {
+        return (errors.isEmpty()) ? responses : errors;
+    }
 }

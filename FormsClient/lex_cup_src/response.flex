@@ -82,6 +82,9 @@ WhiteSpace = {LineTerminator}|[\s\t\f]
 	"fin_respuestas"
 	{ return symbol(FIN_RS); }
 
+	"null"
+	{ return symbol(NULL, String.valueOf(yytext())); }
+
 	{Integer}
 	{ return symbol(INTEGER, Integer.valueOf(yytext())); }
 

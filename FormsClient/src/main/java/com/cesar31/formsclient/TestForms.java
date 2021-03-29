@@ -11,19 +11,19 @@ import java.io.StringReader;
  */
 public class TestForms {
 
-    public static void main(String[] args) {
-        // Write your code here
-        FileControl control = new FileControl();
-        String input = control.readData("response.indigo");
-        
-        //System.out.println(input);
-            
-        ResponseLex lex = new ResponseLex(new StringReader(input));
-        ResponseParser parser = new ResponseParser(lex);
-        try {
-            parser.parse();
-        } catch (Exception ex) {
-            ex.printStackTrace(System.out);
-        }
-    }
+//    public static void main(String[] args) {
+//        // Write your code here
+//        FileControl control = new FileControl();
+//        String input = control.readData("response.indigo");
+//        
+//        System.out.println(input);
+//            
+//        ResponseLex lex = new ResponseLex(new StringReader(input));
+//        ResponseParser parser = new ResponseParser(lex);
+//        try {
+//            parser.parse();
+//        } catch (Exception ex) {
+//            ex.printStackTrace(System.out);
+//        }
+//    }
 }
