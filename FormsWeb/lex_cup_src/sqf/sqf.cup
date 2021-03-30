@@ -1,0 +1,93 @@
+package com.cesar31.formsweb.parser.sqf;
+
+import com.cesar31.formsweb.model.Token;
+import java_cup.runtime.*;
+
+import java.util.List;
+
+class SQFParser;
+
+parser code {:
+
+	private Symbol cur_token;
+
+	public SQFParser(SQFLex lex) {
+		super(lex);
+	}
+
+	public void syntax_error(Symbol cur_token) {
+        System.out.printf("syntax_error: Linea: %d, columna: %d, sym: %s, nombre: %s, value: \"%s\", parse_state: %d\n", cur_token.left, cur_token.right, cur_token.sym, symbl_name_from_id(cur_token.sym), cur_token.value, cur_token.parse_state);
+        List<Integer> tokens = expected_token_ids();
+        System.out.print("Se esperaba ->");
+        for(Integer i : tokens) {
+			System.out.printf("%s, ", symbl_name_from_id(i));
+        }
+        System.out.println("");
+	}
+
+:}
+
+terminal Token SEL, TO, FORM, ARROW, WHERE, LBRACKET, RBRACKET, AND, OR, NOT, GREATER, SMALLER, GR_EQ, SM_EQ;
+terminal Token EQ, NEQ, COMMA, PLUS, MINUS, TIMES, DIVIDE, ID, STR, APOS, VALUE_STR;
+terminal Token ERROR;
+
+terminal Integer INTEGER;
+terminal Double DECIMAL;
+
+non terminal ini, opt, fields, make_field, field_keys, where_cond, comps, make_comp, comp;
+non terminal opr_rel, values, opr_log_b, number_v, value_str;
+
+ini			::=	SEL TO FORM ARROW opt fields where_cond
+				;
+
+opt			::=	ID
+				| STR
+				;
+
+fields		::=	LBRACKET make_field RBRACKET
+				;
+
+make_field	::=	field_keys
+				|
+				;
+
+field_keys	::=	STR:p
+				{: System.out.println(p.getValue()); :}
+				| field_keys COMMA STR:p
+				{: System.out.println(p.getValue()); :}
+				;
+
+where_cond	::=	WHERE comps
+				|
+				;
+
+comps		::=	LBRACKET make_comp RBRACKET
+				;
+
+make_comp	::=	comp
+				| make_comp opr_log_b comp
+				;
+
+comp		::=	STR opr_rel values
+				| NOT STR opr_rel values
+				;
+
+opr_rel		::=	GREATER
+				| SMALLER
+				| GR_EQ
+				| SM_EQ
+				| EQ
+				| NEQ
+				;
+
+opr_log_b	::=	AND
+				| OR
+				;
+
+values		::=	VALUE_STR
+				| number_v
+				;
+
+number_v	::=	INTEGER
+				| DECIMAL
+				;

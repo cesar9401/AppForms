@@ -89,6 +89,7 @@ terminal Token STR, STR_N, DATE, ADD_USER, CRED, DATE_ADD, EDIT_USER, DEL_USER, 
 terminal Token NEW_FORM, PARAM_F, ID, TITLE, NAME, THEME, DEL_FORM, EDIT_FORM, ADD_COMP, PARAM_C, FIELD_N, FORM, CLASS, TEXT_FIELD, TEXT_AREA, CHECKBOX, RADIO;
 terminal Token FILE, IMG, COMBO, BTN, INDEX, TEXT, ALIGN, REQUIRED, OPTION, ROWS, COLUMNS, URL, DEL_COMP, EDIT_COMP, ID_, USER_C;
 terminal Token CENTER, LEFT, RIGHT, JUSTIFY, YES, NO, OPTION_V, STR_NUMBER, DARK, LIGHT;
+terminal Token CONS_DATA, CONS, CONS_NAME;
 
 non terminal solicitude, ini_sol, fin_sol, sol, request, req_u, body, ini_many, fin_many;
 
@@ -97,8 +98,9 @@ non terminal us, pass, date, add_u, add, old_u, new_u, new_p, e_date;
 non terminal forms, id, title, name, theme, user_c;
 /* componentes */
 non terminal field_n, form, kind, index, text, opt, url, kind_a, req, rows, columns, comp;
-
-non terminal Token str_param, class_o, align, required, kind_t;
+/* data*/
+non terminal data, body_data, make_data, cons;
+non terminal Token str_param, class_o, align, required, kind_t, str;
 
 
 solicitude	::=	ini_sol
@@ -190,6 +192,14 @@ request		::=	ADD_USER GREATER req_u /* add user */
 				{: RESULT = "MODIFICAR_COMPONENTE"; :} /* MODIFICAR_COMPONENTE */
 				| EDIT_COMP error comp
 				{: RESULT = "MODIFICAR_COMPONENTE"; :}
+
+				/* Consultar datos */
+				| CONS_DATA GREATER data
+				{: RESULT = "SQForm"; :}
+				| error GREATER data
+				{: RESULT = "SQForm"; :}
+				| CONS_DATA error data
+				{: RESULT = "SQForm"; :}
 				;
 
 /* add, del, edit user */
@@ -214,6 +224,31 @@ comp		::=	LBRACE PARAM_C COLON LBRACKET body
 				// | LBRACE error COLON LBRACKET body
 				| LBRACE PARAM_C error LBRACKET body
 				| LBRACE PARAM_C COLON error body
+				;
+
+data		::=	LBRACE CONS COLON LBRACKET body_data
+				| error CONS COLON LBRACKET body_data
+				| LBRACE error COLON LBRACKET body_data
+				| LBRACE CONS error LBRACKET body_data
+				| LBRACE CONS COLON error body_data
+				;
+
+body_data	::=	LBRACE make_data RBRACE RBRACKET RBRACE fin_sol
+				| error make_data RBRACE RBRACKET RBRACE fin_sol
+				| LBRACE make_data error RBRACKET RBRACE fin_sol
+				| LBRACE make_data RBRACE error RBRACE fin_sol
+				| LBRACE make_data RBRACE RBRACKET error fin_sol
+				;
+
+make_data	::=	cons
+				| make_data COMMA cons
+				;
+
+cons		::=	CONS_NAME:n COLON str:p
+				{: u.setParamSQF(n.getValue(), p); :}
+				| error COLON str
+				| CONS_NAME error str
+				| CONS_NAME COLON error
 				;
 /* ----------------------------------------------------------- producciones para crear usuario nuevo */
 us			::=	USER:a COLON str_param:p
@@ -482,6 +517,13 @@ str_param	::=	STR:p {: RESULT = p; :}
 				| align:p {: RESULT = p; :}
 				| required:p {: RESULT = p; :}
 				| kind_t:p {: RESULT = p; :}
+				| CONS_DATA:p {: RESULT = p; :}
+				| CONS:p {: RESULT = p; :}
+				| CONS_NAME:p {: RESULT = p; :}
+				;
+
+str			::=	STR_SPACE:p {: RESULT = p; :}
+				| str_param:p {: RESULT = p; :}
 				;
 
 class_o		::=	TEXT_FIELD:p {: RESULT = p; :}

@@ -3,7 +3,7 @@ package com.cesar31.formsweb.control;
 import com.cesar31.formsweb.model.Operation;
 import com.cesar31.formsweb.model.Request;
 import com.cesar31.formsweb.model.User;
-import com.cesar31.formsweb.parser.main.Token;
+import com.cesar31.formsweb.model.Token;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java_cup.runtime.Symbol;
 public class UserContainer {
 
     private String user;
-    
+
     private List<Error> errors;
     private List<Error> currentErrors;
     private HashMap<String, Token> params;
@@ -35,6 +35,9 @@ public class UserContainer {
     // Componentes
     private ComponentContainer component;
 
+    // Consultas
+    private SQForm sqf;
+
     public UserContainer() {
         this.errors = new ArrayList<>();
         this.params = new HashMap<>();
@@ -46,6 +49,7 @@ public class UserContainer {
         this.requests = new ArrayList<>();
         this.form = new FormContainer(this);
         this.component = new ComponentContainer(this);
+        this.sqf = new SQForm(this);
     }
 
     /**
@@ -96,6 +100,10 @@ public class UserContainer {
 
                 case "MODIFICAR_COMPONENTE":
                     component.editComponent(t);
+                    break;
+
+                case "SQForm":
+                    sqf.createSQF(t);
                     break;
             }
         } else {
@@ -449,7 +457,7 @@ public class UserContainer {
         String typeError = (type.equals("SYMB") || type.equals("ERROR")) ? "LEXICO" : "SINTACTICO";
 
         String value = (type.equals("EOF")) ? "Fin de entrada" : t.getValue();
-        
+
         Error e = new Error(value, typeError, t.getX(), t.getY());
 
         String description = (typeError.equals("LEXICO")) ? "La cadena no se reconoce en el lenguaje. " : "";
@@ -493,7 +501,6 @@ public class UserContainer {
     /**
      * Errores por espacios
      *
-     * @param t
      * @param r
      * @param param
      */
@@ -532,12 +539,23 @@ public class UserContainer {
         return date;
     }
 
+    /**
+     * Agregar peticion
+     *
+     * @param t
+     * @param name
+     * @param r
+     */
     public void addRequest(Token t, String name, Request r) {
         r.setNameRequest(name);
         r.setNumber(requests.size() + 1);
         r.setLine(t.getX());
         r.setColumn(t.getY());
         requests.add(r);
+    }
+    
+    public void setParamSQF(String key, Token t) {
+        this.sqf.setParam(key, t);
     }
 
     /**

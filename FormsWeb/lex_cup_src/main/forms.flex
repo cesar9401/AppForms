@@ -43,6 +43,10 @@ Integer =  0|[1-9][0-9]*
 Date = \d{4,4}\-\d{2,2}\-\d{2,2}
 Input = [^\n\r\"\\\|]+
 InputClean = [^\n\r\"\\\t\s\f\|]+
+
+/* Para formularios */
+InputCleanId = [\w\-]+
+
 Id = \" [\_\-\$] ([\_\-\$] | {InputClean} )+ \"
 
 str = {WhiteSpace}* {InputClean}+ {Input}+ {WhiteSpace}*
@@ -59,6 +63,7 @@ StringSpace = \" {str_space} \"
 Options	= \" ({str} \| )* {str} \"
 Options_space	= \" ({str_space} \| )* {str_space} \"
 
+Consulta = "CONSULTA-" {Integer}
 
 Quote = \"
 Ql = {Quote} {WhiteSpace}*
@@ -262,6 +267,17 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 
 	{Ql} "MODIFICAR_COMPONENTE" {Qr}
 	{ return symbol(EDIT_COMP, yytext()); }
+
+	/* CONSULTAR_DATOS */
+	{Ql} "CONSULTAR_DATOS" {Qr}
+	{ return symbol(CONS_DATA, yytext()); }
+
+	{Ql} "CONSULTAS" {Qr}
+	{ return symbol(CONS, yytext()); }
+
+	{Ql} {Consulta} {Qr}
+	{ return symbol(CONS_NAME, yytext()); }
+	/* CONSULTAR_DATOS */
 
 	/* Input con comillas */
 	{StringNoClean}

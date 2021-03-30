@@ -22,11 +22,13 @@ public class FormsParserSym {
   public static final int RIGHT = 77;
   public static final int DATE_MOD = 39;
   public static final int ROWS = 68;
+  public static final int CONS_DATA = 85;
   public static final int CHECKBOX = 57;
   public static final int NAME = 46;
   public static final int PASS = 41;
   public static final int STR_N = 28;
   public static final int ID_ = 73;
+  public static final int CONS = 86;
   public static final int COMMA = 15;
   public static final int RBRACE = 12;
   public static final int LIGHT = 84;
@@ -51,6 +53,7 @@ public class FormsParserSym {
   public static final int QUOTE = 23;
   public static final int DIVIDE = 20;
   public static final int INDEX = 63;
+  public static final int CONS_NAME = 87;
   public static final int ALIGN = 65;
   public static final int JUSTIFY = 78;
   public static final int SYMB = 22;
@@ -178,7 +181,10 @@ public class FormsParserSym {
   "OPTION_V",
   "STR_NUMBER",
   "DARK",
-  "LIGHT"
+  "LIGHT",
+  "CONS_DATA",
+  "CONS",
+  "CONS_NAME"
   };
 }
 

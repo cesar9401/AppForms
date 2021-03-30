@@ -2,7 +2,7 @@ package com.cesar31.formsweb.control;
 
 import com.cesar31.formsweb.model.Component;
 import com.cesar31.formsweb.model.Operation;
-import com.cesar31.formsweb.parser.main.Token;
+import com.cesar31.formsweb.model.Token;
 
 /**
  *

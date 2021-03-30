@@ -2,7 +2,7 @@ package com.cesar31.formsweb.control;
 
 import com.cesar31.formsweb.model.Form;
 import com.cesar31.formsweb.model.Operation;
-import com.cesar31.formsweb.parser.main.Token;
+import com.cesar31.formsweb.model.Token;
 import java.time.LocalDate;
 
 /**

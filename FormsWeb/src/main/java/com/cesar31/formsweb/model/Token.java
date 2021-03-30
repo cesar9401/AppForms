@@ -1,4 +1,4 @@
-package com.cesar31.formsweb.parser.main;
+package com.cesar31.formsweb.model;
 
 /**
  *

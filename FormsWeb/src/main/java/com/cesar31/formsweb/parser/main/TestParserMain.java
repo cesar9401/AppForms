@@ -4,7 +4,6 @@ import com.cesar31.formsweb.control.HandleDB;
 import com.cesar31.formsweb.control.HandlerFormParser;
 import com.cesar31.formsweb.model.Component;
 import com.cesar31.formsweb.model.Form;
-import com.cesar31.formsweb.model.Message;
 import com.cesar31.formsweb.model.User;
 import java.io.IOException;
 import java.io.StringReader;
@@ -22,13 +21,21 @@ public class TestParserMain {
         HandleDB db = new HandleDB();
         HandlerFormParser handler = new HandlerFormParser();
 
-        String data = db.readData("request1.indigo");
+        String data = db.readData("sqf.indigo");
         //System.out.println(data);
-        Message m = handler.parserInput(new Message(null, data));
-
-        System.out.println(m.getMesssage());
+//        Message m = handler.parserInput(new Message(null, data));
+//
+//        System.out.println(m.getMesssage());
         
         //debug(data);
+        
+        FormsLex lex = new FormsLex(new StringReader(data));
+        FormsParser parser = new FormsParser(lex);
+        try {
+            parser.parse();
+        } catch (Exception ex) {
+            ex.printStackTrace(System.out);
+        }
     }
 
     public static void operation(List<User> u, List<Form> f, List<Component> c) {
