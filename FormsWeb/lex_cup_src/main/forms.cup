@@ -478,7 +478,7 @@ fin_sol		::= SMALLER FIN_SOL EXCL GREATER
 				;
 
 str_param	::=	STR:p {: RESULT = p; :}
-				| str_param_n:p {: RESULT = p; :}
+				| name_f:p {: RESULT = p; :}
 				;
 
 name_f		::=	NAME_F:p {: RESULT = p; :}

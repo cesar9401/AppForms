@@ -160,9 +160,6 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 	{Id}
 	{ return symbol(ID_, yytext()); }
 
-	{Name}
-	{ return symbol(NAME_F, yytext()); }
-
 	{Ql} "TITULO" {Qr}
 	{ return symbol(TITLE, yytext()); }
 
@@ -285,6 +282,8 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 	{Ql} "CONSULTAS" {Qr}
 	{ return symbol(CONS, yytext()); }
 
+	{Name}
+	{ return symbol(NAME_F, yytext()); }
 	/* CONSULTAR_DATOS */
 
 	/* Input con comillas */

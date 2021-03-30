@@ -4,6 +4,7 @@ import com.cesar31.formsweb.control.HandleDB;
 import com.cesar31.formsweb.control.HandlerFormParser;
 import com.cesar31.formsweb.model.Component;
 import com.cesar31.formsweb.model.Form;
+import com.cesar31.formsweb.model.Request;
 import com.cesar31.formsweb.model.User;
 import java.io.IOException;
 import java.io.StringReader;
@@ -33,6 +34,16 @@ public class TestParserMain {
         FormsParser parser = new FormsParser(lex);
         try {
             parser.parse();
+            if(parser.isParsed()) {
+                List<Request> r = parser.getContainer().getRequests();
+                r.forEach(req -> {
+                    System.out.println(req.toString());
+                });
+            } else {
+                parser.getContainer().getErrors().forEach(e -> {
+                    System.out.println(e.toString());
+                });
+            }
             //System.out.println("ParserMain");
         } catch (Exception ex) {
             System.out.println("no parserMAIN");
