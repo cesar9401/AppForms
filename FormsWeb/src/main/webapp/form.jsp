@@ -85,7 +85,7 @@
                                                 </c:when>
 
                                                 <c:when test="${cm.kind == 'COMBO'}">
-                                                    <select class="form-select inpt" aria-label="Default select example" required="${cm.required}">
+                                                    <select class="form-select inpt" aria-label="Default select example" id="${cm.id_component}" name="${cm.id_component}" required="${cm.required}">
                                                         <option value="" selected>Open this select menu</option>
                                                         <c:forEach items="${cm.options}" var="s">
                                                             <option value="${s}">${s}</option>

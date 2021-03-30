@@ -824,7 +824,7 @@ public class FormsParser extends java_cup.runtime.lr_parser {
 	}
 
 	public void setUser(String user) {
-		u.setUser(user);
+		this.u.setUser(user);
 	}
 
 	/* Constructor sin cambiar nombre */

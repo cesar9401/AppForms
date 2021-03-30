@@ -4,6 +4,7 @@ import com.cesar31.formsweb.model.Component;
 import com.cesar31.formsweb.model.Form;
 import com.cesar31.formsweb.model.FormData;
 import com.cesar31.formsweb.model.Message;
+import com.cesar31.formsweb.model.Operation;
 import com.cesar31.formsweb.model.Request;
 import com.cesar31.formsweb.model.User;
 import com.cesar31.formsweb.parser.main.FormsLex;
@@ -65,8 +66,12 @@ public class HandlerFormParser {
 
         // Setear usuario
         if (m.getUser() != null) {
+            // Agregar usuario a parser -> user container para formularios que seran crados
             parser.setUser(m.getUser());
+            // Agregar usuario propietario de la sesion
             this.user = m.getUser();
+        } else {
+            this.user = null;
         }
 
         try {
@@ -84,12 +89,11 @@ public class HandlerFormParser {
 
         res.setMesssage(response);
         // Setear usuario
-        if (m.getUser() != null) {
-            res.setUser(m.getUser());
-        }
-
         if (this.user != null) {
             res.setUser(this.user);
+        } else {
+            // Cerrar sesion
+            res.setUser(null);
         }
 
         //return response;
@@ -102,85 +106,100 @@ public class HandlerFormParser {
     private void executeRequests() {
         reqs.forEach(r -> {
             //System.out.println(r.toString());
-            if (r instanceof User) {
-                switch (r.getOp()) {
-                    case LOGIN:
-                        login((User) r);
-                        break;
-                    case ADD:
-                        if (hasSession()) {
+
+            if (r.getOp() == Operation.LOGIN) {
+                if (r instanceof User) {
+                    login((User) r);
+                }
+            } else if (hasSession()) {
+                if (r instanceof User) {
+                    switch (r.getOp()) {
+                        case ADD:
                             addUser((User) r);
-                        } else {
-                            String message = "No puede realizar esta operacion, antes debe de iniciar sesion.";
-                            hres.createResponse(r, message);
-                        }
-                        break;
-                    case EDIT:
-                        editUser((User) r);
-                        break;
-                    case DEL:
-                        delUser((User) r);
-                        break;
+                            break;
+                        case EDIT:
+                            editUser((User) r);
+                            break;
+                        case DEL:
+                            delUser((User) r);
+                            break;
+                    }
                 }
-            }
 
-            if (r instanceof Form) {
-                switch (r.getOp()) {
-                    case ADD:
-                        addForm((Form) r);
-                        break;
+                if (r instanceof Form) {
+                    switch (r.getOp()) {
+                        case ADD:
+                            addForm((Form) r);
+                            break;
 
-                    case EDIT:
-                        editForm((Form) r);
-                        break;
+                        case EDIT:
+                            editForm((Form) r);
+                            break;
 
-                    case DEL:
-                        delForm((Form) r);
-                        break;
+                        case DEL:
+                            delForm((Form) r);
+                            break;
+                    }
                 }
-            }
 
-            if (r instanceof Component) {
-                switch (r.getOp()) {
-                    case ADD:
-                        addComp((Component) r);
-                        break;
-                    case EDIT:
-                        editComp((Component) r);
-                        break;
-                    case DEL:
-                        delComp((Component) r);
-                        break;
+                if (r instanceof Component) {
+                    switch (r.getOp()) {
+                        case ADD:
+                            addComp((Component) r);
+                            break;
+                        case EDIT:
+                            editComp((Component) r);
+                            break;
+                        case DEL:
+                            delComp((Component) r);
+                            break;
+                    }
                 }
+            } else {
+                String message = "No puede realizar esta operación, antes debe de iniciar sesión.";
+                hres.createResponse(r, message);
             }
         });
     }
 
+    /**
+     * Iniciar sesion
+     *
+     * @param u
+     */
     private void login(User u) {
         readDB();
         User login = null;
-        User user = getUser(u.getUser());
+        User us = getUser(u.getUser());
 
-        if (user != null) {
-            if (user.getPassword().equals(u.getPassword())) {
-                login = user;
-                this.user = user.getUser();
+        if (us != null) {
+            if (us.getPassword().equals(u.getPassword())) {
+                login = us;
+                this.user = us.getUser();
                 hres.createSuccessResponse(u);
             }
         }
 
         if (login == null) {
             String message = "Las credenciales para el inicio de sesión son incorrectas.";
+            if (this.user != null) {
+                message += " Sesión actual: " + this.user;
+            }
             hres.createResponse(u, message);
         }
         //return login;
     }
 
+    /**
+     * Agregar usuario
+     *
+     * @param u
+     */
     private void addUser(User u) {
         readDB();
 
-        User user = getUser(u.getUser());
-        if (user == null) {
+        User us = getUser(u.getUser());
+        if (us == null) {
             users.add(u);
 
             // Actualizar
@@ -212,11 +231,21 @@ public class HandlerFormParser {
                 u.setEditDate(edit.getEditDate());
                 u.seteDate(edit.geteDate());
 
+                /* RECORDAR: Actualizar USER_CREATION en formularios */
+
                 // Actualizar
                 executeUpdate();
 
                 // Respuesta cliente
                 hres.createSuccessResponse(edit);
+                if (this.user != null) {
+                    if (edit.getUser().equals(this.user)) {
+                        this.user = u.getUser();
+                        String message = "Al editar su usuario, su sesion ha sido actualizada. Sesion actual: " + this.user;
+                        hres.createResponse(edit, message);
+                    }
+                }
+
             } else {
                 String message = "El username que desea utilizar(" + edit.getNewUser() + "), no esta disponible, intente con otro.";
                 hres.createResponse(edit, message);
@@ -234,18 +263,27 @@ public class HandlerFormParser {
      */
     private void delUser(User u) {
         readDB();
-        User user = getUser(u.getUser());
-        if (user != null) {
-            users.remove(user);
+        User us = getUser(u.getUser());
+        if (us != null) {
+            users.remove(us);
 
             // Eliminar formularios tambien :v
-            delFormsUser(user);
+            delFormsUser(us);
 
             // Actualizar
             executeUpdate();
 
             // Respuesta cliente
             hres.createSuccessResponse(u);
+
+            if (this.user != null) {
+                if (us.getUser().equals(this.user)) {
+                    this.user = null;
+                    String message = "Al eliminar al usuario: " + us.getUser() + ", su sesión ha sido cerrada. Inicie sesión con otra cuenta para continuar.";
+                    hres.createResponse(u, message);
+                }
+            }
+
         } else {
             String message = "El usuario que desea eliminar(" + u.getUser() + "), no existe.";
             hres.createResponse(u, message);
@@ -258,13 +296,17 @@ public class HandlerFormParser {
      * @param u
      */
     private void delFormsUser(User u) {
+        List<Form> rem = new ArrayList<>();
         for (Form f : forms) {
-            if (f.getUser_creation().equals(u.getUser())) {
-                forms.remove(f);
-                // Eliminar datos recopilados
-                //delDataFormsUser(f.getId_form());
+            if (f.getUser_creation() != null) {
+                if (f.getUser_creation().equals(u.getUser())) {
+                    rem.add(f);
+                }
             }
         }
+
+        forms.removeAll(rem);
+        /* Recoradar eliminar datos recopilados */
     }
 
     /**
@@ -293,6 +335,11 @@ public class HandlerFormParser {
         Form fm = getForm(f.getId_form());
 
         if (fm == null) {
+            if (f.getUser_creation() == null) {
+                if (this.user != null) {
+                    f.setUser_creation(this.user);
+                }
+            }
             forms.add(f);
 
             // Actualizar
@@ -301,7 +348,7 @@ public class HandlerFormParser {
             // Respuesta cliente
             hres.createSuccessResponse(f);
         } else {
-            String message = "El id que desea utilizar para el formulario(" + f.getId_form() + ") no esta disponible, intente con otro.";
+            String message = "El id(" + f.getId_form() + ") que desea utilizar para el formulario, no esta disponible, intente con otro.";
             hres.createResponse(f, message);
         }
     }
@@ -402,7 +449,7 @@ public class HandlerFormParser {
                 // Respuesta cliente
                 hres.createSuccessResponse(c);
             } else {
-                String message = "El id del componente que desea agregar(" + c.getId_component() + ") no esta disponible, intente con otro.";
+                String message = "El id(" + c.getId_component() + ") del componente que desea agregar, no esta disponible, intente con otro.";
                 hres.createResponse(c, message);
             }
         } else {

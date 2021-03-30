@@ -71,8 +71,8 @@ public class Form extends HttpServlet {
         com.cesar31.formsweb.model.Form form = db.getForm(action);
         if (form != null) {
             obtenerRespuest(form, request, response);
-        } 
-        
+        }
+
         request.setAttribute("answer", true);
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }

@@ -28,7 +28,7 @@ public class Request {
     private List list;
     private boolean errors;
     private String serverResponse;
-    
+
     private String user;
 
     public Request() {
@@ -44,24 +44,31 @@ public class Request {
      */
     public void sendRequest(String input) {
         System.out.println(input);
-        
+
         Message message = new Message();
         message.setMesssage(input);
-        if(this.user != null) {
+        if (this.user != null) {
             message.setUser(user);
+            System.out.println("User request = " + this.user);
+        } else {
+            message.setUser(null);
         }
-        
+
         invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
         response = invocationBuilder.post(Entity.entity(message, MediaType.APPLICATION_JSON));
         //System.out.println(response.getStatus());
-        
+
         // Obtener respuesta
         Message res = response.readEntity(Message.class);
-        
-        if(res.getUser() != null) {
+
+        if (res.getUser() != null) {
             this.user = res.getUser();
+            System.out.println("User response = " + this.user);
+        } else {
+            // Cerrar sesion
+            this.user = null;
         }
-        
+
         System.out.println(res.getMesssage());
 
         // Parsear respuesta
@@ -89,7 +96,7 @@ public class Request {
     public String getServerResponse() {
         return serverResponse;
     }
-    
+
     public List getList() {
         return list;
     }

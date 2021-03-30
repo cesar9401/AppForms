@@ -21,7 +21,7 @@ parser code {:
 	}
 
 	public void setUser(String user) {
-		u.setUser(user);
+		this.u.setUser(user);
 	}
 
 	/* Constructor sin cambiar nombre */
