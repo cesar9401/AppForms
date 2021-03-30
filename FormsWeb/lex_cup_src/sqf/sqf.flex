@@ -39,8 +39,10 @@ WhiteSpace = {LineTerminator}|[\s\t\f]
 
 /* Entrada sin espacios, saltos de linea, tabulaciones, comillas y \ */
 Input = [^\n\r\"\\]+
-InputClean = [\w\-]+
-//InputClean = [^\n\r\"\\\t\s\f\|]+
+
+/* Nombre y se usa en la expresion regular para id */
+//InputClean = [\w\-]+
+InputClean = [^\n\r\"\\\t\s\f><\{\}\[\]=\*\+\,\|\?\'\’]+
 
 Id = [\_\-\$] ([\_\-\$] | {InputClean} )+
 

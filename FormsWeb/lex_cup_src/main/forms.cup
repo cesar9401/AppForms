@@ -89,7 +89,7 @@ terminal Token STR, STR_N, DATE, ADD_USER, CRED, DATE_ADD, EDIT_USER, DEL_USER, 
 terminal Token NEW_FORM, PARAM_F, ID, TITLE, NAME, THEME, DEL_FORM, EDIT_FORM, ADD_COMP, PARAM_C, FIELD_N, FORM, CLASS, TEXT_FIELD, TEXT_AREA, CHECKBOX, RADIO;
 terminal Token FILE, IMG, COMBO, BTN, INDEX, TEXT, ALIGN, REQUIRED, OPTION, ROWS, COLUMNS, URL, DEL_COMP, EDIT_COMP, ID_, USER_C;
 terminal Token CENTER, LEFT, RIGHT, JUSTIFY, YES, NO, OPTION_V, STR_NUMBER, DARK, LIGHT;
-terminal Token CONS_DATA, CONS, CONS_NAME;
+terminal Token CONS_DATA, CONS, CONS_NAME, NAME_F;
 
 non terminal solicitude, ini_sol, fin_sol, sol, request, req_u, body, ini_many, fin_many;
 
@@ -100,7 +100,7 @@ non terminal forms, id, title, name, theme, user_c;
 non terminal field_n, form, kind, index, text, opt, url, kind_a, req, rows, columns, comp;
 /* data*/
 non terminal data, body_data, make_data, cons;
-non terminal Token str_param, class_o, align, required, kind_t, str;
+non terminal Token str_param, class_o, align, required, kind_t, str, str_param_n, name_f;
 
 
 solicitude	::=	ini_sol
@@ -245,10 +245,15 @@ make_data	::=	cons
 				;
 
 cons		::=	CONS_NAME:n COLON str:p
-				{: u.setParamSQF(n.getValue(), p); :}
+				{:
+					u.setParamSQF(n.getValue(), p);
+				:}
 				| error COLON str
+				{: System.out.println("1"); :}
 				| CONS_NAME error str
+				{: System.out.println("2"); :}
 				| CONS_NAME COLON error
+				{: System.out.println("3"); :}
 				;
 /* ----------------------------------------------------------- producciones para crear usuario nuevo */
 us			::=	USER:a COLON str_param:p
@@ -334,7 +339,7 @@ title		::=	TITLE:a COLON str_param:p
 				| TITLE COLON error
 				;
 
-name		::=	NAME:a COLON str_param:p
+name		::=	NAME:a COLON name_f:p
 				{: u.setNewParam(a, p, "NOMBRE"); :}
 				| NAME error str_param
 				| NAME COLON error
@@ -473,7 +478,14 @@ fin_sol		::= SMALLER FIN_SOL EXCL GREATER
 				;
 
 str_param	::=	STR:p {: RESULT = p; :}
-				| DATE:p {: RESULT = p; :}
+				| str_param_n:p {: RESULT = p; :}
+				;
+
+name_f		::=	NAME_F:p {: RESULT = p; :}
+				| str_param_n:p {: RESULT = p; :}
+				;
+
+str_param_n	::=	DATE:p {: RESULT = p; :}
 				| ADD_USER:p {: RESULT = p; :}
 				| CRED:p {: RESULT = p; :}
 				| USER:p {: RESULT = p; :}

@@ -90,6 +90,7 @@ public class FormsParserSym {
   public static final int FIN_SOL = 3;
   public static final int SMALLER = 9;
   public static final int NO = 80;
+  public static final int NAME_F = 88;
   public static final int ADD_USER = 30;
   public static final int LBRACKET = 13;
   public static final int PARAM_F = 43;
@@ -184,7 +185,8 @@ public class FormsParserSym {
   "LIGHT",
   "CONS_DATA",
   "CONS",
-  "CONS_NAME"
+  "CONS_NAME",
+  "NAME_F"
   };
 }
 

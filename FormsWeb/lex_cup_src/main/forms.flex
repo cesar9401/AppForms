@@ -1,5 +1,6 @@
 package com.cesar31.formsweb.parser.main;
 
+import com.cesar31.formsweb.model.Token;
 import static com.cesar31.formsweb.parser.main.FormsParserSym.*;
 import java_cup.runtime.*;
 
@@ -44,10 +45,13 @@ Date = \d{4,4}\-\d{2,2}\-\d{2,2}
 Input = [^\n\r\"\\\|]+
 InputClean = [^\n\r\"\\\t\s\f\|]+
 
-/* Para formularios */
-InputCleanId = [\w\-]+
+/* Para formularios, nombres y para expresion regular de Id */
+//InputCleanId = [\w\-]+
+InputCleanId = [^\n\r\"\\\t\s\f><\{\}\[\]=\*\+\,\|\?\'\’]+
 
-Id = \" [\_\-\$] ([\_\-\$] | {InputClean} )+ \"
+Id = \" [\_\-\$] ([\_\-\$] | {InputCleanId} )+ \"
+
+Name = \" {InputCleanId} \"
 
 str = {WhiteSpace}* {InputClean}+ {Input}+ {WhiteSpace}*
 
@@ -150,8 +154,14 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 	{Ql} "ID" {Qr}
 	{ return symbol(ID, yytext()); }
 
+	{Ql} {Consulta} {Qr}
+	{ return symbol(CONS_NAME, yytext()); }
+
 	{Id}
 	{ return symbol(ID_, yytext()); }
+
+	{Name}
+	{ return symbol(NAME_F, yytext()); }
 
 	{Ql} "TITULO" {Qr}
 	{ return symbol(TITLE, yytext()); }
@@ -275,8 +285,6 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 	{Ql} "CONSULTAS" {Qr}
 	{ return symbol(CONS, yytext()); }
 
-	{Ql} {Consulta} {Qr}
-	{ return symbol(CONS_NAME, yytext()); }
 	/* CONSULTAR_DATOS */
 
 	/* Input con comillas */
@@ -286,9 +294,6 @@ Fin_m_sol = {Fin} "_" {Sol}[Ee][Ss]
 	/* opciones para radio y combo */
 	{Options}
 	{ return symbol(OPTION_V, yytext()); }
-
-	// {StringNoClean}
-	// { return symbol(STR_N, yytext()); }
 
 	":"
 	{ return symbol(COLON, yytext()); }

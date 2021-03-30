@@ -33,7 +33,9 @@ public class TestParserMain {
         FormsParser parser = new FormsParser(lex);
         try {
             parser.parse();
+            //System.out.println("ParserMain");
         } catch (Exception ex) {
+            System.out.println("no parserMAIN");
             ex.printStackTrace(System.out);
         }
     }

@@ -34,10 +34,17 @@ terminal Token ERROR;
 terminal Integer INTEGER;
 terminal Double DECIMAL;
 
-non terminal ini, opt, fields, make_field, field_keys, where_cond, comps, make_comp, comp;
+non terminal ini, opt, fields, make_field, field_keys, where_cond, comps, make_comp, comp, yes_comp, no_comp;
 non terminal opr_rel, values, opr_log_b, number_v, value_str;
 
 ini			::=	SEL TO FORM ARROW opt fields where_cond
+				| error TO FORM ARROW opt fields where_cond
+				| SEL error FORM ARROW opt fields where_cond
+				| SEL TO error ARROW opt fields where_cond
+				| SEL TO FORM error opt fields where_cond
+				| SEL TO FORM ARROW error fields where_cond
+				| SEL TO FORM ARROW opt error where_cond
+				| SEL TO FORM ARROW opt fields error
 				;
 
 opt			::=	ID
@@ -45,6 +52,8 @@ opt			::=	ID
 				;
 
 fields		::=	LBRACKET make_field RBRACKET
+				| error make_field RBRACKET
+				| LBRACKET make_field error
 				;
 
 make_field	::=	field_keys
@@ -58,18 +67,36 @@ field_keys	::=	STR:p
 				;
 
 where_cond	::=	WHERE comps
+				| error comps
 				|
 				;
 
 comps		::=	LBRACKET make_comp RBRACKET
+				| error make_comp RBRACKET
+				| LBRACKET error RBRACKET
+				| LBRACKET make_comp error
 				;
 
 make_comp	::=	comp
 				| make_comp opr_log_b comp
 				;
 
-comp		::=	STR opr_rel values
-				| NOT STR opr_rel values
+comp		::=	yes_comp
+				| no_comp
+				;
+
+yes_comp	::=	STR opr_rel values
+				| error opr_rel values
+				| STR error values
+				| STR opr_rel error
+				;
+
+no_comp		::=	NOT STR opr_rel values
+				{: System.out.println("not"); :}
+				| error STR opr_rel values
+				| NOT error opr_rel values
+				| NOT STR error values
+				| NOT STR opr_rel error
 				;
 
 opr_rel		::=	GREATER
@@ -82,6 +109,7 @@ opr_rel		::=	GREATER
 
 opr_log_b	::=	AND
 				| OR
+				| error
 				;
 
 values		::=	VALUE_STR

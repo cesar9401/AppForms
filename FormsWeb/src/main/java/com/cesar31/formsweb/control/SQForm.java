@@ -35,9 +35,9 @@ public class SQForm {
             SQFParser parser = new SQFParser(lex);
             try {
                 parser.parse();
-                System.out.println("parseado");
                 //System.out.println(s + " -> " + k.getValue() + "linea: " + k.getX() + "columna: " + k.getY());
             } catch (Exception ex) {
+                System.out.println("no parseado");
                 ex.printStackTrace(System.out);
             }
         });
