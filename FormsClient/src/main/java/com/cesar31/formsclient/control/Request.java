@@ -11,6 +11,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -46,7 +47,7 @@ public class Request {
         System.out.println(input);
 
         Message message = new Message();
-        message.setMesssage(input);
+        message.setMsj(input);
         if (this.user != null) {
             message.setUser(user);
             System.out.println("User request = " + this.user);
@@ -54,9 +55,10 @@ public class Request {
             message.setUser(null);
         }
 
-        invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-        response = invocationBuilder.post(Entity.entity(message, MediaType.APPLICATION_JSON));
-        //System.out.println(response.getStatus());
+        invocationBuilder = webTarget.request(MediaType.APPLICATION_XML);
+        response = invocationBuilder.post(Entity.entity(message, MediaType.APPLICATION_XML));
+        System.out.println(response.getStatus());
+        System.out.println("Here");
 
         // Obtener respuesta
         Message res = response.readEntity(Message.class);
@@ -69,10 +71,10 @@ public class Request {
             this.user = null;
         }
 
-        System.out.println(res.getMesssage());
+        System.out.println(res.getMsj());
 
         // Parsear respuesta
-        parseResponse(res.getMesssage());
+        parseResponse(res.getMsj());
     }
 
     /**

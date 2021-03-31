@@ -18,16 +18,17 @@ import javax.ws.rs.core.Response.Status;
 public class MainService {
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_XML)
+    @Produces(MediaType.APPLICATION_XML)
     public Response getRequest(Message message) {
         //Write your code here
         try {
-            System.out.println(message.getMesssage());
+            System.out.println("Servidor");
+            System.out.println(message.getMsj());
             HandlerFormParser handle = new HandlerFormParser();
             Message response = handle.parserInput(message);
 
-            System.out.println(response.getMesssage());
+            System.out.println(response.getMsj());
 
             return Response.ok().entity(response).build();
         } catch (Exception e) {

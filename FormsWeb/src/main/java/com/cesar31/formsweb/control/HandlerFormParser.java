@@ -61,7 +61,7 @@ public class HandlerFormParser {
         Message res = new Message();
         String response = "";
 
-        FormsLex lex = new FormsLex(new StringReader(m.getMesssage()));
+        FormsLex lex = new FormsLex(new StringReader(m.getMsj()));
         FormsParser parser = new FormsParser(lex);
 
         // Setear usuario
@@ -87,7 +87,7 @@ public class HandlerFormParser {
             ex.printStackTrace(System.out);
         }
 
-        res.setMesssage(response);
+        res.setMsj(response);
         // Setear usuario
         if (this.user != null) {
             res.setUser(this.user);

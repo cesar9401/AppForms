@@ -1,22 +1,28 @@
 package com.cesar31.formsclient.model;
 
+import java.io.Serializable;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author cesar31
  */
-public class Message {
+@XmlRootElement
+public class Message implements Serializable {
 
     private String user;
-    private String messsage;
+    private String msj;
 
     public Message() {
     }
 
-    public Message(String user, String messsage) {
+    public Message(String user, String msj) {
         this.user = user;
-        this.messsage = messsage;
+        this.msj = msj;
     }
-    
+
+    @XmlElement(name = "usuario")
     public String getUser() {
         return user;
     }
@@ -25,16 +31,17 @@ public class Message {
         this.user = user;
     }
 
-    public String getMesssage() {
-        return messsage;
+    @XmlElement(name = "mensaje")
+    public String getMsj() {
+        return msj;
     }
 
-    public void setMesssage(String messsage) {
-        this.messsage = messsage;
+    public void setMsj(String msj) {
+        this.msj = msj;
     }
 
     @Override
     public String toString() {
-        return "Message{" + "user=" + user + ", messsage=" + messsage + '}';
+        return "Message{" + "user=" + user + ", msj=" + msj + '}';
     }
 }
