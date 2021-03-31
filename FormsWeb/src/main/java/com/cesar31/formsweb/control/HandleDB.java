@@ -18,6 +18,8 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -104,6 +106,25 @@ public class HandleDB {
     }
 
     /**
+     * Obtener usuario segun username
+     *
+     * @param u
+     * @return
+     */
+    public User getUser(String u) {
+        readDataBase();
+        User us = null;
+        for (User user : users) {
+            if (user.getUser().equals(u)) {
+                us = user;
+                break;
+            }
+        }
+
+        return us;
+    }
+
+    /**
      * Obtener formulario segun id
      *
      * @param id
@@ -120,6 +141,58 @@ public class HandleDB {
         }
 
         return fm;
+    }
+
+    /**
+     * Obtener formulario por busqueda
+     *
+     * @param input
+     * @return
+     */
+    public Form getFormByRegex(String input) {
+        input = input.trim();
+        Form fm = null;
+
+        if (!input.isEmpty()) {
+            String match = null;
+            Pattern pat = Pattern.compile("^[$-_]([$-_]|[^\\n\\s\\f\\t\\r])+$");
+            Pattern pat2 = Pattern.compile("^http:\\/\\/localhost:8080\\/FormsWeb\\/Form\\?id=([$-_]([S-_]|[^\\n\\s\\f\\t\\r])+)$");
+
+            Matcher matcher = pat.matcher(input);
+            Matcher matcher2 = pat2.matcher(input);
+
+            if (matcher.find()) {
+                match = matcher.group();
+            } else if (matcher2.find()) {
+                match = matcher2.group(1);
+            }
+
+            if (match != null) {
+                fm = getForm(match);
+            }
+        }
+
+        return fm;
+    }
+
+    /**
+     * Obtener formularios por usuario
+     *
+     * @param user
+     * @return
+     */
+    public List<Form> getForms(String user) {
+        readDataBase();
+        List<Form> fms = new ArrayList<>();
+        for (Form f : forms) {
+            if (f.getUser_creation() != null) {
+                if (f.getUser_creation().equals(user)) {
+                    fms.add(f);
+                }
+            }
+        }
+
+        return fms;
     }
 
     /**

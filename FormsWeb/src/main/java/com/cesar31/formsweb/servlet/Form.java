@@ -3,6 +3,7 @@ package com.cesar31.formsweb.servlet;
 import com.cesar31.formsweb.control.HandleDB;
 import com.cesar31.formsweb.model.Component;
 import com.cesar31.formsweb.model.FormData;
+import com.cesar31.formsweb.model.User;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,14 +68,21 @@ public class Form extends HttpServlet {
         String action = request.getParameter("action");
         if (action != null) {
             System.out.println(action);
-        }
-        com.cesar31.formsweb.model.Form form = db.getForm(action);
-        if (form != null) {
-            obtenerRespuest(form, request, response);
+            com.cesar31.formsweb.model.Form form = db.getForm(action);
+            if (form != null) {
+                obtenerRespuest(form, request, response);
+
+                //Redirigir a perfil o index
+                setProfile(request, response);
+
+            } else {
+                request.getRequestDispatcher("form-not-found.jsp").forward(request, response);
+            }
+
+        } else {
+            request.getRequestDispatcher("form-not-found.jsp").forward(request, response);
         }
 
-        request.setAttribute("answer", true);
-        request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
     private void obtenerRespuest(com.cesar31.formsweb.model.Form form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -156,4 +164,24 @@ public class Form extends HttpServlet {
         return path;
     }
 
+    private void setProfile(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String id = (String) request.getSession().getAttribute("id");
+        request.setAttribute("answer", true);
+        if (id != null) {
+            User u = db.getUser(id);
+            if (u != null) {
+                List<com.cesar31.formsweb.model.Form> fms = db.getForms(u.getUser());
+
+                request.getSession().setAttribute("id", u.getUser());
+                request.setAttribute("user", u);
+                request.setAttribute("forms", fms);
+                request.getRequestDispatcher("user.jsp").forward(request, response);
+            } else {
+                request.getRequestDispatcher("index.jsp").forward(request, response);
+
+            }
+        } else {
+            request.getRequestDispatcher("index.jsp").forward(request, response);
+        }
+    }
 }

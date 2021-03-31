@@ -98,6 +98,7 @@
                                                     <button type="button" class="btn btn-outline-primary btn-lg">${cm.text}</button>
                                                 </c:when>
                                             </c:choose>
+                                            <div class="form-text">${cm.fieldName}</div>
                                         </div>
                                     </div>
                                 </div>

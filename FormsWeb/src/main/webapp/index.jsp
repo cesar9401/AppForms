@@ -39,13 +39,13 @@
                         </div>
 
                         <div class="col-12 col-lg-5 offset-lg-1 my-4 bg-light">
-                            <form class="text-center my-4">
+                            <form action="UserController" method="post" class="text-center my-4">
                                 <h1 class="text-success">Formularios</h1>
                                 <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" placeholder="URL o ID">
+                                    <input type="text" class="form-control" id="id-form" name="id-form" placeholder="URL o ID" required>
                                     <label for="floatingInput">URL o ID</label>
                                 </div>
-                                <button type="button" class="btn btn-outline-dark btn-lg">Buscar</button>
+                                <button type="submit" name="action" value="searchForm" class="btn btn-outline-dark btn-lg">Buscar</button>
                             </form>
                         </div> 
 
@@ -95,6 +95,19 @@
 
                 modalTitle.textContent = "Credenciales incorrectas";
                 modalP.textContent = "Verifique que sus credenciales estén escritas correctamente.";
+
+                myModal.show();
+            </script>
+        </c:if>
+
+        <c:if test="${noMatch != null}">
+            <script>
+                let myModal = new bootstrap.Modal(document.getElementById('modal-info'), {focus: true});
+                let modalTitle = document.getElementById("modal-title");
+                let modalP = document.getElementById("modal-p");
+
+                modalTitle.textContent = "Error en Busqueda";
+                modalP.textContent = "No se encontro el formulario, verifique que la URL o Id ingresados sean los correctos.";
 
                 myModal.show();
             </script>
