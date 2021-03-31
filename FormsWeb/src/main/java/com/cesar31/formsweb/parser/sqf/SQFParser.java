@@ -5,8 +5,11 @@
 
 package com.cesar31.formsweb.parser.sqf;
 
+import com.cesar31.formsweb.control.SQForm;
+import com.cesar31.formsweb.model.FormData;
 import com.cesar31.formsweb.model.Token;
 import java_cup.runtime.*;
+import java.util.ArrayList;
 import java.util.List;
 import java_cup.runtime.XMLElement;
 
@@ -33,13 +36,13 @@ public class SQFParser extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\063\000\002\002\011\000\002\002\004\000\002\002" +
-    "\011\000\002\002\011\000\002\002\011\000\002\002\011" +
-    "\000\002\002\011\000\002\002\011\000\002\002\011\000" +
-    "\002\003\003\000\002\003\003\000\002\004\005\000\002" +
-    "\004\005\000\002\004\005\000\002\005\003\000\002\005" +
-    "\002\000\002\006\003\000\002\006\005\000\002\007\004" +
-    "\000\002\007\004\000\002\007\002\000\002\010\005\000" +
+    "\000\063\000\002\004\011\000\002\002\004\000\002\004" +
+    "\011\000\002\004\011\000\002\004\011\000\002\004\011" +
+    "\000\002\004\011\000\002\004\011\000\002\004\011\000" +
+    "\002\002\003\000\002\002\003\000\002\005\005\000\002" +
+    "\005\005\000\002\005\005\000\002\006\003\000\002\006" +
+    "\002\000\002\007\003\000\002\007\005\000\002\003\004" +
+    "\000\002\003\004\000\002\003\002\000\002\010\005\000" +
     "\002\010\005\000\002\010\005\000\002\010\005\000\002" +
     "\011\003\000\002\011\005\000\002\012\003\000\002\012" +
     "\003\000\002\013\005\000\002\013\005\000\002\013\005" +
@@ -58,7 +61,7 @@ public class SQFParser extends java_cup.runtime.lr_parser {
     unpackFromStrings(new String[] {
     "\000\150\000\006\003\005\004\006\001\002\000\004\002" +
     "\152\001\002\000\004\005\144\001\002\000\006\003\010" +
-    "\005\007\001\002\000\006\003\121\006\120\001\002\000" +
+    "\005\007\001\002\000\006\003\120\006\121\001\002\000" +
     "\004\006\011\001\002\000\004\007\012\001\002\000\006" +
     "\031\013\032\015\001\002\000\006\003\ufff8\011\ufff8\001" +
     "\002\000\006\003\017\011\020\001\002\000\006\003\ufff7" +
@@ -117,20 +120,20 @@ public class SQFParser extends java_cup.runtime.lr_parser {
     "\012\uffde\013\uffde\014\uffde\001\002\000\004\002\uffea\001" +
     "\002\000\012\003\115\012\116\013\066\014\072\001\002" +
     "\000\010\003\uffd3\015\uffd3\032\uffd3\001\002\000\004\002" +
-    "\uffeb\001\002\000\004\002\uffef\001\002\000\006\003\126" +
-    "\007\127\001\002\000\004\007\122\001\002\000\006\031" +
-    "\013\032\015\001\002\000\006\003\017\011\020\001\002" +
-    "\000\010\002\uffed\003\033\010\032\001\002\000\004\002" +
-    "\ufffd\001\002\000\006\031\013\032\015\001\002\000\010" +
-    "\003\130\031\013\032\015\001\002\000\006\003\017\011" +
-    "\020\001\002\000\006\003\133\011\020\001\002\000\010" +
-    "\002\uffed\003\135\010\032\001\002\000\014\002\uffed\003" +
-    "\033\010\032\012\ufff2\032\021\001\002\000\004\002\ufffa" +
-    "\001\002\000\010\002\ufff9\003\035\011\036\001\002\000" +
-    "\004\002\001\001\002\000\010\002\uffed\003\033\010\032" +
-    "\001\002\000\004\002\ufffb\001\002\000\006\003\017\011" +
+    "\uffeb\001\002\000\004\002\uffef\001\002\000\004\007\140" +
+    "\001\002\000\006\003\122\007\123\001\002\000\006\031" +
+    "\013\032\015\001\002\000\010\003\124\031\013\032\015" +
+    "\001\002\000\006\003\017\011\020\001\002\000\006\003" +
+    "\127\011\020\001\002\000\010\002\uffed\003\131\010\032" +
+    "\001\002\000\014\002\uffed\003\033\010\032\012\ufff2\032" +
+    "\021\001\002\000\004\002\ufffa\001\002\000\010\002\ufff9" +
+    "\003\035\011\036\001\002\000\004\002\001\001\002\000" +
+    "\010\002\uffed\003\033\010\032\001\002\000\004\002\ufffb" +
+    "\001\002\000\006\003\017\011\020\001\002\000\010\002" +
+    "\uffed\003\033\010\032\001\002\000\004\002\ufffc\001\002" +
+    "\000\006\031\013\032\015\001\002\000\006\003\017\011" +
     "\020\001\002\000\010\002\uffed\003\033\010\032\001\002" +
-    "\000\004\002\ufffc\001\002\000\004\006\145\001\002\000" +
+    "\000\004\002\ufffd\001\002\000\004\006\145\001\002\000" +
     "\004\007\146\001\002\000\006\031\013\032\015\001\002" +
     "\000\006\003\017\011\020\001\002\000\010\002\uffed\003" +
     "\033\010\032\001\002\000\004\002\uffff\001\002\000\004" +
@@ -142,12 +145,12 @@ public class SQFParser extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\150\000\004\002\003\001\001\000\002\001\001\000" +
+    "\000\150\000\004\004\003\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001\000\002\001\001\000\004\003\013\001\001\000" +
-    "\002\001\001\000\004\004\015\001\001\000\002\001\001" +
-    "\000\004\007\033\001\001\000\006\005\027\006\022\001" +
-    "\001\000\006\005\021\006\022\001\001\000\002\001\001" +
+    "\001\001\000\002\001\001\000\004\002\013\001\001\000" +
+    "\002\001\001\000\004\005\015\001\001\000\002\001\001" +
+    "\000\004\003\033\001\001\000\006\006\027\007\022\001" +
+    "\001\000\006\006\021\007\022\001\001\000\002\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
     "\001\001\000\002\001\001\000\004\010\116\001\001\000" +
@@ -173,16 +176,16 @@ public class SQFParser extends java_cup.runtime.lr_parser {
     "\016\111\020\062\001\001\000\002\001\001\000\002\001" +
     "\001\000\004\017\067\001\001\000\002\001\001\000\002" +
     "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
-    "\001\000\004\003\122\001\001\000\004\004\123\001\001" +
-    "\000\004\007\124\001\001\000\002\001\001\000\004\003" +
-    "\140\001\001\000\004\003\130\001\001\000\004\004\136" +
-    "\001\001\000\004\004\131\001\001\000\004\007\135\001" +
-    "\001\000\010\005\027\006\022\007\133\001\001\000\002" +
-    "\001\001\000\004\010\036\001\001\000\002\001\001\000" +
-    "\004\007\137\001\001\000\002\001\001\000\004\004\141" +
-    "\001\001\000\004\007\142\001\001\000\002\001\001\000" +
-    "\002\001\001\000\002\001\001\000\004\003\146\001\001" +
-    "\000\004\004\147\001\001\000\004\007\150\001\001\000" +
+    "\001\000\004\002\134\001\001\000\004\002\124\001\001" +
+    "\000\004\005\132\001\001\000\004\005\125\001\001\000" +
+    "\004\003\131\001\001\000\010\003\127\006\027\007\022" +
+    "\001\001\000\002\001\001\000\004\010\036\001\001\000" +
+    "\002\001\001\000\004\003\133\001\001\000\002\001\001" +
+    "\000\004\005\135\001\001\000\004\003\136\001\001\000" +
+    "\002\001\001\000\004\002\140\001\001\000\004\005\141" +
+    "\001\001\000\004\003\142\001\001\000\002\001\001\000" +
+    "\002\001\001\000\002\001\001\000\004\002\146\001\001" +
+    "\000\004\005\147\001\001\000\004\003\150\001\001\000" +
     "\002\001\001\000\002\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
@@ -224,21 +227,28 @@ public class SQFParser extends java_cup.runtime.lr_parser {
 
 
 	private Symbol cur_token;
+	private SQForm sqf;
 
-	public SQFParser(SQFLex lex) {
+	public SQFParser(SQFLex lex, SQForm sqf) {
 		super(lex);
+		this.sqf = sqf;
 	}
 
 	public void syntax_error(Symbol cur_token) {
-        System.out.printf("syntax_error: Linea: %d, columna: %d, sym: %s, nombre: %s, value: \"%s\", parse_state: %d\n", cur_token.left, cur_token.right, cur_token.sym, symbl_name_from_id(cur_token.sym), cur_token.value, cur_token.parse_state);
-        List<Integer> tokens = expected_token_ids();
-        System.out.print("Se esperaba ->");
-        for(Integer i : tokens) {
-			System.out.printf("%s, ", symbl_name_from_id(i));
-        }
-        System.out.println("");
+		this.cur_token = cur_token;
+
+		List<String> expected = new ArrayList<>();
+		List<Integer> tokens = expected_token_ids();
+		for(Integer i : tokens) {
+			expected.add(symbl_name_from_id(i));
+		}
+
+		sqf.setError(cur_token, symbl_name_from_id(cur_token.sym), expected);
 	}
 
+	protected int error_sync_size() {
+		return 1;
+	}
 
 
 /** Cup generated class to encapsulate user supplied action code.*/
@@ -266,11 +276,17 @@ class CUP$SQFParser$actions {
       switch (CUP$SQFParser$act_num)
         {
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 0: // ini ::= SEL TO FORM ARROW opt fields where_cond 
+          case 0: // ini ::= SEL TO FM ARROW opt fields where_cond 
             {
               Object RESULT =null;
-
-              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("ini",0, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-6)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
+		int oleft = ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-2)).left;
+		int oright = ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-2)).right;
+		Boolean o = (Boolean)((java_cup.runtime.Symbol) CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-2)).value;
+		int wleft = ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()).left;
+		int wright = ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()).right;
+		Boolean w = (Boolean)((java_cup.runtime.Symbol) CUP$SQFParser$stack.peek()).value;
+		 sqf.createQuery(o, w); 
+              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("ini",2, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-6)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
             }
           return CUP$SQFParser$result;
 
@@ -289,20 +305,20 @@ class CUP$SQFParser$actions {
           return CUP$SQFParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 2: // ini ::= error TO FORM ARROW opt fields where_cond 
+          case 2: // ini ::= error TO FM ARROW opt fields where_cond 
             {
               Object RESULT =null;
 
-              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("ini",0, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-6)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
+              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("ini",2, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-6)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
             }
           return CUP$SQFParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 3: // ini ::= SEL error FORM ARROW opt fields where_cond 
+          case 3: // ini ::= SEL error FM ARROW opt fields where_cond 
             {
               Object RESULT =null;
 
-              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("ini",0, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-6)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
+              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("ini",2, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-6)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
             }
           return CUP$SQFParser$result;
 
@@ -311,61 +327,73 @@ class CUP$SQFParser$actions {
             {
               Object RESULT =null;
 
-              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("ini",0, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-6)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
+              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("ini",2, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-6)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
             }
           return CUP$SQFParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 5: // ini ::= SEL TO FORM error opt fields where_cond 
+          case 5: // ini ::= SEL TO FM error opt fields where_cond 
             {
               Object RESULT =null;
 
-              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("ini",0, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-6)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
+              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("ini",2, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-6)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
             }
           return CUP$SQFParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 6: // ini ::= SEL TO FORM ARROW error fields where_cond 
+          case 6: // ini ::= SEL TO FM ARROW error fields where_cond 
             {
               Object RESULT =null;
 
-              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("ini",0, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-6)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
+              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("ini",2, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-6)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
             }
           return CUP$SQFParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 7: // ini ::= SEL TO FORM ARROW opt error where_cond 
+          case 7: // ini ::= SEL TO FM ARROW opt error where_cond 
             {
               Object RESULT =null;
 
-              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("ini",0, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-6)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
+              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("ini",2, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-6)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
             }
           return CUP$SQFParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 8: // ini ::= SEL TO FORM ARROW opt fields error 
+          case 8: // ini ::= SEL TO FM ARROW opt fields error 
             {
               Object RESULT =null;
 
-              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("ini",0, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-6)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
+              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("ini",2, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-6)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
             }
           return CUP$SQFParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 9: // opt ::= ID 
             {
-              Object RESULT =null;
-
-              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("opt",1, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
+              Boolean RESULT =null;
+		int vleft = ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()).left;
+		int vright = ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()).right;
+		Token v = (Token)((java_cup.runtime.Symbol) CUP$SQFParser$stack.peek()).value;
+		
+					sqf.setParam(v.getValue());
+					RESULT = true;
+				
+              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("opt",0, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
             }
           return CUP$SQFParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 10: // opt ::= STR 
             {
-              Object RESULT =null;
-
-              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("opt",1, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
+              Boolean RESULT =null;
+		int vleft = ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()).left;
+		int vright = ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()).right;
+		Token v = (Token)((java_cup.runtime.Symbol) CUP$SQFParser$stack.peek()).value;
+		
+					sqf.setParam(v.getValue());
+					RESULT = false;
+				
+              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("opt",0, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
             }
           return CUP$SQFParser$result;
 
@@ -374,7 +402,7 @@ class CUP$SQFParser$actions {
             {
               Object RESULT =null;
 
-              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("fields",2, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-2)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
+              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("fields",3, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-2)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
             }
           return CUP$SQFParser$result;
 
@@ -383,7 +411,7 @@ class CUP$SQFParser$actions {
             {
               Object RESULT =null;
 
-              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("fields",2, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-2)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
+              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("fields",3, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-2)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
             }
           return CUP$SQFParser$result;
 
@@ -392,7 +420,7 @@ class CUP$SQFParser$actions {
             {
               Object RESULT =null;
 
-              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("fields",2, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-2)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
+              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("fields",3, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-2)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
             }
           return CUP$SQFParser$result;
 
@@ -401,7 +429,7 @@ class CUP$SQFParser$actions {
             {
               Object RESULT =null;
 
-              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("make_field",3, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
+              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("make_field",4, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
             }
           return CUP$SQFParser$result;
 
@@ -410,7 +438,7 @@ class CUP$SQFParser$actions {
             {
               Object RESULT =null;
 
-              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("make_field",3, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
+              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("make_field",4, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
             }
           return CUP$SQFParser$result;
 
@@ -421,8 +449,8 @@ class CUP$SQFParser$actions {
 		int pleft = ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()).left;
 		int pright = ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()).right;
 		Token p = (Token)((java_cup.runtime.Symbol) CUP$SQFParser$stack.peek()).value;
-		 System.out.println(p.getValue()); 
-              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("field_keys",4, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
+		 sqf.setField(p); 
+              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("field_keys",5, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
             }
           return CUP$SQFParser$result;
 
@@ -433,35 +461,35 @@ class CUP$SQFParser$actions {
 		int pleft = ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()).left;
 		int pright = ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()).right;
 		Token p = (Token)((java_cup.runtime.Symbol) CUP$SQFParser$stack.peek()).value;
-		 System.out.println(p.getValue()); 
-              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("field_keys",4, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-2)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
+		 sqf.setField(p); 
+              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("field_keys",5, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-2)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
             }
           return CUP$SQFParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 18: // where_cond ::= WHERE comps 
             {
-              Object RESULT =null;
-
-              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("where_cond",5, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-1)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
+              Boolean RESULT =null;
+		 RESULT = true; 
+              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("where_cond",1, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-1)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
             }
           return CUP$SQFParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 19: // where_cond ::= error comps 
             {
-              Object RESULT =null;
+              Boolean RESULT =null;
 
-              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("where_cond",5, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-1)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
+              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("where_cond",1, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-1)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
             }
           return CUP$SQFParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 20: // where_cond ::= 
             {
-              Object RESULT =null;
-
-              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("where_cond",5, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
+              Boolean RESULT =null;
+		 RESULT = false; 
+              CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("where_cond",1, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
             }
           return CUP$SQFParser$result;
 
@@ -577,7 +605,7 @@ class CUP$SQFParser$actions {
           case 33: // no_comp ::= NOT STR opr_rel values 
             {
               Object RESULT =null;
-		 System.out.println("not"); 
+
               CUP$SQFParser$result = parser.getSymbolFactory().newSymbol("no_comp",10, ((java_cup.runtime.Symbol)CUP$SQFParser$stack.elementAt(CUP$SQFParser$top-3)), ((java_cup.runtime.Symbol)CUP$SQFParser$stack.peek()), RESULT);
             }
           return CUP$SQFParser$result;

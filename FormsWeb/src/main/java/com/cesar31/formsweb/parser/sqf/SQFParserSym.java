@@ -16,13 +16,13 @@ public class SQFParserSym {
   public static final int OR = 10;
   public static final int SMALLER = 13;
   public static final int DECIMAL = 29;
+  public static final int FM = 4;
   public static final int NOT = 11;
   public static final int ERROR = 27;
   public static final int GREATER = 12;
   public static final int GR_EQ = 14;
   public static final int LBRACKET = 7;
   public static final int ID = 23;
-  public static final int FORM = 4;
   public static final int RBRACKET = 8;
   public static final int COMMA = 18;
   public static final int EOF = 0;
@@ -43,7 +43,7 @@ public class SQFParserSym {
   "error",
   "SEL",
   "TO",
-  "FORM",
+  "FM",
   "ARROW",
   "WHERE",
   "LBRACKET",

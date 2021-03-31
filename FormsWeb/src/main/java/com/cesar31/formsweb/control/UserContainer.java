@@ -603,4 +603,8 @@ public class UserContainer {
     public String getUser() {
         return user;
     }
+
+    public HandleError getHandle() {
+        return handle;
+    }
 }

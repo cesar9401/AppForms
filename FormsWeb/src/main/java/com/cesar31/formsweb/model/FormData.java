@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @author cesar31
  */
-public class FormData {
+public class FormData extends Request{
     
     private String idForm;
     private String nameForm;

@@ -874,7 +874,7 @@ public class SQFLex implements java_cup.runtime.Scanner {
             // fall through
           case 53: break;
           case 26:
-            { return symbol(FORM, yytext());
+            { return symbol(FM, yytext());
             }
             // fall through
           case 54: break;

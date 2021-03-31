@@ -289,6 +289,33 @@ public class HandleDB {
         return fd;
     }
 
+    /**
+     * Obtener FormData por id o nombre
+     *
+     * @param id
+     * @param param
+     * @return
+     */
+    public FormData getFormDate(boolean id, String param) {
+        readDataForms();
+        FormData fmd = null;
+        for (FormData fd : fmData) {
+            if (id) {
+                if (fd.getIdForm().equals(param)) {
+                    fmd = fd;
+                    break;
+                }
+            } else {
+                if (fd.getNameForm().equals(param)) {
+                    fmd = fd;
+                    break;
+                }
+            }
+        }
+
+        return fmd;
+    }
+
     public void writeFormData(List<FormData> fd) {
         ObjectMapper mapper = new ObjectMapper();
         String json = "DATOS_RECOPILADOS\n";

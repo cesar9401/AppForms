@@ -48,9 +48,10 @@ parser code {:
 	}
 
 	public void syntax_error(Symbol cur_token) {
+        this.cur_token = cur_token;
+
         List<String> expected = new ArrayList<>();
 
-        this.cur_token = cur_token;
 		//Token t = (Token) cur_token.value;
         //System.out.printf("syntax_error: %s, %s\n", symbl_name_from_id(cur_token.sym), t.toString());
 

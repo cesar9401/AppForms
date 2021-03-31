@@ -62,7 +62,7 @@ Decimal = {Integer} \. [0-9]+
 	{ return symbol(TO, yytext()); }
 
 	"FORM"
-	{ return symbol(FORM, yytext()); }
+	{ return symbol(FM, yytext()); }
 
 	"->"
 	{ return symbol(ARROW, yytext()); }

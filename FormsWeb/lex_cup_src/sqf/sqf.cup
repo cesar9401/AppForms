@@ -1,8 +1,11 @@
 package com.cesar31.formsweb.parser.sqf;
 
+import com.cesar31.formsweb.control.SQForm;
+import com.cesar31.formsweb.model.FormData;
 import com.cesar31.formsweb.model.Token;
 import java_cup.runtime.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class SQFParser;
@@ -10,45 +13,64 @@ class SQFParser;
 parser code {:
 
 	private Symbol cur_token;
+	private SQForm sqf;
 
-	public SQFParser(SQFLex lex) {
+	public SQFParser(SQFLex lex, SQForm sqf) {
 		super(lex);
+		this.sqf = sqf;
 	}
 
 	public void syntax_error(Symbol cur_token) {
-        System.out.printf("syntax_error: Linea: %d, columna: %d, sym: %s, nombre: %s, value: \"%s\", parse_state: %d\n", cur_token.left, cur_token.right, cur_token.sym, symbl_name_from_id(cur_token.sym), cur_token.value, cur_token.parse_state);
-        List<Integer> tokens = expected_token_ids();
-        System.out.print("Se esperaba ->");
-        for(Integer i : tokens) {
-			System.out.printf("%s, ", symbl_name_from_id(i));
-        }
-        System.out.println("");
+		this.cur_token = cur_token;
+
+		List<String> expected = new ArrayList<>();
+		List<Integer> tokens = expected_token_ids();
+		for(Integer i : tokens) {
+			expected.add(symbl_name_from_id(i));
+		}
+
+		sqf.setError(cur_token, symbl_name_from_id(cur_token.sym), expected);
 	}
 
+	protected int error_sync_size() {
+		return 1;
+	}
 :}
 
-terminal Token SEL, TO, FORM, ARROW, WHERE, LBRACKET, RBRACKET, AND, OR, NOT, GREATER, SMALLER, GR_EQ, SM_EQ;
+terminal Token SEL, TO, FM, ARROW, WHERE, LBRACKET, RBRACKET, AND, OR, NOT, GREATER, SMALLER, GR_EQ, SM_EQ;
 terminal Token EQ, NEQ, COMMA, PLUS, MINUS, TIMES, DIVIDE, ID, STR, APOS, VALUE_STR;
 terminal Token ERROR;
 
 terminal Integer INTEGER;
 terminal Double DECIMAL;
 
-non terminal ini, opt, fields, make_field, field_keys, where_cond, comps, make_comp, comp, yes_comp, no_comp;
+non terminal Boolean opt, where_cond;
+
+non terminal ini, fields, make_field, field_keys, comps, make_comp, comp, yes_comp, no_comp;
 non terminal opr_rel, values, opr_log_b, number_v, value_str;
 
-ini			::=	SEL TO FORM ARROW opt fields where_cond
-				| error TO FORM ARROW opt fields where_cond
-				| SEL error FORM ARROW opt fields where_cond
+
+ini			::=	SEL TO FM ARROW opt:o fields where_cond:w
+				{: sqf.createQuery(o, w); :}
+				| error TO FM ARROW opt fields where_cond
+				| SEL error FM ARROW opt fields where_cond
 				| SEL TO error ARROW opt fields where_cond
-				| SEL TO FORM error opt fields where_cond
-				| SEL TO FORM ARROW error fields where_cond
-				| SEL TO FORM ARROW opt error where_cond
-				| SEL TO FORM ARROW opt fields error
+				| SEL TO FM error opt fields where_cond
+				| SEL TO FM ARROW error fields where_cond
+				| SEL TO FM ARROW opt error where_cond
+				| SEL TO FM ARROW opt fields error
 				;
 
-opt			::=	ID
-				| STR
+opt			::=	ID:v
+				{:
+					sqf.setParam(v.getValue());
+					RESULT = true;
+				:}
+				| STR:v
+				{:
+					sqf.setParam(v.getValue());
+					RESULT = false;
+				:}
 				;
 
 fields		::=	LBRACKET make_field RBRACKET
@@ -61,14 +83,16 @@ make_field	::=	field_keys
 				;
 
 field_keys	::=	STR:p
-				{: System.out.println(p.getValue()); :}
+				{: sqf.setField(p); :}
 				| field_keys COMMA STR:p
-				{: System.out.println(p.getValue()); :}
+				{: sqf.setField(p); :}
 				;
 
 where_cond	::=	WHERE comps
+				{: RESULT = true; :}
 				| error comps
 				|
+				{: RESULT = false; :}
 				;
 
 comps		::=	LBRACKET make_comp RBRACKET
@@ -92,7 +116,6 @@ yes_comp	::=	STR opr_rel values
 				;
 
 no_comp		::=	NOT STR opr_rel values
-				{: System.out.println("not"); :}
 				| error STR opr_rel values
 				| NOT error opr_rel values
 				| NOT STR error values

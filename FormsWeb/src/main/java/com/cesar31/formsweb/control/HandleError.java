@@ -13,7 +13,7 @@ public class HandleError {
     public HandleError() {
         initGram();
     }
-    
+
     public String getValue(String key) {
         return (this.gram.containsKey(key)) ? gram.get(key) : key;
     }
@@ -101,8 +101,25 @@ public class HandleError {
         put("EMPTY", "Cadena con espacios entre comillas(\"\")");
         put("STR_SPACE", "Cadena entre comillas con saltos de linea.");
         put("OPTION_SPACE", "Cadena de opciones entre comillas con saltos de linea.");
-    
+
         put("ERROR", "Caracter que no pertenece al lenguaje");
+
+        /* SQForm */
+        put("SEL", "SELECT");
+        put("TO", "TO");
+        put("FM", "FORM");
+        put("ARROW", "->");
+        put("WHERE", "WHERE");
+        put("AND", "AND");
+        put("OR", "OR");
+        put("NOT", "NOT");
+
+        put("GR_EQ", ">=");
+        put("SM_EQ", "<=");
+        put("EQ", "=");
+        put("NEQ", "<>");
+        put("DECIMAL", "Numero decimal");
+        
     }
 
     private void put(String key, String value) {
