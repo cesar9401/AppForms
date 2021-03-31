@@ -1,5 +1,6 @@
 package com.cesar31.formsweb.control;
 
+import com.cesar31.formsweb.model.Error;
 import com.cesar31.formsweb.model.Component;
 import com.cesar31.formsweb.model.Form;
 import com.cesar31.formsweb.model.Request;

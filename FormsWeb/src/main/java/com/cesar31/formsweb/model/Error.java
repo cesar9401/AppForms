@@ -1,4 +1,4 @@
-package com.cesar31.formsweb.control;
+package com.cesar31.formsweb.model;
 
 /**
  *
