@@ -5,9 +5,11 @@ import com.cesar31.formsclient.control.Request;
 import com.cesar31.formsclient.model.ErrorResponse;
 import com.cesar31.formsclient.model.Response;
 import java.awt.Event;
+import java.io.File;
 import java.util.List;
 import javax.swing.Action;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.text.DefaultEditorKit;
 
@@ -18,6 +20,7 @@ import javax.swing.text.DefaultEditorKit;
 public class MainView extends javax.swing.JFrame {
 
     private FileControl control;
+    private String path;
 
     // Para control de lineas
     private LineNumber num;
@@ -31,6 +34,8 @@ public class MainView extends javax.swing.JFrame {
         control = new FileControl();
 
         request = new Request();
+
+        this.path = null;
     }
 
     /**
@@ -98,8 +103,10 @@ public class MainView extends javax.swing.JFrame {
         responseTable = new javax.swing.JTable();
         menuBar = new javax.swing.JMenuBar();
         menu1 = new javax.swing.JMenu();
+        itemNew = new javax.swing.JMenuItem();
         itemOpen = new javax.swing.JMenuItem();
-        itemGuardar = new javax.swing.JMenuItem();
+        itemSave = new javax.swing.JMenuItem();
+        itemSaveAs = new javax.swing.JMenuItem();
         itemExit = new javax.swing.JMenuItem();
         menu2 = new javax.swing.JMenu();
         ItemCut = new javax.swing.JMenuItem();
@@ -328,10 +335,21 @@ public class MainView extends javax.swing.JFrame {
         menu1.setText("File");
         menu1.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
 
+        itemNew.setBackground(new java.awt.Color(36, 27, 47));
+        itemNew.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        itemNew.setForeground(new java.awt.Color(255, 255, 255));
+        itemNew.setText("Nuevo");
+        itemNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemNewActionPerformed(evt);
+            }
+        });
+        menu1.add(itemNew);
+
         itemOpen.setBackground(new java.awt.Color(36, 27, 47));
         itemOpen.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         itemOpen.setForeground(new java.awt.Color(255, 255, 255));
-        itemOpen.setText("Abrir");
+        itemOpen.setText("Abrir...");
         itemOpen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 itemOpenActionPerformed(evt);
@@ -339,11 +357,27 @@ public class MainView extends javax.swing.JFrame {
         });
         menu1.add(itemOpen);
 
-        itemGuardar.setBackground(new java.awt.Color(36, 27, 47));
-        itemGuardar.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        itemGuardar.setForeground(new java.awt.Color(255, 255, 255));
-        itemGuardar.setText("Guardar");
-        menu1.add(itemGuardar);
+        itemSave.setBackground(new java.awt.Color(36, 27, 47));
+        itemSave.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        itemSave.setForeground(new java.awt.Color(255, 255, 255));
+        itemSave.setText("Guardar");
+        itemSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemSaveActionPerformed(evt);
+            }
+        });
+        menu1.add(itemSave);
+
+        itemSaveAs.setBackground(new java.awt.Color(36, 27, 47));
+        itemSaveAs.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        itemSaveAs.setForeground(new java.awt.Color(255, 255, 255));
+        itemSaveAs.setText("Guardar como...");
+        itemSaveAs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemSaveAsActionPerformed(evt);
+            }
+        });
+        menu1.add(itemSaveAs);
 
         itemExit.setBackground(new java.awt.Color(36, 27, 47));
         itemExit.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
@@ -430,19 +464,6 @@ public class MainView extends javax.swing.JFrame {
         }
 
         myTabbedPane.setSelectedIndex(2);
-
-//        String input = control.readData("response.indigo");
-//
-//        ResponseLex lex = new ResponseLex(new StringReader(input));
-//        ResponseParser parser = new ResponseParser(lex);
-//        try {
-//            parser.parse();
-//            List<ErrorResponse> e = parser.getHandle().getList();
-//            setTableErrors(e);
-//        } catch (Exception ex) {
-//            ex.printStackTrace(System.out);
-//        }
-
     }//GEN-LAST:event_btnRequestActionPerformed
 
     private void setTableErrors(List<ErrorResponse> errors) {
@@ -462,7 +483,6 @@ public class MainView extends javax.swing.JFrame {
                 }
         ));
         setSizeTable();
-
     }
 
     /**
@@ -487,7 +507,6 @@ public class MainView extends javax.swing.JFrame {
                 }
         ));
         setSizeTable();
-
     }
 
     private void setSizeTable() {
@@ -524,7 +543,8 @@ public class MainView extends javax.swing.JFrame {
         JFileChooser fileChooser = new JFileChooser();
         int seleccion = fileChooser.showOpenDialog(this);
         if (seleccion == JFileChooser.APPROVE_OPTION) {
-            String text = control.readData(fileChooser.getSelectedFile().getAbsolutePath());
+            this.path = fileChooser.getSelectedFile().getAbsolutePath();
+            String text = control.readData(this.path);
             textMain.setText(text);
         }
 
@@ -535,14 +555,86 @@ public class MainView extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_textResponseCaretUpdate
 
+    private void itemSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemSaveAsActionPerformed
+        // TODO add your handling code here:
+        saveFile();
+    }//GEN-LAST:event_itemSaveAsActionPerformed
+
+    private void itemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemSaveActionPerformed
+        // TODO add your handling code here:
+        if (this.path != null) {
+            String text = textMain.getText();
+            File file = new File(this.path);
+            control.writeFile(file, text);
+        } else {
+            saveFile();
+        }
+    }//GEN-LAST:event_itemSaveActionPerformed
+
+    private void itemNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemNewActionPerformed
+        // TODO add your handling code here:
+        if (this.path != null) {
+            int input = JOptionPane.showConfirmDialog(this, "Desear guardar los cambios?");
+            if (input == 0) {
+                String text = textMain.getText();
+                File file = new File(this.path);
+                control.writeFile(file, text);
+            } else if (input == 1) {
+                this.path = null;
+                textMain.setText("");
+            }
+        } else {
+            String txt = textMain.getText();
+            if (!txt.isEmpty()) {
+                int input = JOptionPane.showConfirmDialog(this, "Desea guardar los cambios?");
+                if (input == 0) {
+                    JFileChooser save = new JFileChooser();
+                    int sel = save.showSaveDialog(this);
+                    if (sel == JFileChooser.APPROVE_OPTION) {
+                        File file = save.getSelectedFile();
+
+                        this.path = file.getAbsolutePath();
+                        String tx = textMain.getText();
+
+                        control.writeFile(file, tx);
+
+                        this.path = null;
+                        textMain.setText("");
+                    }
+                } else if (input == 1) {
+                    //this.path = null;
+                    textMain.setText("");
+                }
+            } else {
+                textMain.setText("");
+            }
+        }
+    }//GEN-LAST:event_itemNewActionPerformed
+
+    private void saveFile() {
+        JFileChooser fileChooser = new JFileChooser();
+        int selection = fileChooser.showSaveDialog(this);
+
+        if (selection == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+
+            this.path = file.getAbsolutePath();
+            String txt = textMain.getText();
+
+            control.writeFile(file, txt);
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem ItemCopy;
     private javax.swing.JMenuItem ItemCut;
     private javax.swing.JMenuItem ItemPaste;
     private javax.swing.JButton btnRequest;
     private javax.swing.JMenuItem itemExit;
-    private javax.swing.JMenuItem itemGuardar;
+    private javax.swing.JMenuItem itemNew;
     private javax.swing.JMenuItem itemOpen;
+    private javax.swing.JMenuItem itemSave;
+    private javax.swing.JMenuItem itemSaveAs;
     private javax.swing.JLabel labelInfo;
     private javax.swing.JLabel labelResponse;
     private javax.swing.JLabel labelResponseMain;

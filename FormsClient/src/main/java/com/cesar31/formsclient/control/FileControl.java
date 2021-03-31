@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 
@@ -41,6 +42,22 @@ public class FileControl {
             ex.printStackTrace(System.out);
         }
         return string;
+    }
+
+    /**
+     * Escribir en archivo
+     *
+     * @param file
+     * @param txt
+     */
+    public void writeFile(File file, String txt) {
+        try {
+            try (PrintWriter writer = new PrintWriter(file)) {
+                writer.write(txt);
+            }
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace(System.out);
+        }
     }
 
     /**
