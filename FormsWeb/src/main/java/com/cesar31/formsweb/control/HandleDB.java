@@ -59,7 +59,7 @@ public class HandleDB {
         this.path = path();
         this.db_url = this.path + "forms.db";
         this.db_data_url = this.path + "forms_data.db";
-        this.files = this.path + "/Files/";
+        this.files = this.path + "Files/";
         
         
     }
@@ -363,14 +363,14 @@ public class HandleDB {
         } catch (JsonProcessingException ex) {
             ex.printStackTrace(System.out);
         }
-        System.out.println(json);
+        //System.out.println(json);
         writeData(db_data_url, json);
     }
 
     public String saveFile(Part filePart) {
         String url = files + filePart.getSubmittedFileName();
-        System.out.println(path);
-        File file = new File(path);
+        System.out.println(url);
+        File file = new File(url);
         try {
             try (InputStream input = filePart.getInputStream()) {
                 Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
