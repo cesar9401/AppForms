@@ -32,13 +32,19 @@ import javax.servlet.http.Part;
 public class HandleDB {
 
     /* CAMBIAR */
-    public final String PATH = "/home/cesar31/Java/AppForms/";
+//    public final String PATH = "/home/cesar31/Java/AppForms/";
+//
+//    /* Base de Datos */
+//    public final String DB_URL = PATH + "FormsWeb/src/main/webapp/resources/DB/forms.db";
+//    public final String DB_DATA_URL = PATH + "FormsWeb/src/main/webapp/resources/DB/forms_data.db";
+//    public final String FILES = PATH + "FormsWeb/src/main/webapp/resources/DB/Files/";
 
-    /* Base de Datos */
-    public final String DB_URL = PATH + "FormsWeb/src/main/webapp/resources/DB/forms.db";
-    public final String DB_DATA_URL = PATH + "FormsWeb/src/main/webapp/resources/DB/forms_data.db";
-    public final String FILES = PATH + "FormsWeb/src/main/webapp/resources/DB/Files/";
-
+    public final String path;
+    public final String db_url;
+    public final String db_data_url;
+    public final String files;
+    
+    
     private List<User> users;
     private List<Form> forms;
 
@@ -49,6 +55,13 @@ public class HandleDB {
         this.users = new ArrayList<>();
         this.forms = new ArrayList<>();
         this.fmData = new ArrayList<>();
+        
+        this.path = path();
+        this.db_url = this.path + "forms.db";
+        this.db_data_url = this.path + "forms_data.db";
+        this.files = this.path + "/Files/";
+        
+        
     }
 
     /**
@@ -81,7 +94,7 @@ public class HandleDB {
      * Leer base de datos de formularios y usuarios
      */
     public void readDataBase() {
-        String data = readData(DB_URL);
+        String data = readData(db_url);
         DataLex lex = new DataLex(new StringReader(data));
         DataParser parser = new DataParser(lex);
         try {
@@ -269,7 +282,7 @@ public class HandleDB {
      * Leer base de datos recopilados con formularios
      */
     public void readDataForms() {
-        String data = readData(DB_DATA_URL);
+        String data = readData(db_data_url);
         AnswerLex lex = new AnswerLex(new StringReader(data));
         AnswerParser parser = new AnswerParser(lex);
         try {
@@ -351,11 +364,11 @@ public class HandleDB {
             ex.printStackTrace(System.out);
         }
         System.out.println(json);
-        writeData(DB_DATA_URL, json);
+        writeData(db_data_url, json);
     }
 
     public String saveFile(Part filePart) {
-        String path = FILES + filePart.getSubmittedFileName();
+        String url = files + filePart.getSubmittedFileName();
         System.out.println(path);
         File file = new File(path);
         try {
@@ -366,7 +379,7 @@ public class HandleDB {
             ex.printStackTrace(System.out);
         }
 
-        return path;
+        return url;
     }
 
     public List<User> getUsers() {
@@ -379,5 +392,13 @@ public class HandleDB {
 
     public List<FormData> getFmData() {
         return fmData;
+    }
+    
+    private String path() {
+        String url = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+        url = url.replace("target/FormsWeb/WEB-INF/classes/com/cesar31/formsweb/control/HandleDB.class", "");
+        url = url + "src/main/webapp/resources/DB/";
+
+        return url;
     }
 }
