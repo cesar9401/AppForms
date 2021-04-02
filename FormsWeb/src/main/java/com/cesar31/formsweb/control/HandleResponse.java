@@ -155,7 +155,7 @@ public class HandleResponse {
         if (r instanceof com.cesar31.formsweb.model.Form) {
             switch (r.getOp()) {
                 case ADD:
-                    return "Se ha agregado correctamente el formulario: " + ((Form) r).getId_form();
+                    return "Formulario creado, url: http://localhost:8080/FormsWeb/Form?id=" + ((Form) r).getId_form();
                 case EDIT:
                     return "Se ha editado correctamente la informacion del formulario: " + ((Form) r).getId_form();
                 case DEL:

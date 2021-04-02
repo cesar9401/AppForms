@@ -109,8 +109,16 @@
                         </form>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col text-center">
+                        <a class="btn btn-light" href="ExportForm?id-form=${form.id_form}" target="_blank" role="button">Exportar Formulario</a>
+                    </div>
+                </div>
             </div>
         </section>
+
+
 
         <section id="footer" class="p-3 mb-2 bg-dark text-white">
             <div class="container">

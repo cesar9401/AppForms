@@ -90,7 +90,9 @@
                             <tbody>
                                 <c:forEach items="${forms}" var="f">
                                     <tr>
-                                        <th scope="row">${f.id_form}</th>
+                                        <th scope="row">
+                                            <a class="btn btn-light" href="ExportForm?id-form=${f.id_form}" target="_blank" role="button">${f.id_form}</a>
+                                        </th>
                                         <td>${f.name}</td>
                                         <td>${f.components.size()}</td>
                                         <td>${f.theme}</td>

@@ -158,7 +158,7 @@ public class HandleDB {
      * @return
      */
     public Form getFormByRegex(String input) {
-        
+
         input = input.trim();
         Form fm = null;
 
@@ -184,11 +184,26 @@ public class HandleDB {
         return fm;
     }
 
+    public String exportForm(String id) {
+        readDataBase();
+        Form fm = getForm(id);
+        String json = null;
+        if (fm != null) {
+            fm.setId_form("**CAMBIAR-ID**");
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                json = mapper.writerWithDefaultPrettyPrinter().withView(Form.class).writeValueAsString(fm);
+            } catch (JsonProcessingException ex) {
+                ex.printStackTrace(System.out);
+            }
+        }
+        return json;
+    }
+
     /**
      * Obtener formularios por usuario
      *
      * @param user
-     * @param url
      * @return
      */
     public List<Form> getForms(String user) {

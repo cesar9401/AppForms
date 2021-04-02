@@ -12,10 +12,10 @@ FormsWeb/lex_cup_src/*/*.java
 FormsWeb/lex_cup_src/*/*java~
 
 # archivos creados para almacenamiento
-*.db
+#*.db
 
 # carpeta donde se almacenan archivos
-DB/
+#DB/
 
 # archivos con solicitudes
 *.indigo

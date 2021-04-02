@@ -1,0 +1,47 @@
+DATOS_RECOPILADOS
+[ {
+  "idForm" : "$form-test2",
+  "nameForm" : "formulario_prueba",
+  "data" : [ {
+    "Posicion_jugador" : "Messi",
+    "Puestp_trabajo1" : "Guardia",
+    "fichero_1" : "/home/cesar31/Java/AppForms/FormsWeb/DB/Files/enviar1.png",
+    "Comentarios" : "cometnarios",
+    "Puestp_trabajo" : "[Mesero, Gerente]",
+    "Cliente" : "Cesar Reginaldo Tzoc Alvarado"
+  }, {
+    "Posicion_jugador" : "Messi",
+    "Puestp_trabajo1" : "Mesero",
+    "fichero_1" : "/home/cesar31/Java/AppForms/FormsWeb/DB/Files/102977.png",
+    "Comentarios" : "comerakfds",
+    "Puestp_trabajo" : "[Mesero]",
+    "Cliente" : "Archivos test"
+  }, {
+    "Posicion_jugador" : "Messi",
+    "Puestp_trabajo1" : "Portero",
+    "fichero_1" : "/home/cesar31/Java/AppForms/FormsWeb/DB/Files/102977.png",
+    "Comentarios" : "Comentarios",
+    "Puestp_trabajo" : "[Gerente]",
+    "Cliente" : "Cesar Reginaldo Tzoc Alvarado"
+  }, {
+    "Posicion_jugador" : "Messi",
+    "Puestp_trabajo1" : "Mesero",
+    "fichero_1" : "/home/cesar31/Java/AppForms/FormsWeb/src/main/webapp/resources/DB/Files/archlinux.png",
+    "Comentarios" : "qwerqwerwqrewrwerwqerqwerqwerqwer",
+    "Puestp_trabajo" : "[Cocinero]",
+    "Cliente" : "Cesar Reginaldo Tzoc Alvarado"
+  } ]
+}, {
+  "idForm" : "$form1",
+  "nameForm" : "Soy_el_formulario_1",
+  "data" : [ {
+    "Pais" : "Guatemala",
+    "Cliente" : "César Reginaldo Tzoc"
+  } ]
+}, {
+  "idForm" : "$_-form5",
+  "nameForm" : "formulario_encuesta_5",
+  "data" : [ {
+    "Pais" : "Guatemala"
+  } ]
+} ]
