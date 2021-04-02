@@ -10,6 +10,9 @@ import java.util.List;
  */
 public class FormData extends Request{
     
+    public interface NoView {
+    };
+    
     private String idForm;
     private String nameForm;
     private List<HashMap<String, String>> data;

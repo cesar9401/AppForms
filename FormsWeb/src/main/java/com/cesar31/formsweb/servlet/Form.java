@@ -43,6 +43,7 @@ public class Form extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String id = request.getParameter("id");
+
         com.cesar31.formsweb.model.Form form = db.getForm(id);
 
         if (form != null) {
@@ -66,6 +67,7 @@ public class Form extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
+
         if (action != null) {
             System.out.println(action);
             com.cesar31.formsweb.model.Form form = db.getForm(action);
@@ -130,8 +132,8 @@ public class Form extends HttpServlet {
                 case "FICHERO":
                     Part filePart = request.getPart(c.getId_component());
                     if (filePart != null) {
-                        String url = saveFile(filePart);
-                        data.put(c.getFieldName(), url);
+                        String url_file = db.saveFile(filePart);
+                        data.put(c.getFieldName(), url_file);
                     }
                     break;
             }
@@ -140,34 +142,16 @@ public class Form extends HttpServlet {
         FormData fd = new FormData(form.getId_form(), form.getName());
         fd.getData().add(data);
 
+
         // Enviar informacion a db
         db.addData(fd);
-    }
-
-    /**
-     * Guardar filePart en carpeta en servidor
-     *
-     * @param filePart
-     * @return
-     */
-    private String saveFile(Part filePart) {
-        String path = "/home/cesar31/Java/AppForms/FormsWeb/DB/Files/" + filePart.getSubmittedFileName();
-        File file = new File(path);
-        try {
-            try (InputStream input = filePart.getInputStream()) {
-                Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace(System.out);
-        }
-
-        return path;
     }
 
     private void setProfile(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String id = (String) request.getSession().getAttribute("id");
         request.setAttribute("answer", true);
         if (id != null) {
+
             User u = db.getUser(id);
             if (u != null) {
                 List<com.cesar31.formsweb.model.Form> fms = db.getForms(u.getUser());

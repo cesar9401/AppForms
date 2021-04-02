@@ -14,12 +14,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.servlet.http.Part;
 
 /**
  *
@@ -27,8 +31,13 @@ import java.util.regex.Pattern;
  */
 public class HandleDB {
 
-    public final String DB_URL = "/home/cesar31/Java/AppForms/FormsWeb/DB/forms.db";
-    public final String DB_DATA_URL = "/home/cesar31/Java/AppForms/FormsWeb/DB/forms_data.db";
+    /* CAMBIAR */
+    public final String PATH = "/home/cesar31/Java/AppForms/";
+
+    /* Base de Datos */
+    public final String DB_URL = PATH + "FormsWeb/src/main/webapp/resources/DB/forms.db";
+    public final String DB_DATA_URL = PATH + "FormsWeb/src/main/webapp/resources/DB/forms_data.db";
+    public final String FILES = PATH + "FormsWeb/src/main/webapp/resources/DB/Files/";
 
     private List<User> users;
     private List<Form> forms;
@@ -39,7 +48,6 @@ public class HandleDB {
     public HandleDB() {
         this.users = new ArrayList<>();
         this.forms = new ArrayList<>();
-
         this.fmData = new ArrayList<>();
     }
 
@@ -150,6 +158,7 @@ public class HandleDB {
      * @return
      */
     public Form getFormByRegex(String input) {
+        
         input = input.trim();
         Form fm = null;
 
@@ -179,6 +188,7 @@ public class HandleDB {
      * Obtener formularios por usuario
      *
      * @param user
+     * @param url
      * @return
      */
     public List<Form> getForms(String user) {
@@ -296,7 +306,7 @@ public class HandleDB {
      * @param param
      * @return
      */
-    public FormData getFormDate(boolean id, String param) {
+    public FormData getFormData(boolean id, String param) {
         readDataForms();
         FormData fmd = null;
         for (FormData fd : fmData) {
@@ -320,14 +330,28 @@ public class HandleDB {
         ObjectMapper mapper = new ObjectMapper();
         String json = "DATOS_RECOPILADOS\n";
         try {
-            json += mapper.writerWithDefaultPrettyPrinter().writeValueAsString(fd);
+            json += mapper.writerWithDefaultPrettyPrinter().withView(FormData.class).writeValueAsString(fd);
             json += "\n";
         } catch (JsonProcessingException ex) {
             ex.printStackTrace(System.out);
         }
-        //System.out.println(json);
-
+        System.out.println(json);
         writeData(DB_DATA_URL, json);
+    }
+
+    public String saveFile(Part filePart) {
+        String path = FILES + filePart.getSubmittedFileName();
+        System.out.println(path);
+        File file = new File(path);
+        try {
+            try (InputStream input = filePart.getInputStream()) {
+                Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace(System.out);
+        }
+
+        return path;
     }
 
     public List<User> getUsers() {

@@ -5,9 +5,9 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <%@include file="assets/css/css.html"%>
-       	<link type="text/css" rel="stylesheet" href="assets/css/style404.css" />
-        <link href="assets/img/forms.png" rel="icon" type="image/png">
+        <%@include file="resources/assets/css/css.html"%>
+       	<link type="text/css" rel="stylesheet" href="resources/assets/css/style404.css" />
+        <link href="resources/assets/img/forms.png" rel="icon" type="image/png">
         <title>Error</title>
     </head>
     <body>
@@ -24,6 +24,6 @@
             </div>
         </div>
 
-        <%@include file="assets/js/js.html" %>
+        <%@include file="resources/assets/js/js.html" %>
     </body>
 </html>

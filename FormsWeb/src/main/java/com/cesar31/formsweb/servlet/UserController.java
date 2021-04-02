@@ -4,8 +4,6 @@ import com.cesar31.formsweb.control.HandleDB;
 import com.cesar31.formsweb.model.User;
 import java.io.IOException;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -118,6 +116,7 @@ public class UserController extends HttpServlet {
     private void setPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String id = (String) request.getSession().getAttribute("id");
         if (id != null) {
+
             User u = db.getUser(id);
             if (u != null) {
                 setProfile(u, request, response);
@@ -148,6 +147,7 @@ public class UserController extends HttpServlet {
      */
     private void searchForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String input = request.getParameter("id-form");
+
         com.cesar31.formsweb.model.Form form = db.getFormByRegex(input);
 
         if (form != null) {

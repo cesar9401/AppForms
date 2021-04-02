@@ -66,7 +66,7 @@ public class SQForm {
     }
 
     public void createQuery(Boolean id, Boolean whereCnd) {
-        FormData fd = db.getFormDate(id, param);
+        FormData fd = db.getFormData(id, param);
         if (fd != null) {
             if (!fd.getData().isEmpty()) {
                 if (this.fields.isEmpty()) {

@@ -4,7 +4,6 @@ import com.cesar31.formsweb.control.HandleDB;
 import com.cesar31.formsweb.control.HandlerFormParser;
 import com.cesar31.formsweb.model.Component;
 import com.cesar31.formsweb.model.Form;
-import com.cesar31.formsweb.model.Request;
 import com.cesar31.formsweb.model.User;
 import java.io.IOException;
 import java.io.StringReader;
@@ -21,8 +20,10 @@ public class TestParserMain {
 
         HandleDB db = new HandleDB();
         HandlerFormParser handler = new HandlerFormParser();
-
-        String data = db.readData("sqf.indigo");
+        
+        
+        String data = db.readData("src/main/webapp/resources/DB/forms_data.db");
+        System.out.println(data);
         //System.out.println(data);
 //        Message m = handler.parserInput(new Message(null, data));
 //
@@ -30,25 +31,25 @@ public class TestParserMain {
         
         //debug(data);
         
-        FormsLex lex = new FormsLex(new StringReader(data));
-        FormsParser parser = new FormsParser(lex);
-        try {
-            parser.parse();
-            if(parser.isParsed()) {
-                List<Request> r = parser.getContainer().getRequests();
-                r.forEach(req -> {
-                    System.out.println(req.toString());
-                });
-            } else {
-                parser.getContainer().getErrors().forEach(e -> {
-                    System.out.println(e.toString());
-                });
-            }
-            //System.out.println("ParserMain");
-        } catch (Exception ex) {
-            System.out.println("no parserMAIN");
-            ex.printStackTrace(System.out);
-        }
+//        FormsLex lex = new FormsLex(new StringReader(data));
+//        FormsParser parser = new FormsParser(lex);
+//        try {
+//            parser.parse();
+//            if(parser.isParsed()) {
+//                List<Request> r = parser.getContainer().getRequests();
+//                r.forEach(req -> {
+//                    System.out.println(req.toString());
+//                });
+//            } else {
+//                parser.getContainer().getErrors().forEach(e -> {
+//                    System.out.println(e.toString());
+//                });
+//            }
+//            //System.out.println("ParserMain");
+//        } catch (Exception ex) {
+//            System.out.println("no parserMAIN");
+//            ex.printStackTrace(System.out);
+//        }
     }
 
     public static void operation(List<User> u, List<Form> f, List<Component> c) {

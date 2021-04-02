@@ -23,13 +23,12 @@ public class MainService {
     public Response getRequest(Message message) {
         //Write your code here
         try {
-            System.out.println("Servidor");
+            //System.out.println("Servidor");
             System.out.println(message.getMsj());
             HandlerFormParser handle = new HandlerFormParser();
             Message response = handle.parserInput(message);
-
             System.out.println(response.getMsj());
-
+            
             return Response.ok().entity(response).build();
         } catch (Exception e) {
             e.printStackTrace(System.out);

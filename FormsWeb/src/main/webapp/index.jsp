@@ -1,13 +1,12 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <%@include file="assets/css/css.html"%>
-        <link href="assets/img/forms.png" rel="icon" type="image/png">
+        <%@include file="resources/assets/css/css.html"%>
+        <link href="resources/assets/img/forms.png" rel="icon" type="image/png">
         <title>Forms Web</title>
     </head>
     <body>
@@ -23,7 +22,7 @@
                             <form action="UserController" method="post" class="text-center">
                                 <div class="row">
                                     <div class="col text-center">
-                                        <img class="text-center" src="assets/img/login.png" width="35%">
+                                        <img class="text-center" src="resources/assets/img/login.png" width="35%">
                                     </div>
                                 </div>
                                 <div class="form-floating mb-3">
@@ -72,7 +71,7 @@
                 </div>
             </div>
 
-        <%@include file="assets/js/js.html" %>
+        <%@include file="resources/assets/js/js.html" %>
 
         <c:if test="${answer != null}">
             <script>
